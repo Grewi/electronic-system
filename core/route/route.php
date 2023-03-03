@@ -7,6 +7,7 @@ class route
     protected $get = true;
     protected $url = [];
     protected $groupName = null;
+    protected $param_regex = '/[^a-zA-Zа-яА-Я0-9-_]/ui';
     
     public function __construct()
     {
@@ -104,6 +105,7 @@ class route
     {
         if($this->get){
             $controller = $this->namespace . $class;
+            $_SERVER['routeController'] = $controller;
             (new $controller)->$method();
         }
         return $this;
@@ -135,25 +137,31 @@ class route
 
         //Если длина url меньше роута, а последний параметр не является необязательным
         if(count($url) < count($g)){
-            preg_match('/\{(.*?)\?\}/si', $g[count($g)-1], $freeParam);
-            if(!isset($freeP[0])){
+            preg_match('/\{(.*?)\?\}/si', $g[count($g)], $freeParam);
+            if(!isset($freeParam[0])){
                 $check = false;
             }
         }
 
         foreach($url as $a => $i){
+
             //Если на последней итерации пусто. пропускаем
             if(empty($i) && count($url) == $a){
                 continue;
             }
-
+            
             if(isset($g[$a])){
                 preg_match('/\{(.*?)\}/si', $g[$a], $param);
                 preg_match('/\{(.*?)\?\}/si', $g[$a], $freeParam);
 
+                //Если сработал необязательный параметр, удаляем обязательный
+                if($freeParam[1]){
+                    unset($param);
+                }
+
                 //Проверка не обязательного параметра
                 if(isset($freeParam[1])){
-                    request('get')->set([$freeParam[1] => $url[$a]]);
+                    request('get')->set([$freeParam[1] => preg_replace($this->param_regex, '', urldecode($url[$a])) ]);
                     continue;
                 }
 
@@ -163,13 +171,7 @@ class route
                     break;
 
                 }elseif( ( isset($param[1]) && !empty($url[$a]) ) && $check){
-                    // dump($param, $url);
-                    request('get')->set([$param[1] => $url[$a]]);
-                }
-
-                //Если обязательный или необязательный параметр не являются числом
-                if( (isset($param[0]) && !is_numeric($url[$a])) || (isset($freeParam[0]) && !is_numeric($url[$a])) ){
-                    $check = false;
+                    request('get')->set([$param[1] => preg_replace($this->param_regex, '', urldecode($url[$a])) ]);
                 }
 
                 //Проверка элемента url
@@ -179,6 +181,7 @@ class route
                 }
                 
             }else{
+                
                 $check = false;
             }
         }
