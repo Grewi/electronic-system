@@ -27,8 +27,8 @@ trait validetePassTrait
     {
         $data = $this->data[$this->currentName];
         $user = db()->fetch('SELECT * FROM `' . $table . '` WHERE `id` = "' . $id . '"', []);
-        if(isset($user[$col])){
-            $current = $user[$col];
+        if(isset($user->{$col})){
+            $current = $user->{$col};
             if(!password_verify($data, $current)){
                 
                 $this->error[$this->currentName][] = lang('valid', 'currentPass');

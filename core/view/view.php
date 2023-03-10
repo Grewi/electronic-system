@@ -78,6 +78,8 @@ class view
             $html = 'layout/' . $aa;
             if($matches){
                 $layout = $this->getFile(ROOT . '/' . config::globals('app') . '/views/' . $html . '.php', $html);
+                $adm = '<?php $_SERVER[\'viewList\'][] = \'' . addslashes($html) . '\'; ?>';
+                $layout = $adm . $layout;
                 preg_match_all('/\<block\s*name=\"(.*?)\"\s*\/*>/si', $layout, $matches2);
                 foreach($matches2[1] as $a => $i){
                     preg_match('/\<block\s*name=\"' . $i . '\"\s*\>(.*?)\<\/block\s*>/si', $temp, $m);
