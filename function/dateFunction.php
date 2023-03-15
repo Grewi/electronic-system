@@ -178,7 +178,6 @@ function subMin($date, $count = 1, $format = 'H:i'){
 }
 
 function intervalDay($date1, $date2 = null){
-    if(!$date1) return;
     $date2 = $date2 ? $date2 : date('Y-m-d H:i');
     $d = \system\core\date\date::create($date1);
     return $d->intervalDay($date1, $date2);

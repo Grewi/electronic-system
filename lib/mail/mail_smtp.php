@@ -30,7 +30,7 @@ class mail_smtp{
 
     public function alternative(string $alternative)
     {
-        $this->alternative = $alternative;
+        $this->alternative = htmlspecialchars_decode($alternative);
         return $this;
     }
 
@@ -42,25 +42,28 @@ class mail_smtp{
 
     public function subject(string $subject)
     {
-        $this->subject = $subject;
+        $this->subject = htmlspecialchars_decode($subject);
         return $this;
     }
 
     public function body(string $body)
     {
-        $this->body = $body;
+        $this->body = htmlspecialchars_decode($body);
         return $this;
     }
 
     public function fromName($name)
     {
-        $this->fromName = $name;
+        $this->fromName = htmlspecialchars_decode($name);
         return $this;
     }
 
 
     public function send($mailUser, $name, $subject = '', $body = '', $alternative = '', $attachment = null)
     {
+        $name = htmlspecialchars_decode($name);
+        $subject = htmlspecialchars_decode($name);
+
         ob_start();
         $mail = new PHPMailer();
 
