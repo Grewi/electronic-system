@@ -70,98 +70,115 @@ function eDateValid($year,$month, $day){
 }
 
 function eDate($date, $mask = 'd.m.Y'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     return $d->format($mask);
 }
 
 function eDateLang($date, $p = 'r'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     return $d->formatLang($p);
 }
 
 function eTime($date, $mask = 'H:i'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     return $d->format($mask);
 }
 
 function eDateTime($date, $mask = 'd.m.Y h:i'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     return $d->format($mask);
 }
 
 function addDay($date, $count = 1, $format = 'Y-m-d'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     $d->addDay($count);
     return $d->format($format);
 }
 
 function subDay($date, $count = 1, $format = 'Y-m-d'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     $d->subDay($count);
     return $d->format($format);
 }
 
 function addWeek($date, $count = 1, $format = 'Y-m-d'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     $d->addWeek($count);
     return $d->format($format);
 }
 
 function subWeek($date, $count = 1, $format = 'Y-m-d'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     $d->subWeek($count);
     return $d->format($format);
 }
 
 function addMonth($date, $count = 1, $format = 'Y-m-d'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     $d->addMonth($count);
     return $d->format($format);
 }
 
 function subMonth($date, $count = 1, $format = 'Y-m-d'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     $d->subMonth($count);
     return $d->format($format);
 }
 
 function addYear($date, $count = 1, $format = 'Y-m-d'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     $d->addYear($count);
     return $d->format($format);
 }
 
 function subYaer($date, $count = 1, $format = 'Y-m-d'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     $d->subYaer($count);
     return $d->format($format);
 }
 
 function addHour($date, $count = 1, $format = 'H:i'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     $d->addInterval('PT' . $count . 'H');
     return $d->format($format);
 }
 
 function subHour($date, $count = 1, $format = 'H:i'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     $d->subInterval('PT' . $count . 'H');
     return $d->format($format);
 }
 
 function addMin($date, $count = 1, $format = 'H:i'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     $d->addInterval('PT' . $count . 'M');
     return $d->format($format);
 }
 
 function subMin($date, $count = 1, $format = 'H:i'){
+    if(!$date) return;
     $d = \system\core\date\date::create($date);
     $d->subInterval('PT' . $count . 'M');
     return $d->format($format);
 }
 
 function intervalDay($date1, $date2 = null){
+    if(!$date1) return;
     $date2 = $date2 ? $date2 : date('Y-m-d H:i');
     $d = \system\core\date\date::create($date1);
     return $d->intervalDay($date1, $date2);
