@@ -26,8 +26,8 @@ class createController
         $this->namespace = implode('\\', $_ArrParam);
 
         if(!$v){
-            exit('0');
             $this->saveController();
+            exit();
         }
         
 
