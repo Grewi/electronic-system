@@ -9,6 +9,7 @@ class createController
     private $path;
     private $path_v;
     private $pathDir;
+    private $pathDir_v;
     private $path_crud_v = [];
     private $namespace;
 
@@ -27,7 +28,6 @@ class createController
 
         if(!$v){
             $this->saveController();
-            exit();
         }
         
 
