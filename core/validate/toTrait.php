@@ -19,4 +19,12 @@ trait toTrait{
         $data = $this->data[$this->currentName];
         $this->setReturn((string)$data);
     }
+	
+	public function toNull() : void
+    {
+        $data = $this->data[$this->currentName];
+        if(empty($data)){
+            $this->setReturn(null);
+        }
+    }
 }
