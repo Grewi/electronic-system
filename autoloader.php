@@ -39,6 +39,10 @@ class autoloader
             }
             includeFile(ROOT . $this->pathApp . '.php');
         }
+
+        if(!file_exists(ROOT . $this->pathSystem . '.php') && file_exists(ROOT . $this->pathApp . '.php')){
+            includeFile(ROOT . $this->pathApp . '.php');
+        }
     }
 
     private function createFile()
