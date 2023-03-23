@@ -42,7 +42,13 @@ function includeFile($path)
     }catch(FileException $e){
         exit($e->message);
     }
+}
 
+function createDir($path)
+{
+    if(!file_exists($path)){
+        mkdir($path, 0755, true);
+    }    
 }
 
 function alert($text, $type = null)
