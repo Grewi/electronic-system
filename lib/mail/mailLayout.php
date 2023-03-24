@@ -13,7 +13,6 @@ trait mailLayout
             $this->subject = $this->view(htmlspecialchars_decode($layout->subject));
             $this->body = $this->view(htmlspecialchars_decode($layout->body));            
         }else{
-            dump('INSERT INTO `mail_layout` (`name`,`subject`,`body`,`description`) VALUES ("' . $name . '","---","---",NULL)');
             db()->query('INSERT INTO `mail_layout` (`name`,`subject`,`body`,`description`) VALUES ("' . $name . '","---","---",NULL)', []);
         }
         return $this;

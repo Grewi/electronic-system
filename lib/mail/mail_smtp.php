@@ -97,20 +97,26 @@ class mail_smtp{
                 $mail->addAttachment($i);
             }
         }
+        $log = '';
+        $mail->preSend();
+        $log .= PHP_EOL . $mail->getSentMIMEMessage() . PHP_EOL;
 
-        // send the message, check for errors
-        if (!$mail->send()) {
-            //  echo 'Mailer Error: ' . $mail->ErrorInfo;
-             if(!file_exists(ROOT . '/app/cache/logs')){
-                mkdir(ROOT . '/app/cache/logs', 0755, true);
+        if(config::globals('dev') == 0){
+            // Отправляем сообщение
+            if (!$mail->send()) {
+                $log .= PHP_EOL . date('Y-m-d H:s') .  ' ' .  $mail->ErrorInfo . PHP_EOL;
+            } else {
+                // echo 'Message sent!';
             } 
-            $error = PHP_EOL . date('Y-m-d H:s') .  ' ' .  $mail->ErrorInfo;
-            file_put_contents(ROOT . '/app/cache/logs/mail_smtp-' . date('Y-m') . '.log', $error, FILE_APPEND);
-        } else {
-            // echo 'Message sent!';
-        } 
-        $content = ob_get_contents();
-        ob_end_clean();  
+            $content = ob_get_contents();
+            ob_end_clean();             
+        }
+
+        if(config::mail('logs') == '1'){
+            createDir(ROOT . '/app/cache/logs');
+            file_put_contents(ROOT . '/app/cache/logs/mail_smtp-' . date('Y-m') . '.log', $log , FILE_APPEND);
+        }
+ 
     }
 
 
