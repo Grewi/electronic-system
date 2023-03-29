@@ -1,5 +1,7 @@
 <?php 
 namespace system\core\model;
+
+use __PHP_Incomplete_Class;
 use system\core\database\database;
 
 trait updateTrait
@@ -29,8 +31,15 @@ trait updateTrait
         $data = array_merge($data, $this->_bind);
         $sql = 'UPDATE ' . $this->_table . ' SET ' . $str . $this->_where;
         db()->query($sql, $data);
-        if($this->_idNumber){
-            return db()->fetch('SELECT * FROM ' . $this->_table . ' WHERE `' . $this->_id . '` = ' . $this->_idNumber . ';', []);
+        try{
+            if($this->_idNumber){
+                $dbId = db()->fetch('SELECT * FROM ' . $this->_table . ' WHERE `' . $this->_id . '` = ' . $this->_idNumber . ';', []);
+                $ob = static::class;
+                return $ob::find($dbId->id);
+            }
+        }catch(\Exception $e){
+            return null;
         }
+
     }
 }

@@ -23,12 +23,11 @@ trait insertTrait
         $sql = 'INSERT INTO ' . $this->_table . ' SET ' . $str;
         $db->query($sql, $data);
         try{
-            $a = $db->fetch('SELECT * FROM ' . $this->_table . ' where ' . $this->_id .' = LAST_INSERT_ID()', []);
-
-            return $a;
+            $dbId = $db->fetch('SELECT * FROM ' . $this->_table . ' where ' . $this->_id .' = LAST_INSERT_ID()', []);
+            $ob = static::class;
+            return $ob::find($dbId->id);
         }catch(\Exception $e){
-            //dd($e);
-            
+            return null;
         }
         
     }
