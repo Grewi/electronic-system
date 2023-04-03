@@ -22,7 +22,7 @@ class autoloader
         if($this->classArray[0] == 'electronic'){
             $this->system();
         }else{
-            includeFile(ROOT . '/' . $namespace . '.php');
+            includeFile(ROOT . '/' . $this->namespace . '.php');
         }
     }
 
