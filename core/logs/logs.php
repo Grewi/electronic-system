@@ -2,6 +2,7 @@
 namespace system\core\logs;
 use app\models\logs_type;
 use app\models\logs as logsModel;
+use system\core\config\config;
 
 //data - json 
 //Данные: 
@@ -16,6 +17,12 @@ class logs
     private $name = null;
     private $description = null;
     private $userId = null;
+    private $logConfig = false;
+
+    private function __construct()
+    {
+        $this->logConfig = (bool)config::globals('logs');
+    }
 
     static public function connect() : logs
     {
@@ -46,7 +53,7 @@ class logs
 
     public function _insert($data = null) : void
     {
-        if($this->slug && $this->name){
+        if($this->logConfig && $this->slug && $this->name){
             $type = logs_type::where('slug', $this->slug)->get();
             if(!$type){
                 $typeData = [

@@ -1,28 +1,32 @@
 <?php declare(strict_types=1);
 
 namespace system\core\lang;
+use system\core\traits\singleton;
+use system\core\config\config;
 
 class lang 
 {
     private static $connect = null;
     private $default = 'ru';
 
+    use singleton;
+
     private function __construct()
     {
-
+        $l = config::globals('lang');
+        if($l){
+           $this->default = $l;
+        }
     }
 
-    static public function connect() : lang
+    public static function __callStatic($name, $arguments)
     {
-		if(self::$connect === null){
-			self::$connect = new self();
-		}
-		return self::$connect;
-	}
-
-    public function return( string $fileName, string $lex, array $param = []) : string
-    {
-        $file = ROOT . '/app/lang/' . $this->default . '/' . $fileName . '.php';
+        $lex = $arguments[0];
+        if(!isset($arguments[0]) || empty($arguments[0])){
+            return $lex;
+        }
+        
+        $file = ROOT . '/app/lang/' . (new static)->default . '/' . $name . '.php';
         $str = '';
         if(file_exists($file)){
             $langs = require $file;
