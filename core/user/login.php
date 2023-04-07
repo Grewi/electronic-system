@@ -67,7 +67,13 @@ class login
                 'device_type' => $_SESSION['device_type'],
                 'os_name' => $_SESSION['os_name'],
             ];
-            logs::userId($user->id)->name('auth', 'Авторизация пользователя')->insert($logs, 'auth');
+            $text = '<ul>
+                <li>ip - ' . $logs['ip'] . '</li>
+                <li>browser_family - ' . $logs['browser_family'] . '</li>
+                <li>device_type - ' . $logs['device_type'] . '</li>
+                <li>os_name - ' . $logs['os_name'] . '</li>
+            </ul>';
+            logs::userId($user->id)->name('auth', 'Авторизация пользователя')->description($text)->insert($logs, 'auth');
             redirect($url ? $url : referal_url());
         } else {
             $error = [

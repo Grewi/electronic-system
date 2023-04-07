@@ -19,3 +19,7 @@ function eSanitizerInt($str){
 function eSanitizerDate($str){
     return preg_replace('/[^0-9-]/ui', '', $str);
 } 
+
+function eSanitizerDEmail($str){
+    return preg_replace('/[^@.a-zA-Zа-яА-Я0-9-_]/ui', '', $str);
+} 

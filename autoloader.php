@@ -50,13 +50,13 @@ class autoloader
         $path = $this->classArray;
         $className = $path[count($path) - 1];
         unset($path[0]);
-        unset($path[count($path) - 1]);
+        unset($path[count($path)]);
         $p = ROOT . '/app/system/' . implode('/', $path);
         createDir($p);
 
         $namespace = $this->classArray;
         unset($namespace[0]);
-        unset($namespace[count($namespace) - 1]);
+        unset($namespace[count($namespace)]);
         $n = 'electronic/' . implode('/', $namespace);
         
         $class = '<?php

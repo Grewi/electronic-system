@@ -35,7 +35,7 @@ class migrate
 
                 if (empty($m)) {
                     
-                    if (is_null($m['active'])) {
+                    try {
                         $mSql = file_get_contents(APP . '/migrations/' . $i . '.sql');
                         if(!empty($mSql)){
                             $db->query('INSERT INTO migrations SET name = "' . $i . '", active = "' . date('Y-m-d H:i', time()) . '"', []);
@@ -44,8 +44,8 @@ class migrate
                         }else{
                             echo 'Пустой файл миграции ' . $i  . PHP_EOL; 
                         }
-                    }else{
-                        echo 'Пропущен ' . $i  . PHP_EOL; 
+                    }catch(\PDOException $e){
+                        echo $e->getMessage()   . PHP_EOL;
                     }
                 }else{
                     echo 'Пропущен ' . $i  . PHP_EOL; 
