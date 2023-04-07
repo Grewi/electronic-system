@@ -4,14 +4,19 @@ namespace system\console;
 
 class createModel
 {
+    private $className = '';
+    private $path = '';
+    private $pathDir = '';
+    private $namespace = '';
+
     public function index()
     {
         $parametr = ARGV[2];
         $ArrParam = explode('/', $parametr);
         $this->className = array_pop($ArrParam);
-        $this->path = ROOT . '/app/models/' . $parametr . '.php';
-        $this->pathDir = ROOT . '/app/models/' . implode('/', $ArrParam) ;
-        $ArrParam = array_merge(['app', 'models'], $ArrParam);
+        $this->path = APP . '/models/' . $parametr . '.php';
+        $this->pathDir = APP . '/models/' . implode('/', $ArrParam) ;
+        $ArrParam = array_merge([APP_NAME, 'models'], $ArrParam);
         $this->namespace = implode('\\', $ArrParam) ;
         $this->save();
     }
@@ -31,7 +36,7 @@ class createModel
     {
 return "<?php 
 namespace " . $this->namespace . ";
-use system\core\model\model;
+use electronic\core\model\model;
 
 class " . $this->className . " extends model
 {

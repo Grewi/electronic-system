@@ -4,13 +4,13 @@ namespace system\console;
 
 class clean
 {
-    public function index()
+    public function index() : void
     {
         $this->cleanConfig();
         $this->cleanCache();
     }
 
-    public function cleanConfig()
+    public function cleanConfig() : void
     {
          $dirConfigs = scandir(ROOT . '/app/configs/');
          foreach($dirConfigs as $i){
@@ -20,7 +20,7 @@ class clean
          }        
     }
 
-    public function cleanCache()
+    public function cleanCache() : void
     {
         $dirCache = scandir(ROOT . '/app/cache/views/');
         foreach($dirCache as $i){
@@ -30,7 +30,8 @@ class clean
         }
     }
 
-    private function deleteDir($dirPath) {
+    private function deleteDir(string $dirPath) : void
+    {
         if (! is_dir($dirPath)) {
             throw new \InvalidArgumentException("$dirPath must be a directory");
         }

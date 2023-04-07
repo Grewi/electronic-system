@@ -1,8 +1,33 @@
-<?php 
+<?php
 
-require ROOT . '/system/function/_systemFunction.php';
-require ROOT . '/system/function/dateFunction.php';
-require ROOT . '/system/function/numberFormatFunction.php';
-require ROOT . '/system/function/getFunctions.php';
-require ROOT . '/system/function/sanitizerFunction.php';
-require ROOT . '/system/function/rules.php';
+$systemFunctionDir = SYSTEM . '/function';
+if (file_exists($systemFunctionDir)) {
+    $systemFnctionFiles = scandir($systemFunctionDir);
+    if (is_iterable($systemFnctionFiles)) {
+        foreach ($systemFnctionFiles as $file) {
+            if (!file_exists($systemFunctionDir . '/' . $file)) {
+                continue;
+            }
+            $f = pathinfo($file);
+            if ($f['extension'] == 'php') {
+                require $systemFunctionDir . '/' . $file;
+            }
+        }
+    }
+}
+
+$appFunctionDir = APP . '/system/function';
+if (file_exists($appFunctionDir)) {
+    $systemFnctionFiles = scandir($appFunctionDir);
+    if (is_iterable($systemFnctionFiles)) {
+        foreach ($systemFnctionFiles as $file) {
+            if (!file_exists($appFunctionDir . '/' . $file)) {
+                continue;
+            }
+            $f = pathinfo($file);
+            if ($f['extension'] == 'php') {
+                require $appFunctionDir . '/' . $file;
+            }
+        }
+    }
+}

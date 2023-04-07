@@ -12,8 +12,13 @@ function db()
 
 function lang( string $fileName, string $lex, array $param = [])
 {
-    $lang = lang::connect();
-    return $lang->return($fileName, $lex, $param);
+    $lang = lang::{$fileName}($lex);
+    return $lang;
+}
+
+function config(string $fileName, string $lex)
+{
+    return config::{$fileName}($lex);
 }
 
 function user_id()

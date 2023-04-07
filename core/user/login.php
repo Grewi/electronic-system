@@ -1,7 +1,5 @@
 <?php
 namespace system\core\user;
-
-use system\core\database\database;
 use system\core\validate\validate;
 use system\core\logs\logs;
 use system\core\request\request;

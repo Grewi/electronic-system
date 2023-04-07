@@ -3,7 +3,7 @@
 class FileException extends Exception
 {
   public $message = '';
-  public function __construct(string $message = '', $code = 1)
+  public function __construct(string $message = '', int $code = 1)
   {
     parent::__construct($message, $code);
   }
@@ -11,7 +11,7 @@ class FileException extends Exception
 
 class GlobalException extends Exception
 {
-  public function __construct(string $message = '', $code = 1)
+  public function __construct(string $message = '', int $code = 1)
   {
     parent::__construct($message, $code);
   }
@@ -20,7 +20,7 @@ class GlobalException extends Exception
 class MaxCountIncludeTemp extends Exception
 {
   public $message = '';
-  public function __construct(string $message = '', $code = 0)
+  public function __construct(string $message = '', int $code = 0)
   {
     parent::__construct($message, $code);
   }
@@ -29,7 +29,7 @@ class MaxCountIncludeTemp extends Exception
 class TempException extends Exception
 {
   public $message = '';
-  public function __construct(string $message = '', $code = 0)
+  public function __construct(string $message = '', int $code = 0)
   {
     parent::__construct($message, $code);
   }

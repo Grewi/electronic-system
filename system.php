@@ -1,20 +1,22 @@
 <?php 
 declare(strict_types=1);
 !INDEX ? exit('exit') : true;
+define('APP_NAME', 'app');
+define('APP', ROOT . '/' . APP_NAME);
+define('SYSTEM', ROOT . '/system');
 
-require_once ROOT . '/system/exception.php';
+require_once SYSTEM . '/exception.php';
 
 try{
-    require_once ROOT . '/system/function.php';
-    require_once ROOT . '/system/autoloader.php';
-    require_once ROOT . '/system/bootstrap.php';
+    require_once SYSTEM . '/function.php';
+    require_once SYSTEM . '/autoloader.php';
+    require_once SYSTEM . '/bootstrap.php';
 
     if(ENTRANSE == 'web'){
-        require_once ROOT . '/app/route/web.php';
+        require_once APP . '/route/web.php';
     }elseif(ENTRANSE == 'console'){
-        require_once ROOT . '/system/console/console.php';
+        require_once SYSTEM . '/console/console.php';
     }
 }catch(GlobalException $e){
     exit($e);
 }
-//system

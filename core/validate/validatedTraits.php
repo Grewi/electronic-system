@@ -36,7 +36,6 @@ trait validatedTraits
 
     public function int(): validate
     {
-        //$this->data[$this->currentName] = empty($this->data[$this->currentName]) ? 0 : $this->data[$this->currentName] ;
         $data = $this->data[$this->currentName];
         if (!empty($data) && !preg_match("/^[0-9]+$/u", (string)$data)) {
             $this->error[$this->currentName][] = lang( 'valid' ,'noInt');
@@ -70,7 +69,6 @@ trait validatedTraits
 
     public function float(): validate 
     {
-        //$this->data[$this->currentName] = empty($this->data[$this->currentName]) ? 0 : $this->data[$this->currentName] ;
         $data = $this->data[$this->currentName];
         if (!empty($data) && !preg_match("/^[0-9\.\,]+$/u", (string)$data)) {
             $this->error[$this->currentName][] = lang('valid' ,'noInt');;
@@ -152,10 +150,6 @@ trait validatedTraits
             $this->error[$this->currentName][] = lang('valid', 'tel');
             $this->setControl(false);
         }
-        // if ($clean) {
-        //     $del  = ['-', '(', ')', ' ', '+'];
-        //     $data = str_replace($del, '', $resut[3] . $resut[4]);
-        // }
         $this->setReturn($this->currentName);
         return $this;
     }

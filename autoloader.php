@@ -14,7 +14,7 @@ class autoloader
     private $pathSystem = '';
     private $pathApp = '';
 
-    public function start($namespace)
+    public function start(string $namespace) : void
     {
         $this->namespace = str_replace('\\', '/', $namespace);
         $this->classArray = explode('/', $this->namespace);
@@ -26,11 +26,11 @@ class autoloader
         }
     }
 
-    private function system()
+    private function system() : void
     {
         $path = $this->classArray;
         unset($path[0]);
-        $this->pathApp = '/app/system/' . implode('/', $path);
+        $this->pathApp = '/' . APP_NAME . '/system/' . implode('/', $path);
         $this->pathSystem = '/system/' . implode('/', $path);
 
         if(file_exists(ROOT . $this->pathSystem . '.php')){
@@ -45,7 +45,7 @@ class autoloader
         }
     }
 
-    private function createFile()
+    private function createFile() : void
     {
         $path = $this->classArray;
         $className = $path[count($path) - 1];
@@ -58,7 +58,6 @@ class autoloader
         unset($namespace[0]);
         unset($namespace[count($namespace) - 1]);
         $n = 'electronic/' . implode('/', $namespace);
-        // $namspace = implode() $this->namespace
         
         $class = '<?php
 namespace ' . str_replace('/', '\\', $n) . ';

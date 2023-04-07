@@ -25,7 +25,7 @@ class database
         $dbHost = config::database('host');
         $dbPass = config::database('pass');
         $dbUser = config::database('user'); 
-        $dir = ROOT . '/app/cache/dump/' . $parametr;     
+        $dir = APP . '/cache/dump/' . $parametr;     
         $print = exec('mysql  --user=' . $dbUser .' --password=' . $dbPass . ' --host=' . $dbHost . ' ' . $dbName . ' < ' . $dir, $output, $status);
         echo "Процессс завершён \n";
     }

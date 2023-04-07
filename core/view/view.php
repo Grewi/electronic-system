@@ -12,8 +12,8 @@ class view
 
     //private $cache = true; //Включить кеширование
     protected $compile = false; // Принудительная перекомпиляция
-    protected $cacheDir = ROOT . '/app/cache/views';
-    protected $viewsDir = ROOT . '/app/views';
+    protected $cacheDir = APP . '/cache/views';
+    protected $viewsDir = APP . '/views';
     protected $maxInclude = 100;
     protected $countInclude = 0;
     protected $content = '';
@@ -31,7 +31,6 @@ class view
             //Время последнего изменения в шаблонах и файла в кеше
             $timeCacheFile = file_exists($fullPathCache) ? filemtime($fullPathCache) : 0; 
             $timeOriginal = $this->foldermtime($this->viewsDir);
-
             //Файл изменился или включена принудительная перекомпиляция
             if($timeOriginal > $timeCacheFile || $this->compile){
                 $this->compile();
@@ -77,7 +76,7 @@ class view
             $aa = array_shift($a);
             $html = 'layout/' . $aa;
             if($matches){
-                $layout = $this->getFile(ROOT . '/' . config::globals('app') . '/views/' . $html . '.php', $html);
+                $layout = $this->getFile(APP . '/views/' . $html . '.php', $html);
                 $adm = '<?php $_SERVER[\'viewList\'][] = \'' . addslashes($html) . '\'; ?>';
                 $layout = $adm . $layout;
                 preg_match_all('/\<block\s*name=\"(.*?)\"\s*\/*>/si', $layout, $matches2);
@@ -106,7 +105,7 @@ class view
         $this->content = $temp;          
     }
     
-    private function variable()
+    private function variable() : void
     {
         $temp = $this->content;
         preg_match_all('/\{\{\s*\$(.*?)\s*\}\}(else\{\{(.*?)}\})?/si', $temp, $matches);
@@ -117,7 +116,7 @@ class view
         $this->content = $temp;
     }
 
-    private function lang()
+    private function lang() : void
     {
         $temp = $this->content;
         preg_match_all('/\{\{\s*lang\((.*?)\)\s*\}\}/si', $temp, $matches);
@@ -129,7 +128,7 @@ class view
     }
 
     //Принимает два параметра type= input/token и name
-    private function csrf()
+    private function csrf() : void
     {
         $temp = $this->content;
         preg_match_all('/\<csrf\s*(.*?)\s*\\/*>/si', $temp, $matches);
@@ -151,14 +150,14 @@ class view
         $this->content = $temp; 
     }
 
-    private function clearing()
+    private function clearing() : void
     {
         $temp = $this->content;
         $temp = preg_replace('/\<\!--(.*?)-->/si', '', $temp);
         $this->content = $temp;
     }
 
-    private function save()
+    private function save() : void
     {
         $filePath = $this->filePath;
         $a = explode('/', $filePath);
@@ -176,7 +175,8 @@ class view
     }
 
     //Последнее изменение в директории
-    function foldermtime($dir) {
+    function foldermtime(string $dir)
+    {
         $foldermtime = 0;
         $flags = \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::CURRENT_AS_FILEINFO;
         $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, $flags));
@@ -186,7 +186,7 @@ class view
             }
             $it->next();
         }
-        return $foldermtime ?: false;
+        return $foldermtime ?: null;
     }
 
     public function out(array $data) : void

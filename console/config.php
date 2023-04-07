@@ -6,14 +6,14 @@ class config
     private $dir = [];
     private $path = ROOT . '/app/configs/';
 
-    public function actual()
+    public function actual() : void
     {
         $this->scan();
         $this->comparison();
         echo "Файлы конфигураций обновленны! \n";
     }
 
-    private function scan()
+    private function scan() : void
     {
         $dir = scandir($this->path);
         foreach($dir as $i){
@@ -28,10 +28,10 @@ class config
                 }
             }
         }
-        
     }
 
-    private function comparison(){
+    private function comparison() : void
+    {
         foreach($this->dir as $i){
             if(file_exists($this->path . '.' . $i . '.ini')){
                 $ini = parse_ini_file($this->path . '.' . $i . '.ini');

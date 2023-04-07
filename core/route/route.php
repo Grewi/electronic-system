@@ -13,7 +13,7 @@ class route
     {
         if(ENTRANSE == 'web'){
             //Парсинг URL
-            $urls = explode('?', root());
+            $urls = explode('?', request('global')->uri);
             $url = explode('/', $urls[0]);
             unset($url[0]);
             $this->url = $url;
@@ -24,7 +24,7 @@ class route
         }
     }
 
-    public function group($name, $function)
+    public function group( string $name, callable $function) : route
     {
         if($name[0] == '/'){
             $name = substr($name, 1);
@@ -40,7 +40,7 @@ class route
         return $this;
     }
 
-    public function namespace( string $namespace, $t = null ) : route
+    public function namespace( string $namespace) : route
     {
         $namespace = str_replace('/', '\\', $namespace);
         $s = substr($namespace, -1);
@@ -86,7 +86,7 @@ class route
     public function prefix($name) : route
     {
         if($this->get){
-            $class = '\\app\\prefix\\'. $name;
+            $class = '\\' . APP_NAME . '\\prefix\\'. $name;
             $get = (new $class)->index();
             if(!is_null($get)){
                 $this->get = $get;
@@ -97,7 +97,7 @@ class route
 
     public function filter($name)
     {
-        $class = '\\app\\filter\\'. $name;
+        $class = '\\' . APP_NAME . '\\filter\\'. $name;
         (new $class)->index();
     }
 

@@ -4,19 +4,24 @@ namespace system\console;
 
 class createConfig
 {
-    public function index()
+    private $className = '';
+    private $path = '';
+    private $pathDir = '';
+    private $namespace = '';
+
+    public function index() : void
     {
         $parametr = ARGV[2];
         $ArrParam = explode('/', $parametr);
         $this->className = array_pop($ArrParam);
-        $this->path = ROOT . '/app/configs/' . $parametr . '.php';
-        $this->pathDir = ROOT . '/app/configs/' . implode('/', $ArrParam) ;
-        $ArrParam = array_merge(['app', 'configs'], $ArrParam);
+        $this->path = APP . '/configs/' . $parametr . '.php';
+        $this->pathDir = APP . '/configs/' . implode('/', $ArrParam) ;
+        $ArrParam = array_merge([APP_NAME, 'configs'], $ArrParam);
         $this->namespace = implode('\\', $ArrParam) ;
         $this->save();
     }
 
-    private function save()
+    private function save() :void
     {
         if(!file_exists($this->path)){
 

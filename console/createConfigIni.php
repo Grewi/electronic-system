@@ -3,9 +3,9 @@ namespace system\console;
 
 class createConfigIni
 {
-    public function index()
+    public function index() : void
     {
-        $path = ROOT . '/app/configs';
+        $path = APP . '/configs';
         if(file_exists($path)){
             $allFiles = scandir($path);
             foreach($allFiles as $a => $i){

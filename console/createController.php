@@ -21,9 +21,9 @@ class createController
 
         $ArrParam = explode('/', $parametr);
         $this->className = array_pop($ArrParam) . 'Controller';
-        $this->path = ROOT . '/app/controllers/' . $parametr . 'Controller.php';
-        $this->pathDir = ROOT . '/app/controllers/' . implode('/', $ArrParam);
-        $_ArrParam = array_merge(['app', 'controllers'], $ArrParam);
+        $this->path = APP . '/controllers/' . $parametr . 'Controller.php';
+        $this->pathDir = APP . '/controllers/' . implode('/', $ArrParam);
+        $_ArrParam = array_merge([APP_NAME, 'controllers'], $ArrParam);
         $this->namespace = implode('\\', $_ArrParam);
 
         if(!$v){
@@ -32,18 +32,18 @@ class createController
         
 
         if($v == 'v'){
-            $this->path_v = ROOT . '/app/views/' . $parametr . '.php';
-            $this->pathDir_v = ROOT . '/app/views/' . implode('/', $ArrParam);
+            $this->path_v = APP . '/views/' . $parametr . '.php';
+            $this->pathDir_v = APP . '/views/' . implode('/', $ArrParam);
             $this->saveController();
             $this->save_v();
         }
 
         if($v == 'crud'){
-            $this->pathDir_v = ROOT . '/app/views/' . $parametr;
-            $this->path_crud_v[] = ROOT . '/app/views/' . $parametr . '/index.php';
-            $this->path_crud_v[] = ROOT . '/app/views/' . $parametr . '/create.php';
-            $this->path_crud_v[] = ROOT . '/app/views/' . $parametr . '/update.php';
-            $this->path_crud_v[] = ROOT . '/app/views/' . $parametr . '/delete.php';
+            $this->pathDir_v = APP . '/views/' . $parametr;
+            $this->path_crud_v[] = APP . '/views/' . $parametr . '/index.php';
+            $this->path_crud_v[] = APP . '/views/' . $parametr . '/create.php';
+            $this->path_crud_v[] = APP . '/views/' . $parametr . '/update.php';
+            $this->path_crud_v[] = APP . '/views/' . $parametr . '/delete.php';
             $this->crud();
         }
     }
@@ -56,19 +56,19 @@ class createController
                 mkdir($this->pathDir, 0755, true);
             }
             $layout = "<?php 
-            namespace " . $this->namespace . ";
-            use app\controllers\controller;
-            use system\core\\view\\view;
-            
-            class " . $this->className . " extends controller
-            {
-                public function index()
-                {
-                    \$this->title('');
-                    new view('" . $this->parametr . "', \$this->data);
-                }
-            }
-            ";
+namespace " . $this->namespace . ";
+use " . APP_NAME . "\controllers\controller;
+use electronic\core\\view\\view;
+
+class " . $this->className . " extends controller
+{
+    public function index()
+    {
+        \$this->title('');
+        new view('" . $this->parametr . "', \$this->data);
+    }
+}
+";
             file_put_contents($this->path, $layout);
         }
     }
@@ -106,37 +106,37 @@ class createController
                 mkdir($this->pathDir, 0755, true);
             }
             $layout = "<?php 
-            namespace " . $this->namespace . ";
-            use app\controllers\controller;
-            use system\core\\view\\view;
-            
-            class " . $this->className . " extends controller
-            {
-                public function index()
-                {
-                    \$this->title('');
-                    new view('" . $this->parametr . "/index', \$this->data);
-                }
+namespace " . $this->namespace . ";
+use " . APP_NAME . "\controllers\controller;
+use electronic\core\\view\\view;
 
-                public function create()
-                {
-                    \$this->title('');
-                    new view('" . $this->parametr . "/create', \$this->data);
-                }
+class " . $this->className . " extends controller
+{
+    public function index()
+    {
+        \$this->title('');
+        new view('" . $this->parametr . "/index', \$this->data);
+    }
 
-                public function update()
-                {
-                    \$this->title('');
-                    new view('" . $this->parametr . "/update', \$this->data);
-                }
+    public function create()
+    {
+        \$this->title('');
+        new view('" . $this->parametr . "/create', \$this->data);
+    }
 
-                public function delete()
-                {
-                    \$this->title('');
-                    new view('" . $this->parametr . "/delete', \$this->data);
-                }
-            }
-            ";
+    public function update()
+    {
+        \$this->title('');
+        new view('" . $this->parametr . "/update', \$this->data);
+    }
+
+    public function delete()
+    {
+        \$this->title('');
+        new view('" . $this->parametr . "/delete', \$this->data);
+    }
+}
+";
             file_put_contents($this->path, $layout);
         }
     }

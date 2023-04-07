@@ -37,9 +37,7 @@ class validate
 
     protected function setReturn($data)
     {
-        //if($this->return[$this->currentName] === false){
-            $this->return[$this->currentName] = $data;
-        //}
+        $this->return[$this->currentName] = $data;
     }
 
     /**
@@ -75,9 +73,6 @@ class validate
             foreach ($this->error as $a => $i) {
                 if (!empty($i)) {
                     $c = implode(', ', $i);
-                    // $d = str_split($c);
-                    // $d[0] = mb_strtoupper($d[0]);
-                    // $result[$a] = implode('', $d);
                     $result[$a] = $c;
                 }
             }

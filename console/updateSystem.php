@@ -9,7 +9,7 @@ class updateSystem
     private $path = '';
     private $recPath = '';
 
-    public function index()
+    public function index() : void
     {
         $this->root = ROOT;
         $this->path = $this->root . '/update/';
@@ -20,7 +20,7 @@ class updateSystem
         $this->delete();
     }
 
-    private function download()
+    private function download() : void
     {
         if (!file_exists($this->path)) {
             mkdir($this->path, 0755, true);
@@ -36,7 +36,7 @@ class updateSystem
         fclose($dest_file);
     }
 
-    private function extract()
+    private function extract() : void
     {
         $zip = new \ZipArchive();
         if ($zip->open($this->path . $this->file) === TRUE) {
@@ -45,7 +45,7 @@ class updateSystem
         }
     }
 
-    private function rec()
+    private function rec() : void
     {
         $this->recPath = $this->path . 'zip/electronic-master/system';
         $this->copy($this->recPath);
@@ -53,7 +53,7 @@ class updateSystem
         $this->cleaning($this->root . '/system');
     }
 
-    private function copy($dir)
+    private function copy(string $dir) : void
     {
         $files = scandir($dir);
 
