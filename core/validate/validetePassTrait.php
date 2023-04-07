@@ -11,8 +11,9 @@ trait validetePassTrait
 
     public function confirmPass()
     {
+        $errorText = $this->errorText ? $this->errorText : lang('valid', 'confirmPass');
         if ($this->pass != $this->data[$this->currentName]) {
-            $this->error[$this->currentName][] = lang('valid', 'confirmPass');
+            $this->error[$this->currentName][] = $errorText;
             $this->setControl(false);
         }
         return $this;
@@ -28,14 +29,16 @@ trait validetePassTrait
         $data = $this->data[$this->currentName];
         $user = db()->fetch('SELECT * FROM `' . $table . '` WHERE `id` = "' . $id . '"', []);
         if(isset($user->{$col})){
+            $errorText = $this->errorText ? $this->errorText : lang('valid', 'currentPass');
             $current = $user->{$col};
             if(!password_verify($data, $current)){
                 
-                $this->error[$this->currentName][] = lang('valid', 'currentPass');
+                $this->error[$this->currentName][] = $errorText;
                 $this->setControl(false);
             }
         }else{
-            $this->error[$this->currentName][] = lang('valid', 'noData');
+            $errorText = $this->errorText ? $this->errorText : lang('valid', 'noData');
+            $this->error[$this->currentName][] = $errorText;
             $this->setControl(false);
         }
         $this->setReturn(null);

@@ -13,6 +13,7 @@ class validate
     protected $return  = [];   //Результат проверки (если проверка не пройдена, метод может вернуть null)
     protected $error   = [];   //Массив ошибок.
     protected $currentName = ''; //Текущее имя
+    protected $errorText = null; //Текст ошибки переданный из контроллера
 
     use validatedTraits;
     use validetePassTrait;
@@ -32,6 +33,7 @@ class validate
         $this->data[$name] = $data;
         $this->currentName = $name;
         $this->return[$name] = false;
+        $this->errorText = null;
         return $this;
 	}
 
@@ -78,6 +80,15 @@ class validate
             }
         }
         return $result;
+    }
+
+    /**
+    * @var Устанавливает текст ошибки 
+    */
+    public function errorText(string $text) : validate
+    {
+        $this->errorText = $text;
+        return $this;
     }
     
     /**

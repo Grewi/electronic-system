@@ -183,7 +183,7 @@ trait validatedTraits
     }
 
     /**
-     * 
+     * @var Проверка на уникальность записи в базе данных
      * @param string $table Имя таблицы
      * @param string $col   Имя стобца
      * @param int $id       id исключение (0 если не требуется)
@@ -193,11 +193,13 @@ trait validatedTraits
     {
         $data = $this->data[$this->currentName];
         $db = database::connect();
+
+        $errorText = $this->errorText ? $this->errorText : lang('valid', 'unique');
         
         $i = $db->fetch('SELECT COUNT(*) as `count`  FROM `' . $table . '` WHERE `' . $col . '` = :data AND id != :id', ['data'  => $data, 'id' => $id]);
 
         if (!empty($data) && !empty($i->count)) {
-            $this->error[$this->currentName][] = lang('valid', 'unique');
+            $this->error[$this->currentName][] = $errorText;
             $this->setControl(false);
         }
         $this->setReturn($data);
@@ -205,7 +207,7 @@ trait validatedTraits
     } 
     
     /**
-     * 
+     * @var Проверка на наличие записи в базе данных
      * @param string $table Имя таблицы
      * @param string $col   Имя стобца
      * @param int $id       id исключение (0 если не требуется)
@@ -214,11 +216,12 @@ trait validatedTraits
     public function id(string $table, string $col, int $id): validate
     {
         $data = $this->data[$this->currentName];
+        $errorText = $this->errorText ? $this->errorText : lang('valid', 'unique');
         
         $i = db()->fetch('SELECT COUNT(*) as `count`  FROM `' . $table . '` WHERE `' . $col . '` = :data AND id != :id', ['data'  => $data, 'id' => $id]);
 
-        if (!empty($data) && empty($i->count)) {
-            $this->error[$this->currentName][] = lang('valid', 'unique');
+        if (!empty($data) && !empty($i->count)) {
+            $this->error[$this->currentName][] = $errorText;
             $this->setControl(false);
         }
         $this->setReturn($data);
@@ -228,9 +231,10 @@ trait validatedTraits
     public function isset(string $table, string $col = 'id')
     {
         $data = $this->data[$this->currentName];
+        $errorText = $this->errorText ? $this->errorText : 'Значение отсутствует';
         $i = db()->fetch('SELECT COUNT(*) as count FROM ' . $table . ' WHERE ' . $col . ' = :data', ['data' => $data]);
         if(!(int)$i->count){
-            $this->error[$this->currentName][] = 'Значение отсутствует';
+            $this->error[$this->currentName][] = $errorText;
             $this->setControl(false);  
         }
         return $this;
@@ -239,8 +243,9 @@ trait validatedTraits
     public function strlen($strlen)
     {
         $data = $this->data[$this->currentName];
+        $errorText = $this->errorText ? $this->errorText : sprintf(lang('valid', 'strlen'), (string)$strlen);
         if (!empty($data) && mb_strlen((string)$data) != $strlen) {
-            $this->error[$this->currentName][] = sprintf(lang('valid', 'strlen'), (string)$strlen);
+            $this->error[$this->currentName][] = $errorText;
             $this->setControl(false);
         }
         $this->setReturn($data);
@@ -250,8 +255,9 @@ trait validatedTraits
     public function strlenMin($strlen)
     {
         $data = $this->data[$this->currentName];
+        $errorText = $this->errorText ? $this->errorText : sprintf(lang('valid', 'strlenMin'), (string)$strlen);
         if (!empty($data) && mb_strlen((string)$data) < $strlen) {
-            $this->error[$this->currentName][] = sprintf(lang('valid', 'strlenMin'), (string)$strlen);
+            $this->error[$this->currentName][] = $errorText;
             $this->setControl(false);
         }
         $this->setReturn($data);
@@ -261,8 +267,9 @@ trait validatedTraits
     public function strlenMax($strlen)
     {
         $data = $this->data[$this->currentName];
+        $errorText = $this->errorText ? $this->errorText : sprintf(lang('valid', 'strlenMax'), (string)$strlen);
         if (!empty($data) && mb_strlen((string)$data) > $strlen) {
-            $this->error[$this->currentName][] = sprintf(lang('valid', 'strlenMax'), (string)$strlen);
+            $this->error[$this->currentName][] = $errorText;
             $this->setControl(false);
         }
         $this->setReturn($data);
