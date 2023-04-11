@@ -3,7 +3,6 @@
 namespace system\core\validate;
 use system\core\validate\validatedTraits;
 use system\core\validate\validetePassTrait;
-use system\core\validate\validBuhcrmTrait;
 use system\core\validate\toTrait;
 
 class validate
@@ -19,7 +18,7 @@ class validate
     use validetePassTrait;
     use toTrait;
 
-    public function name(string $name, $value = null) : validate
+    public function name(string $name, string $value = null)
     {
         
         if(!is_null($value)){
@@ -37,7 +36,7 @@ class validate
         return $this;
 	}
 
-    protected function setReturn($data)
+    protected function setReturn( string $data) : void
     {
         $this->return[$this->currentName] = $data;
     }
@@ -85,7 +84,7 @@ class validate
     /**
     * @var Устанавливает текст ошибки 
     */
-    public function errorText(string $text) : validate
+    public function errorText(string $text)
     {
         $this->errorText = $text;
         return $this;

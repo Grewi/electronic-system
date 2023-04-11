@@ -24,7 +24,7 @@ trait validetePassTrait
     //Имя таблицы
     //Имя ячейки
     //id строки
-    public function currentPass($table, $col, $id)
+    public function currentPass(string $table, string $col, $id)
     {
         $data = $this->data[$this->currentName];
         $user = db()->fetch('SELECT * FROM `' . $table . '` WHERE `id` = "' . $id . '"', []);
