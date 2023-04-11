@@ -3,35 +3,24 @@ namespace system\core\user;
 use system\core\validate\validate;
 use system\core\logs\logs;
 use system\core\request\request;
+use system\core\traits\singleton;
 
-class login
+class auth
 {
+    use singleton;
 
     static private $connect;
     public $status;
     private $session_time = 60 * 60 * 24;
+    private $urlFailed = null;
+    private $urlSuccess = null;
 
-    public function __construct()
-    {
-        $this->status = $this->status();
-    }
-
-    /*
-	* singleton
-	*/
-    static public function connect()
-    {
-        if (self::$connect === null) {
-            self::$connect = new self();
-        }
-        return self::$connect;
-    }
 
     /**
      * @var  Вход пользователя по почте
      * 
      */
-    public function login_(string $url, $email = null, $pass = null): void
+    protected function login($email = null, $pass = null): void
     {
         $valid = new validate();
         if (!is_null($email) && !is_null($pass)) {
@@ -74,13 +63,13 @@ class login
                 <li>os_name - ' . $logs['os_name'] . '</li>
             </ul>';
             logs::userId($user->id)->name('auth', 'Авторизация пользователя')->description($text)->insert($logs, 'auth');
-            redirect($url ? $url : referal_url());
+            redirect($this->urlSuccess ? $this->urlSuccess : referal_url());
         } else {
             $error = [
                 'email' => 'Введённые данные не верны!',
             ];
             alert2('Войти не удалось!', 'danger', '');
-            redirect($url ? $url : referal_url(), $valid->data(), $error);
+            redirect($this->urlFailed ? $this->urlFailed : referal_url(), $valid->data(), $error);
         }
     }
 
@@ -88,7 +77,7 @@ class login
      * 
      * @var Выход пользователя
      */
-    public function out(string $url = ''): void
+    protected function out(string $url = ''): void
     {
         logs::name('exit', 'Выход пользователя')->insert();
         db()->query('DELETE FROM `sessions` WHERE `session_key` = :session_key', ['session_key' => $_SESSION['us']]);
@@ -99,7 +88,7 @@ class login
     }
 
     // возвращает id пользователя или 0 если не зарегистрирован
-    public function status(): string
+    protected function status(): string
     {
         $session = isset($_SESSION['us']) ? $_SESSION['us'] : null;
         $coockie = isset($_COOKIE['us']) ? $_COOKIE['us'] : null;
@@ -150,5 +139,17 @@ class login
         //     ];
         //     db()->query('DELETE FROM `sessions` WHERE `session_key` != :session_key AND `user_id` = :user_id', $data);
         // }
+    }
+
+    protected function urlFailed(string $url)
+    {
+        $this->urlFailed = $url;
+        return $this;
+    }
+
+    protected function urlSuccess(string $url)
+    {
+        $this->urlSuccess = $url;
+        return $this;
     }
 }

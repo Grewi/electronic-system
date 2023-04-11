@@ -2,7 +2,7 @@
 use system\core\database\database;
 use system\core\request\request;
 use system\core\lang\lang;
-use system\core\user\login;
+use system\core\user\auth;
 use system\core\config\config;
 
 function db()
@@ -23,7 +23,7 @@ function config(string $fileName, string $lex)
 
 function user_id()
 {
-    return (login::connect())->status();
+    return auth::status();
 }
 
 function request($param = null)
@@ -45,6 +45,7 @@ function includeFile($path)
             throw new FileException('Файл ' . $path . ' не найден!');
         }        
     }catch(FileException $e){
+        var_dump($e);
         exit($e->message);
     }
 }

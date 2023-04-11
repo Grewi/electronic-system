@@ -7,7 +7,7 @@ use system\core\csrf\csrf;
 trait validatedTraits
 {
 
-    public function csrf(string $name): validate
+    public function csrf(string $name)
     {
         $data = $this->data[$this->currentName];
         $a = null;
@@ -23,7 +23,7 @@ trait validatedTraits
         return $this;
     }
 
-    public function empty(): validate
+    public function empty()
     {
         $data = $this->data[$this->currentName];
         if (empty(strip_tags($data ?? ''))) {
@@ -34,7 +34,7 @@ trait validatedTraits
         return $this;
     }
 
-    public function int(): validate
+    public function int()
     {
         $data = $this->data[$this->currentName];
         if (!empty($data) && !preg_match("/^[0-9]+$/u", (string)$data)) {
@@ -45,7 +45,7 @@ trait validatedTraits
         return $this;
     }
 
-    public function min(int $min): validate
+    public function min(int $min)
     {
         $data = $this->data[$this->currentName];
         if (!empty($data) && $data < $min) {
@@ -56,7 +56,7 @@ trait validatedTraits
         return $this;
     }   
     
-    public function max(int $max): validate
+    public function max(int $max)
     {
         $data = $this->data[$this->currentName];
         if (!empty($data) && $data > $max) {
@@ -67,7 +67,7 @@ trait validatedTraits
         return $this;
     } 
 
-    public function float(): validate 
+    public function float() 
     {
         $data = $this->data[$this->currentName];
         if (!empty($data) && !preg_match("/^[0-9\.\,]+$/u", (string)$data)) {
@@ -98,7 +98,7 @@ trait validatedTraits
         return $this;  
     }
 
-    public function latRuInt(): validate
+    public function latRuInt()
     {
         $data = $this->data[$this->currentName];
         if (!empty($data) && !preg_match("/^[\s a-zA-Z0-9а-яА-ЯёЁ\-_]+$/u", $data)) {
@@ -109,7 +109,7 @@ trait validatedTraits
         return $this;
     }
 
-    public function latInt(): validate
+    public function latInt()
     {
         $data = $this->data[$this->currentName];
         if (!empty($data) && !preg_match("/^[\s a-zA-Z0-9\-_]+$/u", $data)) {
@@ -120,7 +120,7 @@ trait validatedTraits
         return $this;
     }
 
-    public function ru(): validate
+    public function ru()
     {
         $data = $this->data[$this->currentName];
         if (!empty($data) && !preg_match("/^[\s а-яА-ЯёЁ\.]+$/u", $data)) {
@@ -131,7 +131,7 @@ trait validatedTraits
         return $this;
     }
 
-    public function mail(): validate
+    public function mail()
     {
         $this->data[$this->currentName] = $this->data[$this->currentName] ? mb_strtolower($this->data[$this->currentName]) : '';
         $data = $this->data[$this->currentName];
@@ -143,7 +143,7 @@ trait validatedTraits
         return $this;
     }
 
-    public function tel(bool $clean = false): validate
+    public function tel(bool $clean = false)
     {
         $data = $this->data[$this->currentName];
         if (!empty($data) && preg_match("/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?([\d\- ]{7,10})$/u", $data)) {
@@ -154,7 +154,7 @@ trait validatedTraits
         return $this;
     }
 
-    public function date(): validate
+    public function date()
     {
         $this->data[$this->currentName] = !empty($this->data[$this->currentName]) ? $this->data[$this->currentName] : null;
         $data = $this->data[$this->currentName];
@@ -189,7 +189,7 @@ trait validatedTraits
      * @param int $id       id исключение (0 если не требуется)
      * @return void
      */
-    public function unique(string $table, string $col, int $id): validate
+    public function unique(string $table, string $col, int $id)
     {
         $data = $this->data[$this->currentName];
         $db = database::connect();
@@ -213,7 +213,7 @@ trait validatedTraits
      * @param int $id       id исключение (0 если не требуется)
      * @return void
      */
-    public function id(string $table, string $col, int $id): validate
+    public function id(string $table, string $col, int $id)
     {
         $data = $this->data[$this->currentName];
         $errorText = $this->errorText ? $this->errorText : lang('valid', 'unique');
