@@ -31,8 +31,15 @@ class route
         }
 
         $this->groupName = $name;
-       
-        if($this->url[1] == $name){
+        $status = true;
+        foreach(explode('/', $name) as $a => $i){
+            if($this->url[$a + 1] != $i){
+                $status = false;
+            }
+        }
+        $offset = stripos(implode('/', $this->url), $this->groupName);
+
+        if($offset == 0){
             $function($this);
         }else{
             $this->get = false;
@@ -135,12 +142,12 @@ class route
         $url = (array) $this->url;
         $check = true;
 
-        //Если длина url меньше роута, а последний параметр не является необязательным
-        if(count($url) < count($g)){
-            preg_match('/\{(.*?)\?\}/si', $g[count($g)], $freeParam);
-            if(!isset($freeParam[0])){
-                $check = false;
-            }
+        
+
+        //Если длина url меньше роута без необязательных параметров
+        $gg = $this->delParametr($g);
+        if(count($url) < count($gg)){
+            $check = false;
         }
 
         foreach($url as $a => $i){
@@ -149,7 +156,7 @@ class route
             if(empty($i) && count($url) == $a){
                 continue;
             }
-            
+
             if(isset($g[$a])){
                 preg_match('/\{(.*?)\}/si', $g[$a], $param);
                 preg_match('/\{(.*?)\?\}/si', $g[$a], $freeParam);
@@ -185,11 +192,23 @@ class route
                 $check = false;
             }
         }
+        
         $this->get = $check;
     }
 
     public function getUrl()
     {
         return $this->url;
+    }
+
+    private function delParametr(array $param)
+    {
+        preg_match('/\{(.*?)\?\}/si', $param[count($param)], $freeParam);
+        if(isset($freeParam[0])){
+            unset($param[count($param)]);
+            return $this->delParametr($param);
+        }else{
+            return $param;
+        }
     }
 }
