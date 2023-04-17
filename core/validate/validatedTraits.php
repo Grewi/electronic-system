@@ -304,6 +304,7 @@ trait validatedTraits
             $this->error[$this->currentName][] = $errorText;
             $this->setControl(false);
         }
+		$this->setReturn($data);
         return $this;
     }
 
