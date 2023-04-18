@@ -75,6 +75,30 @@ class route
         return $this;
     }
 
+    public function put( string $get) : route
+    {
+        $this->parseUrl($get);
+        if($_SERVER['REQUEST_METHOD'] !== 'PUT'){
+            $this->get = false;
+        }
+        return $this;
+    } 
+    
+    public function delete( string $get) : route
+    {
+        $this->parseUrl($get);
+        if($_SERVER['REQUEST_METHOD'] !== 'DELETE'){
+            $this->get = false;
+        }
+        return $this;
+    }
+
+    public function all( string $get) : route
+    {
+        $this->parseUrl($get);
+        return $this;
+    }    
+
     public function console( string $get) : route
     {
         if($get == $this->url[1]){

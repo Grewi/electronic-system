@@ -36,7 +36,7 @@ class validate
         return $this;
 	}
 
-    protected function setReturn( string $data) : void
+    protected function setReturn($data) : void
     {
         $this->return[$this->currentName] = $data;
     }
