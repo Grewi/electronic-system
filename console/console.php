@@ -28,7 +28,9 @@ $route->console('clean/config')->controller('clean', 'cleanConfig')->exit();
 
 $route->console('config')->controller('config', 'actual')->exit();
 
+$route->console('help')->controller('help', 'index')->exit();
+
 require_once ROOT . '/app/route/console.php';
 
-$route->console('help')->controller('help', 'index')->exit();
+
 exit('no controller ');

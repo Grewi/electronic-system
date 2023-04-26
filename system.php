@@ -1,9 +1,6 @@
 <?php 
 declare(strict_types=1);
 !INDEX ? exit('exit') : true;
-define('APP_NAME', 'app');
-define('APP', ROOT . '/' . APP_NAME);
-define('SYSTEM', ROOT . '/system');
 
 require_once SYSTEM . '/exception.php';
 

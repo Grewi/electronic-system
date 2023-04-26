@@ -4,6 +4,7 @@ use system\core\validate\validate;
 use system\core\logs\logs;
 use system\core\request\request;
 use system\core\traits\singleton;
+use system\core\config\config;
 
 class auth
 {
@@ -47,7 +48,7 @@ class auth
             ];
             db()->query('INSERT INTO `sessions` SET `user_id` = :user_id, `session_key` = :session_key , `active_time` = :active_time', $param);
 
-            setcookie('us', $passForCook, date('U') + 60 * 60 * 24, '/');
+            setcookie('us', $passForCook, date('U') + $this->session_time(), '/');
             $_SESSION['us'] = $passForCook;
             $logs = [
                 'ip' => request::get('global')->ip,
@@ -141,15 +142,35 @@ class auth
         // }
     }
 
-    protected function urlFailed(string $url)
+    protected function redirectFailed(string $url)
     {
         $this->urlFailed = $url;
         return $this;
     }
 
-    protected function urlSuccess(string $url)
+    protected function redirectSuccess(string $url)
     {
         $this->urlSuccess = $url;
         return $this;
+    }
+
+    protected function redirect(string $url)
+    {
+        $this->urlSuccess = $url;
+		$this->urlFailed = $url;
+        return $this;
+    }
+	
+	/**
+	*Время жизни сессии
+	*/
+	private function session_time()
+    {
+        $globalConfig = config::globals('session_time');
+        if($globalConfig > 0){
+            return (int)$globalConfig;
+        }else{
+            return $this->session_time;
+        }
     }
 }

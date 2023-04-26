@@ -39,7 +39,7 @@ class route
         }
         $offset = stripos(implode('/', $this->url), $this->groupName);
 
-        if($offset == 0){
+        if($status){
             $function($this);
         }else{
             $this->get = false;

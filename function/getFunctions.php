@@ -3,11 +3,11 @@
 //Меняет значение Get параметра
 function eGetReplace($name, $value = null, $request = null){
     if($request){
-        $a = $request;
+        $a = parse_url($request);
     }else{
         $a = parse_url($_SERVER['REQUEST_URI']);
     }
-     
+
     parse_str($a['query'], $get);
 
     if($value){
