@@ -22,6 +22,8 @@ class view
 
     public function __construct(string $filePath, array $data = [], bool $include = false) 
     {
+        $_SESSION['tempList'][] = $filePath;
+        
         try{
             $this->filePath = $filePath;
             $fullPathOriginal = $this->viewsDir . '/' . $filePath . '.php';
@@ -61,7 +63,16 @@ class view
         if (file_exists($path)) {
             $temp = file_get_contents($path);
         } else {
-            throw new \TempException('Файл ' . $path . ' ' . $fileName . ' не найден!');
+            $list = '';
+            if(is_iterable($_SESSION['tempList'])){
+                $list .= '<ul>';
+                foreach($_SESSION['tempList'] as $i){
+                    $list .= '<li>'. $i . '</li>';
+                }
+                $list .= '</ul>';
+            }
+            unset($_SESSION['tempList']);
+            throw new \TempException('Файл ' . $this->filePath . ' не найден! Шаблоны: ' . $list);
         }
         return $temp;
     }   
