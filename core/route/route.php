@@ -8,6 +8,8 @@ class route
     protected $url = [];
     protected $groupName = null;
     protected $param_regex = '/[^a-zA-Zа-яА-Я0-9-_]/ui';
+    protected $autoExitGroup = false;
+    protected $autoExitController = true;
     
     public function __construct()
     {
@@ -41,6 +43,9 @@ class route
 
         if($status){
             $function($this);
+            if($this->autoExitGroup){
+                exit();
+            }
         }else{
             $this->get = false;
         }
@@ -138,6 +143,9 @@ class route
             $controller = $this->namespace . $class;
             $_SERVER['routeController'] = $controller;
             (new $controller)->$method();
+            if($this->autoExitController){
+                exit();
+            }
         }
         return $this;
     }
@@ -234,5 +242,15 @@ class route
         }else{
             return $param;
         }
+    }
+
+    public function autoExitGroup($status)
+    {
+        $this->autoExitGroup = $status;
+    }
+
+    public function autoExitController($status)
+    {
+        $this->autoExitController = $status;
     }
 }

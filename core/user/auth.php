@@ -15,6 +15,7 @@ class auth
     private $session_time = 60 * 60 * 24;
     private $urlFailed = null;
     private $urlSuccess = null;
+    public $error;
 
 
     /**
@@ -44,9 +45,11 @@ class auth
             $param = [
                 'user_id'     => $user->id,
                 'session_key' => $passForCook,
-                'active_time' => $date
+                'active_time' => $date,
+                'user_agent' => request('global')->user_agent,
+                'ip' => request('global')->ip,
             ];
-            db()->query('INSERT INTO `sessions` SET `user_id` = :user_id, `session_key` = :session_key , `active_time` = :active_time', $param);
+            db()->query('INSERT INTO `sessions` SET `user_id` = :user_id, `session_key` = :session_key , `active_time` = :active_time, `user_agent` = :user_agent, `ip` = :ip', $param);
 
             setcookie('us', $passForCook, date('U') + $this->session_time(), '/');
             $_SESSION['us'] = $passForCook;
@@ -98,19 +101,20 @@ class auth
             //Если есть и сессия, и куки 
             //Проверяем актуальность кук и сессии
             $ses = db()->fetch('SELECT * FROM `sessions` WHERE `session_key` = :session_key', ['session_key' => $coockie]);
-            if (isset($ses->user_id)) {
+            if (isset($ses->user_id) && $this->sanitary($ses)) {
                 //При активности пользователя, продлеваем сессию
                 db()->query('UPDATE `sessions` SET `active_time` = :active_time WHERE `id` = ' . $ses->id, ['active_time' => time()]);
                 $result = $ses->user_id; // Актуальная сессия
                 $this->delOldSes($ses->user_id);
             } else {
+                $this->error = 'Сессия завершенна';
                 $result = '0'; // Сессия завершенна
             }
         } elseif (isset($_COOKIE['us'])) {
             //Если есть только куки
             //Проверяем актуальность кук,
             $ses = db()->fetch('SELECT * FROM `sessions` WHERE `session_key` = :session_key', ['session_key' => $coockie]);
-            if (isset($ses->session_key)) {
+            if (isset($ses->session_key)  && $this->sanitary($ses)) {
                 //востанавливаем сессию, 
                 $_SESSION['us'] = $ses->session_key;
                 $result = $ses->user_id; // Востановленная сессия
@@ -118,12 +122,15 @@ class auth
                 db()->query('UPDATE `sessions` SET `active_time` =  :active_time WHERE `id` = :id', ['active_time' => date('U'), 'id' =>  $ses->id]);
                 $this->delOldSes($ses->user_id);
             } else {
+                $this->error = 'Востановить ссесию невозможно';
                 $result = '0'; // Востановить ссесию невозможно
             }
         } else {
+            $this->error = 'Требуется авторизация';
             $result = '0'; // Требуется авторизация
         }
         $this->status = $result;
+        // dd($this->error, $result);
         return $result;
     }
 
@@ -140,6 +147,17 @@ class auth
         //     ];
         //     db()->query('DELETE FROM `sessions` WHERE `session_key` != :session_key AND `user_id` = :user_id', $data);
         // }
+    }
+
+    protected function sanitary($ses)
+    {
+        if($ses->user_agent && $ses->user_agent == request('global')->user_agent){
+            return true;
+        }elseif(is_null($ses->user_agent) && is_null(request('global')->user_agent)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     protected function redirectFailed(string $url)
@@ -160,7 +178,7 @@ class auth
 		$this->urlFailed = $url;
         return $this;
     }
-	
+
 	/**
 	*Время жизни сессии
 	*/
