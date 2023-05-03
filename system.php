@@ -20,6 +20,5 @@ try{
         require_once SYSTEM . '/console/console.php';
     }
 }catch(GlobalException $e){
-    dd($e);
-    exit();
+    exit($e);
 }

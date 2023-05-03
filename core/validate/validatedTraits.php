@@ -298,13 +298,15 @@ trait validatedTraits
     public function isset(string $table, string $col = 'id')
     {
         $data = $this->data[$this->currentName];
-        $errorText = $this->errorText ? $this->errorText : 'Значение отсутствует';
-        $i = db()->fetch('SELECT COUNT(*) as count FROM ' . $table . ' WHERE ' . $col . ' = :data', ['data' => $data]);
-        if (!(int)$i->count) {
-            $this->error[$this->currentName][] = $errorText;
-            $this->setControl(false);
+        if (!empty($data)) {
+            $errorText = $this->errorText ? $this->errorText : 'Значение отсутствует';
+            $i = db()->fetch('SELECT COUNT(*) as count FROM ' . $table . ' WHERE ' . $col . ' = :data', ['data' => $data]);
+            if (!(int)$i->count) {
+                $this->error[$this->currentName][] = $errorText;
+                $this->setControl(false);
+            }
         }
-		$this->setReturn($data);
+        $this->setReturn($data);
         return $this;
     }
 
