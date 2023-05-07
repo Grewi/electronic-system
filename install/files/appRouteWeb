@@ -1,5 +1,5 @@
 <?php 
-use system\core\route\route;
+use electronic\core\route\route;
 use app\controllers\error\error;
 
 $route  = new route();
