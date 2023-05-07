@@ -1,0 +1,37 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    RewriteRule ^system/(.*)$ index.php [L]
+    RewriteRule ^app/(.*)$ index.php [L]
+    RewriteRule ^e$ index.php [L]
+
+    ErrorDocument 401 /index.php
+    ErrorDocument 403 /index.php
+    ErrorDocument 404 /index.php
+    ErrorDocument 500 /system/error/error.html
+
+    # # подавить ошибки php
+    # php_flag display_startup_errors off
+    # php_flag display_errors off
+    # php_flag html_errors off
+    # php_value docref_root 0
+    # php_value docref_ext 0
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
