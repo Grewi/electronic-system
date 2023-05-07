@@ -50,6 +50,7 @@ $structure = [
         '.htaccess' => file_get_contents($files . 'publicHtaccess'),
         'index.php' => file_get_contents($files . 'publicIndex'),
     ],
+    'composer' => null,
     'e' => file_get_contents($files . 'e'),
     'index.php' => file_get_contents($files . 'index'),
     '.htaccess' => file_get_contents($files . 'htaccess'),
