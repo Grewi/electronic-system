@@ -43,7 +43,7 @@ class database
 		throw new \PDOException('Неизвестный тип БД');
             }
         } catch (\PDOException $e) {
-            die('Ошибка подключения к БД: ' . $e->getMessage());
+            dd('Ошибка подключения к БД: ' . $e->getMessage());
         }
     }
 
