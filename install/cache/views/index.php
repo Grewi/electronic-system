@@ -88,8 +88,12 @@
                     </div>
                     <hr>
                     <div class="mb-3 form-check">
+                        <input id="table-sessions" type="checkbox" class="form-check-input" name="table-sessions" value="1">
+                        <label for="table-sessions" class="form-check-label">Создать таблицу sessions</label>
+                    </div>
+                    <div class="mb-3 form-check">
                         <input id="table-users" type="checkbox" class="form-check-input" name="table-users" value="1">
-                        <label for="table-users" class="form-check-label">Создать таблицу users и sessions</label>
+                        <label for="table-users" class="form-check-label">Создать таблицу users </label>
                     </div>
                     <div class="mb-3">
                         <input class="btn btn-primary btn-sm" type="submit" value="продолжить">
