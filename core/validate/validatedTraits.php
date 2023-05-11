@@ -254,7 +254,7 @@ trait validatedTraits
      * 
      * @return static
      */
-    public function unique(string $table, string $col, int $id)
+    public function unique(string $table, string $col, int $id = 0)
     {
         $data = $this->data[$this->currentName];
         $db = database::connect();

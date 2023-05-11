@@ -32,12 +32,10 @@ class cacheQuery
     private function _addQuery($data)
     {
         $this->data[$this->key] = $data;
-        // dump($this->key);
     }
 
     private function _returnQuery()
     {
-        // dump($this->data);
         if(isset($this->data[$this->key])){
             return $this->data[$this->key];
         }else{

@@ -1,7 +1,9 @@
 <?php
+
 namespace system\core\user;
+
 use system\core\validate\validate;
-use system\core\logs\logs;
+
 use system\core\request\request;
 use system\core\traits\singleton;
 use system\core\config\config;
@@ -22,7 +24,7 @@ class auth
      * @var  Вход пользователя по почте
      * 
      */
-    protected function login($email = null, $pass = null): void
+    protected function login($email = null, $pass = null, $function = null): void
     {
         $valid = new validate();
         if (!is_null($email) && !is_null($pass)) {
@@ -36,8 +38,7 @@ class auth
         }
 
         $user  = ($valid->control()) ? db()->fetch('SELECT * FROM `users` WHERE `email` = :email', ['email' => $valid->return('email')]) : false;
-        if ($valid->control() && $user && password_verify($valid->return('password'), is_null($user->password) ? '' : $user->password)) 
-        {
+        if ($valid->control() && $user && password_verify($valid->return('password'), is_null($user->password) ? '' : $user->password)) {
 
             $passForCook = bin2hex(random_bytes(15)); //временный хеш сессии
             $date        = date('U'); // Дата сессии
@@ -53,27 +54,22 @@ class auth
 
             setcookie('us', $passForCook, date('U') + $this->session_time(), '/');
             $_SESSION['us'] = $passForCook;
-            $logs = [
-                'ip' => request::get('global')->ip,
-                'browser_family' => $_SESSION['browser_family'],
-                'device_name' => $_SESSION['device_name'],
-                'device_type' => $_SESSION['device_type'],
-                'os_name' => $_SESSION['os_name'],
-            ];
-            $text = '<ul>
-                <li>ip - ' . $logs['ip'] . '</li>
-                <li>browser_family - ' . $logs['browser_family'] . '</li>
-                <li>device_type - ' . $logs['device_type'] . '</li>
-                <li>os_name - ' . $logs['os_name'] . '</li>
-            </ul>';
-            logs::userId($user->id)->name('auth', 'Авторизация пользователя')->description($text)->insert($logs, 'auth');
-            redirect($this->urlSuccess ? $this->urlSuccess : referal_url());
-        } else {
-            $error = [
-                'email' => 'Введённые данные не верны!',
-            ];
-            alert2('Войти не удалось!', 'danger', '');
-            redirect($this->urlFailed ? $this->urlFailed : referal_url(), $valid->data(), $error);
+            $this->status = $user->id;
+            if ($function) {
+                $function($this, $user, $valid);
+            }
+            if($this->urlSuccess){
+                redirect($this->urlSuccess);
+            }
+
+        }else{
+            $this->status = 0;
+            if ($function) {
+                $function($this, $user, $valid);
+            }
+            if($this->urlFailed){
+                redirect($this->urlFailed);
+            }         
         }
     }
 
@@ -81,14 +77,22 @@ class auth
      * 
      * @var Выход пользователя
      */
-    protected function out(string $url = ''): void
+    protected function out($function = null): void
     {
-        logs::name('exit', 'Выход пользователя')->insert();
         db()->query('DELETE FROM `sessions` WHERE `session_key` = :session_key', ['session_key' => $_SESSION['us']]);
         unset($_SESSION['us']);
         unset($_SESSION['user']);
         setcookie('us', '', 1, '/');
-        header('Location: ' . $url);
+        if ($function) {
+            $function();
+        }
+        if($this->urlFailed){
+            redirect($this->urlFailed);
+        }elseif($this->urlSuccess){
+            redirect($this->urlSuccess);
+        }else{
+            redirect('/');
+        }
     }
 
     // возвращает id пользователя или 0 если не зарегистрирован
@@ -151,11 +155,11 @@ class auth
 
     protected function sanitary($ses)
     {
-        if($ses->user_agent && $ses->user_agent == request('global')->user_agent){
+        if ($ses->user_agent && $ses->user_agent == request('global')->user_agent) {
             return true;
-        }elseif(is_null($ses->user_agent) && is_null(request('global')->user_agent)){
+        } elseif (is_null($ses->user_agent) && is_null(request('global')->user_agent)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -175,19 +179,19 @@ class auth
     protected function redirect(string $url)
     {
         $this->urlSuccess = $url;
-		$this->urlFailed = $url;
+        $this->urlFailed = $url;
         return $this;
     }
 
-	/**
-	*Время жизни сессии
-	*/
-	private function session_time()
+    /**
+     *Время жизни сессии
+     */
+    private function session_time()
     {
         $globalConfig = config::globals('session_time');
-        if($globalConfig > 0){
+        if ($globalConfig > 0) {
             return (int)$globalConfig;
-        }else{
+        } else {
             return $this->session_time;
         }
     }
