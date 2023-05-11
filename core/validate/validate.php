@@ -93,9 +93,18 @@ class validate
     /**
      * @var Возвращает необработанные значения
      */
-    public function data():array 
+    public function data(string $i = null) 
     {
-        return $this->data;
+        if($i){
+            if(isset($this->data[$i])){
+                return $this->data[$i];
+            }else{
+                return null;
+            }
+        }else{
+            unset($this->return['csrf']);
+            return $this->return;
+        }
     }
 
     public function return(string $i = null)
