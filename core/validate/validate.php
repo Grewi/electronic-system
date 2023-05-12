@@ -4,6 +4,7 @@ namespace system\core\validate;
 use system\core\validate\validatedTraits;
 use system\core\validate\validetePassTrait;
 use system\core\validate\toTrait;
+use system\core\validate\validateSanit;
 
 class validate
 {
@@ -16,6 +17,7 @@ class validate
 
     use validatedTraits;
     use validetePassTrait;
+    use validateSanit;
     use toTrait;
 
     public function name(string $name, string $value = null)
