@@ -1,12 +1,9 @@
 <?php 
-namespace system\core\model;
+namespace system\core\model\traits;
 
-use __PHP_Incomplete_Class;
-use system\core\database\database;
-
-trait updateTrait
+trait update
 {
-    private function update($data)
+    private function update($data): ?self
     {
         if(is_object($data)){
             $data = get_object_vars($data);
@@ -35,11 +32,12 @@ trait updateTrait
             if($this->_idNumber){
                 $dbId = db()->fetch('SELECT * FROM ' . $this->_table . ' WHERE `' . $this->_id . '` = ' . $this->_idNumber . ';', []);
                 $ob = static::class;
-                return $ob::find($dbId->id);
+                $result = $ob::find($dbId->id);
+                return $result ? $result : null;
             }
         }catch(\Exception $e){
             return null;
         }
-
     }
+    
 }

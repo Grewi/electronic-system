@@ -1,12 +1,10 @@
 <?php 
-namespace system\core\model;
-use system\core\database\database;
+namespace system\core\model\traits;
 
-trait insertTrait
+trait insert
 {
-    private function insert(array $data )
+    private function insert($data ): ?self
     {
-        $db = database::connect();
         $count = count($data);
         $str = '';
         $c = 0;
@@ -21,11 +19,12 @@ trait insertTrait
         }
         $data = array_merge($data,$this->_bind);
         $sql = 'INSERT INTO ' . $this->_table . ' SET ' . $str;
-        $db->query($sql, $data);
+        db()->query($sql, $data);
         try{
-            $dbId = $db->fetch('SELECT * FROM ' . $this->_table . ' where ' . $this->_id .' = LAST_INSERT_ID()', []);
+            $dbId = db()->fetch('SELECT * FROM ' . $this->_table . ' where ' . $this->_id .' = LAST_INSERT_ID()', []);
             $ob = static::class;
-            return $ob::find($dbId->id);
+            $result = $ob::find($dbId->id);
+            return $result ? $result : null;
         }catch(\Exception $e){
             return null;
         }

@@ -1,22 +1,19 @@
 <?php
-namespace system\core\model;
-use system\core\database\database;
+namespace system\core\model\traits;
 
-trait deleteTrait
+trait delete
 {
-    private function delete(int $id = null)
+    private function delete($id = null): void
     {
         if($this->id){
             $this->where($this->id);
         }
         if(is_null($id)){
-            $db = database::connect();
             $sql = 'DELETE FROM ' . $this->_table . ' ' . $this->_where;
-            $db->query($sql, $this->_bind);
+            db()->query($sql, $this->_bind);
         }else{
-            $db = database::connect();
             $sql = 'DELETE FROM ' . $this->_table . ' WHERE `' . $this->_id . '` = ' . $id;
-            $db->query($sql, [$this->_id => $id]);
+            db()->query($sql, [$this->_id => $id]);
         }
 
     }
