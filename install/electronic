@@ -1,0 +1,26 @@
+<?php
+use system\install\files;
+use system\install\controllers\database;
+use system\install\controllers\migrations;
+
+$_POST['public'] = 'public';
+$_POST['database-type'] = 'mySql'; // mySql sqLite pgSql
+
+
+if($_POST['database-type'] == 'sqLite'){
+    $_POST['database-file'] = '';
+}else{
+    $_POST['database-name'] = '';
+    $_POST['database-user'] = '';
+    $_POST['database-pass'] = '';
+    $_POST['database-host'] = 'localhost';    
+}
+
+$_POST['table-sessions'] = '1';
+$_POST['table-users'] = '1';
+
+files::structure();
+database::sessions();
+database::users();
+migrations::start();
+
