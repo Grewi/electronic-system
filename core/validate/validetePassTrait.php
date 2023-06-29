@@ -1,11 +1,13 @@
 <?php
 namespace system\core\validate;
+use system\core\user\register;
 
 trait validetePassTrait
 {
     public function pass()
     {
         $this->pass = $this->data[$this->currentName];
+        $this->setReturn(register::password($this->pass));
         return $this;
     }
 

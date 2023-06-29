@@ -104,8 +104,8 @@ class validate
                 return null;
             }
         }else{
-            unset($this->return['csrf']);
-            return $this->return;
+            unset($this->data['csrf']);
+            return $this->data;
         }
     }
 
