@@ -17,27 +17,53 @@ class auth
     private $session_time = 60 * 60 * 24;
     private $urlFailed = null;
     private $urlSuccess = null;
+    private $login;
+    private $email;
+    private $pass;
     public $error;
 
+
+    protected function setLogin($login)
+    {
+        $this->login = $login;
+    }
+
+    protected function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    protected function setPass($pass)
+    {
+        $this->pass = $pass;
+    }
 
     /**
      * @var  Вход пользователя по почте
      * 
      */
-    protected function login($email = null, $pass = null, $function = null): void
+    protected function login($function = null): void
     {
         $valid = new validate();
-        if (!is_null($email) && !is_null($pass)) {
-            $valid->name('email', $email)->mail()->empty();
-            $valid->name('password', $pass)->empty();
-            //$valid->name('csrf')->csrf('auth')->empty();
-        } else {
-            $valid->name('email')->mail()->empty();
-            $valid->name('password')->empty();
-            $valid->name('csrf')->csrf('auth')->empty();
+        $where = [];  
+        $bild = [];
+        if ($this->email) {
+            $valid->name('email', $this->email)->mail()->empty();
+            $where[] = '`email` = :email';
+            $bild['email'] = $valid->return('email');
+        } 
+        if($this->login){
+            $valid->name('login', $this->login)->latRuInt()->empty();
+            $where[] = '`login` = :login';
+            $bild['login'] = $valid->return('login');
         }
+        $valid->name('password', $this->pass)->empty();
+        $valid->name('csrf')->csrf('auth')->empty();   
+           
 
-        $user  = ($valid->control()) ? db()->fetch('SELECT * FROM `users` WHERE `email` = :email', ['email' => $valid->return('email')]) : false;
+
+        $user  = db()->fetch('SELECT * FROM `users` WHERE ' . implode(' AND ', $where), $bild);
+
         if ($valid->control() && $user && password_verify($valid->return('password'), is_null($user->password) ? '' : $user->password)) {
 
             $passForCook = bin2hex(random_bytes(15)); //временный хеш сессии
