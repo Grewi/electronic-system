@@ -6,13 +6,14 @@ use system\core\validate\validate;
 
 class files
 {
-    public static function structure($type, $name, $user, $pass, $file, $public)
+    public static function structure($type, $name, $user, $pass, $host, $file, $public)
     {
         $database = [
             'type' => $type,
             'name' => $name,
             'user' => $user,
             'pass' => $pass,
+            'host' => $host,
             'file' => $file,
         ];
         $structure = [
