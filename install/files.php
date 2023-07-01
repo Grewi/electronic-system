@@ -71,6 +71,16 @@ class files
         ];
 
         self::structureInstall($structure, '');
+
+        if($file){
+            $sqlite = [
+                'sqlite' => [
+                    $file . '.db' => self::view('sqlite'),
+                ],
+            ];
+
+            self::structureInstall($sqlite, '');
+        }
     }
 
     private static function structureInstall($structure, $path)
