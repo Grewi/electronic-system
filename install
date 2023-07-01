@@ -110,5 +110,4 @@ while ($public === null)
     $public = empty($i) ? 'public' : $i;
 } 
 
-
-require __DIR__ . '/install/install.php';
+require __DIR__ . '/install-system/install.php';
