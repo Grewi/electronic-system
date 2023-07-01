@@ -6,21 +6,19 @@ class database
 {
     public static function users()
     {
-        $valid = new validate();
-        $valid->name('table-users')->bool();
-        if($valid->control() && db() && $valid->return('table-users')){
-            $sqlUsers = file_get_contents(SYSTEM . '/install/sql/users.sql');
-            db()->query($sqlUsers);
-        }
+        $sqlUsers = file_get_contents(SYSTEM . '/install/sql/users.sql');
+        db()->query($sqlUsers);
     }
 
     public static function sessions()
     {
-        $valid = new validate();
-        $valid->name('table-sessions')->bool();
-        if($valid->control() && db() && $valid->return('table-sessions')){
-            $sqlSessions = file_get_contents(SYSTEM . '/install/sql/sessions.sql');
-            db()->query($sqlSessions);
-        }        
+        $sqlSessions = file_get_contents(SYSTEM . '/install/sql/sessions.sql');
+        db()->query($sqlSessions);
     }
+
+    public static function migration()
+    {
+        $sqlSessions = file_get_contents(SYSTEM . '/install/sql/migration.sql');
+        db()->query($sqlSessions);       
+    }    
 }

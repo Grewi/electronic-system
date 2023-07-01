@@ -1,0 +1,104 @@
+<?php
+$ok = ['1', 'y', 'yes', 'да', 'д'];
+$startDb = null;
+$dbType = null;
+$dbName = null;
+$dbUser = null;
+$dbPass = null;
+$dbHost = null;
+$TableDb = null;
+$tableSes = null;
+$tableUsers = null;
+$tableMigration = null;
+$public = null;
+
+while (!$startDb)
+{
+    echo "Установить настройки базы данных? (yes/no): ";
+    $startDb = trim(fgets(STDIN));
+}
+
+if($startDb && in_array(mb_strtolower($startDb), $ok)){
+    while (!$dbType)
+    {
+        echo "Тип БД (mysql, pgsql, sqlite): ";
+        $dbType = trim(fgets(STDIN));
+    }
+}
+
+if($dbType && (mb_strtolower($dbType) == 'pgsql' || mb_strtolower($dbType) == 'mysql')){
+    while (!$dbName)
+    {
+        echo "Имя БД: ";
+        $dbName = trim(fgets(STDIN));
+    }
+
+    while (!$dbName)
+    {
+        echo "Пользователь БД: ";
+        $dbUser = trim(fgets(STDIN));
+    }    
+
+    while (!$dbPass)
+    {
+        echo "Пароль БД: ";
+        $dbPass = trim(fgets(STDIN));
+    }  
+
+    while (!$dbPass)
+    {
+        echo "Хост БД (по умолчанию localhost): ";
+        $dbHost = trim(fgets(STDIN));
+        $dbHost = empty($dbHost) ? 'localhost' : $dbHost;
+    }  
+}
+
+if($dbType && mb_strtolower($dbType) == 'sqlite'){
+    
+    while (!$dbFile)
+    {
+        echo "Имя файла БД: ";
+        $dbFile = trim(fgets(STDIN));
+    } 
+}
+
+if($dbType){
+    while (!$TableDb)
+    {
+        echo "Создать первичные таблицы в БД? (yes/no): ";
+        $TableDb = trim(fgets(STDIN));
+    }
+    
+    if($TableDb && in_array(mb_strtolower($TableDb), $ok)){
+        while (!$tableSes)
+        {
+            echo "Создать таблицу sessions? (yes/no): ";
+            $i = trim(fgets(STDIN));
+            $tableSes = in_array(mb_strtolower($i), $ok);
+        }
+
+        while (!$tableUsers)
+        {
+            echo "Создать таблицу users? (yes/no): ";
+            $i = trim(fgets(STDIN));
+            $tableUsers = in_array(mb_strtolower($i), $ok);
+        }
+
+        while (!$tableMigration)
+        {
+            echo "Создать таблицу users? (yes/no): ";
+            $i = trim(fgets(STDIN));
+            $tableMigration = in_array(mb_strtolower($i), $ok);
+        }        
+    }
+}
+
+while (!$public)
+{
+    echo "Публичная директория (по умолчанию public): ";
+    $public = trim(fgets(STDIN));
+    $public = empty($public) ? 'localhost' : $public;
+} 
+
+
+print($startDb . ' - ' . $dbType . PHP_EOL);

@@ -1,21 +1,29 @@
 <?php
+
 use system\install\files;
 use system\install\controllers\form;
 use system\install\controllers\database;
 use system\install\controllers\migrations;
 
 require SYSTEM . '/system.php';
-require __DIR__ . '/controllers/form.php';
+// require __DIR__ . '/controllers/form.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-if($method == 'GET'){
-    form::index();
-}elseif($method == 'POST'){
-    files::structure();
+files::structure($dbType, $dbName, $dbUser, $dbPass, $dbHost, $public);
+
+if($tableSes){
     database::sessions();
-    database::users();
-    migrations::start();
-    redirect('/');    
 }
 
+
+if($tableUsers){
+    database::users();
+}
+
+if($tableMigration){
+    database::migration();
+}
+
+migrations::start();
+redirect('/');

@@ -62,7 +62,7 @@ class auth
            
 
 
-        $user  = db()->fetch('SELECT * FROM `users` WHERE ' . implode(' AND ', $where), $bild);
+        $user = !empty($where) ? db()->fetch('SELECT * FROM `users` WHERE ' . implode(' AND ', $where), $bild) : null;
 
         if ($valid->control() && $user && password_verify($valid->return('password'), is_null($user->password) ? '' : $user->password)) {
 

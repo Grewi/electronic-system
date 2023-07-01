@@ -41,7 +41,7 @@ class route
         }
         $offset = stripos(implode('/', $this->url), $this->groupName);
 
-        if($status){
+        if($status && $this->get){
             $function($this);
             if($this->autoExitGroup){
                 exit();
