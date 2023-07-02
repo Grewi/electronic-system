@@ -28,6 +28,7 @@ class route
 
     public function group( string $name, callable $function) : route
     {
+        $this->get = true;
         if($name[0] == '/'){
             $name = substr($name, 1);
         }

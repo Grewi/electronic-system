@@ -206,7 +206,18 @@ trait validatedTraits
             $this->error[$this->currentName][] = lang('valid', 'tel');
             $this->setControl(false);
         }
-        $this->setReturn($this->currentName);
+        $this->setReturn($data);
+        return $this;
+    }
+
+    public function url()
+    {
+        $data = $this->data[$this->currentName];
+        if (!empty($data) && preg_match("/^(https?:\/\/)?([\da-z\.-]+)?\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/u", $data)) {
+            $this->error[$this->currentName][] = lang('valid', 'tel');
+            $this->setControl(false);
+        }
+        $this->setReturn($data);
         return $this;
     }
 
