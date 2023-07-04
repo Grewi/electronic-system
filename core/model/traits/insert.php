@@ -3,7 +3,7 @@ namespace system\core\model\traits;
 
 trait insert
 {
-    private function insert($data ): ?self
+    private function insert($data )
     {
         $count = count($data);
         $str = '';

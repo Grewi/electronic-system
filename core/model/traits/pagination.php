@@ -3,7 +3,7 @@ namespace system\core\model\traits;
 
 trait pagination 
 {
-    private function pagin($limit = null,  $sortById = true): self
+    private function pagin($limit = null,  $sortById = true)
     {
         if (isset($_GET['str']) && is_numeric($_GET['str']) && $_GET['str'] > 0) {
             $str = (int) $_GET['str'];

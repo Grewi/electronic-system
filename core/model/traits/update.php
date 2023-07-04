@@ -3,7 +3,7 @@ namespace system\core\model\traits;
 
 trait update
 {
-    private function update($data): ?self
+    private function update($data)
     {
         if(is_object($data)){
             $data = get_object_vars($data);

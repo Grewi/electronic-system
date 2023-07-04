@@ -3,7 +3,7 @@ namespace system\core\model\traits;
 
 trait where
 {
-    private function where($p1, $p2 = null, $p3 = null): self
+    private function where($p1, $p2 = null, $p3 = null)
     {
         $count = $this->_this_where_count++;
         $sep = $this->_where == '' ? ' WHERE' : ' AND';
@@ -31,21 +31,21 @@ trait where
         return $this;
     }
 
-    private function whereNull($p1): self
+    private function whereNull($p1)
     {
         $sep = $this->_where == '' ? ' WHERE' : ' AND';
         $this->_where .= $sep . ' `' . $p1 . '` IS NULL ';
         return $this;
     }
 
-    private function whereNotNull(string $p1): self
+    private function whereNotNull(string $p1)
     {
         $sep = $this->_where == '' ? ' WHERE' : ' AND';
         $this->_where .= $sep . ' `' . $p1 . '` IS NOT NULL ';
         return $this;
     }
 
-    private function whereIn($p1, $arg): self
+    private function whereIn($p1, $arg)
     {
         $sep = $this->_where == '' ? ' WHERE' : ' AND';
         $arr = [];
@@ -60,7 +60,7 @@ trait where
         return $this;
     }
 
-    private function whereStr($str, $bind = []): self
+    private function whereStr($str, $bind = [])
     {
         $this->_where .= $str;
         foreach ($bind as $key => $i) {

@@ -20,28 +20,28 @@ abstract class model
     use join;
     use pagination;
 
-    private $_table = '';
-    private $_idNumber = 0;
-    private $_id = 'id';
-    private $_from;
-    private $_paginCount = 20;
-    private $_where = '';
-    private $_this_where_count = 1;
-    private $_bind = [];
-    private $_limit = '';
-    private $_limitDirection = 20;
-    private $_sort = '';
-    private $_sortDirection = 'DESC'; //ASC or DESC
-    private $_select = '*';
-    private $_offset = '';
-    private $_leftJoin = '';
+    protected $_table = '';
+    protected $_idNumber = 0;
+    protected $_id = 'id';
+    protected $_from;
+    protected $_paginCount = 20;
+    protected $_where = '';
+    protected $_this_where_count = 1;
+    protected $_bind = [];
+    protected $_limit = '';
+    protected $_limitDirection = 20;
+    protected $_sort = '';
+    protected $_sortDirection = 'DESC'; //ASC or DESC
+    protected $_select = '*';
+    protected $_offset = '';
+    protected $_leftJoin = '';
 
-    private $paginationLine = [];
-    private $paginationPriv = 0;
-    private $paginationNext = 0;
-    private $paginationActive = 0;
+    protected $paginationLine = [];
+    protected $paginationPriv = 0;
+    protected $paginationNext = 0;
+    protected $paginationActive = 0;
 
-    private $_data = [];
+    protected $_data = [];
 
     public function __construct()
     {
