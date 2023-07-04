@@ -74,12 +74,21 @@ function alert2($text, $type = 'primary', $header = '')
     ];
 }
 
-function referal_url(){
-    $url = $_SERVER['HTTP_REFERER'];
-    $arrUrl = parse_url($url);
-    $query = empty($arrUrl['query']) ? '' : '?' . $arrUrl['query'];
-    $fragment = empty($arrUrl['fragment']) ? '' : '#' . $arrUrl['fragment'];
-    return  $arrUrl['path'] . $query . $fragment;
+// function referal_url(){
+//     $url = $_SERVER['HTTP_REFERER'];
+//     $arrUrl = parse_url($url);
+//     $query = empty($arrUrl['query']) ? '' : '?' . $arrUrl['query'];
+//     $fragment = empty($arrUrl['fragment']) ? '' : '#' . $arrUrl['fragment'];
+//     return  $arrUrl['path'] . $query . $fragment;
+// }
+
+function referal_url($lavel = 1){
+    //$lavel = 0; Это текущая страница
+    if(isset($_SESSION['history'][$lavel]['uri'])){
+        return $_SESSION['history'][$lavel]['uri'];
+    }else{
+        return '/';
+    }
 }
 
 function redirect($url, $data = null, $error = null)

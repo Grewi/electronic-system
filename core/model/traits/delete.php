@@ -5,8 +5,8 @@ trait delete
 {
     private function delete($id = null): void
     {
-        if($this->id){
-            $this->where($this->id);
+        if($this->_id){
+            $this->where($this->_id);
         }
         if(is_null($id)){
             $sql = 'DELETE FROM ' . $this->_table . ' ' . $this->_where;
