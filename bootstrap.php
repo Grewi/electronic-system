@@ -18,15 +18,15 @@ if (isset($_SERVER['HTTP_USER_AGENT']) AND $_SERVER['HTTP_USER_AGENT'] != '-')
 {
     request('global')->set(['user_agent' => $_SERVER['HTTP_USER_AGENT']]);
 }
-// unset($_SESSION['history_url']);
-if(!isset($_SESSION['history_url'])){
-    $_SESSION['history_url'] = [];
+
+if(!isset($_SESSION['history'])){
+    $_SESSION['history'] = [];
 }
 
 if($_SESSION['history'][0]['uri'] != $_SERVER['REQUEST_URI'] && $_SESSION['history'][0]['method'] != $_SERVER['REQUEST_METHOD']){
     array_unshift($_SESSION['history'], ['uri' => $_SERVER['REQUEST_URI'], 'method' => $_SERVER['REQUEST_METHOD']]);
 }
-// dd($_SESSION['history']);
+
 
 
 
