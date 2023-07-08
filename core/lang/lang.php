@@ -26,7 +26,7 @@ class lang
             return $lex;
         }
         
-        $file = ROOT . '/app/lang/' . (new static)->default . '/' . $name . '.php';
+        $file = APP . '/lang/' . (new static)->default . '/' . $name . '.php';
         $str = '';
         if(file_exists($file)){
             $langs = require $file;

@@ -51,7 +51,7 @@ class autoloader
         $className = $path[count($path) - 1];
         unset($path[0]);
         unset($path[count($path)]);
-        $p = ROOT . '/app/system/' . implode('/', $path);
+        $p = ROOT . '/' . APP_NAME . '/system/' . implode('/', $path);
         createDir($p);
 
         $namespace = $this->classArray;

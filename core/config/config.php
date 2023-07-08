@@ -4,7 +4,7 @@ namespace system\core\config;
 
 class config
 {
-    private $path = ROOT . '/app/configs/';
+    private $path = APP . '/configs/';
     private $element = '';
     private $iniArr = [];
     private $phpArr = [];
@@ -65,7 +65,7 @@ class config
 
     private function createConfigFile(string $className): void
     {
-        $class = '\\app\\configs\\' . $className;
+        $class = '\\' . APP_NAME . '\\configs\\' . $className;
         $a = new $class;
         $config = $a->set();
         $config = array_merge($config, $this->iniArr);
@@ -80,7 +80,7 @@ class config
     //Метод для обновления ini файлов
     private function createConfig(string $className): void
     {
-        $class = '\\app\\configs\\' . $className;
+        $class = '\\' . APP_NAME . '\\configs\\' . $className;
         $a = new $class;
         $config = $a->set();
 
