@@ -15,12 +15,14 @@ class auth
     static private $connect;
     public $status;
     private $session_time = 60 * 60 * 24;
+    private $loginRegex = "/^[\s a-zA-Z0-9а-яА-ЯёЁ.,\(\)$@!?#=+\-_]+$/u";
     private $urlFailed = null;
     private $urlSuccess = null;
     private $login;
     private $email;
     private $pass;
     public $error;
+
 
 
     protected function setLogin($login)
@@ -38,6 +40,11 @@ class auth
         $this->pass = $pass;
     }
 
+    protected function setLoginRegex($regex)
+    {
+        $this->loginRegex = $regex;
+    }
+
     /**
      * @var  Вход пользователя по почте
      * 
@@ -53,7 +60,7 @@ class auth
             $bild['email'] = $valid->return('email');
         } 
         if($this->login){
-            $valid->name('login', $this->login)->latRuInt()->empty();
+            $valid->name('login', $this->login)->free($this->loginRegex)->empty();
             $where[] = '`login` = :login';
             $bild['login'] = $valid->return('login');
         }

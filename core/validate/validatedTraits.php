@@ -373,4 +373,15 @@ trait validatedTraits
         $this->setReturn($data);
         return $this;
     }
+
+    public function free($regex)
+    {
+        $data = $this->data[$this->currentName];
+        if (!empty($data) && !preg_match($regex, (string)$data)) {
+            $this->error[$this->currentName][] = lang('valid', 'noRegex');
+            $this->setControl(false);
+        }
+        $this->setReturn($data);
+        return $this;
+    }
 }
