@@ -19,6 +19,7 @@ trait validatedTraits
     {
         $data = $this->data[$this->currentName];
         $a = null;
+        
         if (isset($_SESSION['csrf'][$name])) {
             $a = $_SESSION['csrf'][$name];
         }

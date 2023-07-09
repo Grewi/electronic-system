@@ -107,9 +107,14 @@ function redirect($url, $data = null, $error = null)
 
 function csrf($name)
 {
-    $token = bin2hex(random_bytes(35));
-    $_SESSION['csrf'][$name] = $token;
-    return  $token;
+    if(!isset($_SESSION['csrf'][$name])){
+        $token = bin2hex(random_bytes(35));
+        $_SESSION['csrf'][$name] = $token;
+        return  $token;        
+    }else{
+        return $_SESSION['csrf'][$name];
+    }
+
 }
 
 function returnModal($i)

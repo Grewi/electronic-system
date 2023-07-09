@@ -53,6 +53,7 @@ class validate
             $_SESSION['data'] = $this->data();
             $_SESSION['error'] = $this->error();
         }
+        unset($_SESSION['csrf']);
         return $this->control;
     }
 

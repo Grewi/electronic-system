@@ -52,25 +52,25 @@ abstract class model
         $this->_from = $this->_table;
     }
 
-    private function from(string $from): self
+    private function from(string $from)
     {
         $this->_from = $from;
         return $this;
     }
 
-    private function select(string $select): self
+    private function select(string $select)
     {
         $this->_select = $select;
         return $this;
     }
 
-    private function limit($limit): self
+    private function limit($limit)
     {
         $this->_limit = ' LIMIT ' . $limit . ' ';
         return $this;
     }
 
-    private function sort(string $type, string $name = null): self
+    private function sort(string $type, string $name = null)
     {
         $name = $name ? $name : $this->_id;
         if ($type == 'asc') {
@@ -111,7 +111,7 @@ abstract class model
         return db()->fetchAll($str, $this->_bind, get_class($this));
     }
 
-    private function get(): self
+    private function get()
     {
         $str = 'SELECT ' . $this->_select . ' ' . ' FROM ' .
             $this->_from . ' ' .
@@ -137,7 +137,7 @@ abstract class model
         dd($str);
     }
 
-    private function find($id): ?self
+    private function find($id)
     {
         $result = db()->fetch('SELECT * FROM ' . $this->_table . ' WHERE `' . $this->_id . '` = :' . $this->_id . ' ', [$this->_id => $id], get_class($this));
         return $result ? $result : null;
