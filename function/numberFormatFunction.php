@@ -1,5 +1,5 @@
 <?php
 
-function eMony($data){
-    return number_format($data, 2, ',', ' ') . ' ₽';
+function eMony($data, $kop = 2){
+    return number_format($data, $kop, ',', ' ') . ' ₽';
 }
