@@ -4,6 +4,7 @@ namespace system\core\validate;
 
 trait validateSanit
 {
+    //Список исполняемых атрибутов
     private $list = [
         'onabort','onafterprint','onautocomplete','onautocompleteerror',
         'onbeforeprint','onbeforeunload','onblur','oncancel','oncanplay',
@@ -22,6 +23,7 @@ trait validateSanit
         'onwaiting','ontouchstart','ontouchmove','ontouchend','ontouchcancel',
     ];
 
+    //Чёрный список тегов
     private $badTags = [
         'audio','base','bdi','bdo','body','button','canvas','data','datalist','dialog','embed','fieldset',
         'figcaption','form','head','html','iframe','input','label','legend','link','main','map','meta','object',
@@ -29,6 +31,7 @@ trait validateSanit
         'title','var',
     ];
 
+    //Белый список тегов
     private $tegs = [
         'a','abbr','address','area','article','aside','b','blockquote','br','caption','cite','code','col',
         'colgroup','dd','del','details','dfn','div','dl','dt','em','figure','footer','h1','h2','h3','h4','h5','h6',
@@ -55,13 +58,28 @@ trait validateSanit
     ];
 
 
+    //Удаление по чёрному списку тегов
+    public function tegsDelete()
+    {
+        $data = $this->data[$this->currentName];
+        foreach($this->badTags as $i){
+            preg_match_all('/<' . $i . '(.*?)' . $i . '>/i', $data, $matches);
+            if(!empty($matches[0])){
+                $data = str_replace($matches[0], ' ', $data);
+            }
+        }
+        $this->setReturn($data);
+        return $this;
+    }
 
+    //Удаление скриптов в т.ч. инлайновых
     public function scriptsDelete()
     {
         $data = $this->data[$this->currentName];
         $data = $this->inline($data);
         $data = $this->script($data);
         $this->setReturn($data);
+        return $this;
     }
 
     private function inline($text)
@@ -72,14 +90,14 @@ trait validateSanit
         foreach ($matches[2] as $a1 => $tag) {
             foreach ($this->list as $a2 => $i) {
                 preg_match_all('/\s*(' . $i . '\s*=\s*\"(.*?)\")\s*/i', $tag, $matches2);
-                preg_match_all("/\s*(" . $i . "\s*=\s*\'(.*?)\')\s*/i", $tag, $matches3);
-                preg_match_all("/\s*(" . $i . "\s*=\s*\`(.*?)\`)\s*/i", $tag, $matches4);
-                $arr = array_merge($matches2, $matches3, $matches4);
-                foreach ($arr as $a3 => $i2) {
+                // preg_match_all("/\s*(" . $i . "\s*=\s*\'(.*?)\')\s*/i", $tag, $matches3);
+                // preg_match_all("/\s*(" . $i . "\s*=\s*\`(.*?)\`)\s*/i", $tag, $matches4);
+                // $arr = array_merge($matches2, $matches3, $matches4);
+                foreach ($matches2 as $a3 => $i2) {
                     if (!empty($i2)) {
                         $test = true;
                         $str = $matches[0][$a1]; //Полная строка
-                        $str2 = str_replace($i2, '', $str); //Изменённая строка
+                        $str2 = str_replace($i2, ' ', $str); //Изменённая строка
                         $text = str_replace($str, $str2, $text);
                     }
                 }
