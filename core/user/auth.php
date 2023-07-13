@@ -3,7 +3,7 @@
 namespace system\core\user;
 
 use system\core\validate\validate;
-
+use system\core\user\bruteforce;
 use system\core\request\request;
 use system\core\traits\singleton;
 use system\core\config\config;
@@ -66,13 +66,14 @@ class auth
         }
         $valid->name('password', $this->pass)->empty();
         $valid->name('csrf')->csrf('auth')->empty();   
-           
-
+        
+        $bruteforce = new bruteforce();
+        $bruteforce->addTry();
 
         $user = !empty($where) ? db()->fetch('SELECT * FROM `users` WHERE ' . implode(' AND ', $where), $bild) : null;
 
-        if ($valid->control() && $user && password_verify($valid->return('password'), is_null($user->password) ? '' : $user->password)) {
-
+        if ($valid->control() && $user && password_verify($valid->return('password'), is_null($user->password) ? '' : $user->password) && $bruteforce->status()) {
+            $bruteforce->resetTry();
             $passForCook = bin2hex(random_bytes(15)); //временный хеш сессии
             $date        = date('U'); // Дата сессии
 
