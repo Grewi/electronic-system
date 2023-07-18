@@ -109,5 +109,6 @@ while ($public === null)
     $i = trim(fgets(STDIN));
     $public = empty($i) ? 'public' : $i;
 } 
-
-require __DIR__ . '/install-system/install.php';
+require_once SYSTEM . '/function.php';
+require_once SYSTEM . '/autoloader.php';
+require __DIR__ . '/install_system/install.php';

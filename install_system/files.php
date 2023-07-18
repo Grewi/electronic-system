@@ -1,6 +1,6 @@
 <?php
 
-namespace system\install;
+namespace system\install_system;
 
 use system\core\validate\validate;
 

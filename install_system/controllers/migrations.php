@@ -1,5 +1,5 @@
 <?php 
-namespace system\install\controllers;
+namespace system\install_system\controllers;
 use system\core\config\config;
 
 class migrations
