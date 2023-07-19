@@ -1,5 +1,5 @@
 <?php
-namespace system\install\view;
+namespace system\install_system\view;
 
 trait tempParsingTrait
 {

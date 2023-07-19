@@ -1,9 +1,7 @@
 <?php
 
-use system\install\files;
-use system\install\controllers\database;
-
-require SYSTEM . '/system.php';
+use system\install_system\files;
+use system\install_system\controllers\database;
 
 $method = $_SERVER['REQUEST_METHOD'];
 

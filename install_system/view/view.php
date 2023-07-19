@@ -1,5 +1,5 @@
 <?php
-namespace system\install\view;
+namespace system\install_system\view;
 use system\core\config\config;
 use system\install\view\tempParsingTrait;
 

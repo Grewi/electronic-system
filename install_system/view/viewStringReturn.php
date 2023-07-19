@@ -1,5 +1,5 @@
 <?php
-namespace system\install\view;
+namespace system\install_system\view;
 use system\core\view\view;
 
 class viewStringReturn extends view
