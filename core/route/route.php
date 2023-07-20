@@ -28,7 +28,10 @@ class route
 
     public function group( string $name, callable $function) : route
     {
-        $this->get = true;
+        if(is_null($this->get)){
+            $this->get = true;
+        }
+        
         if($name[0] == '/'){
             $name = substr($name, 1);
         }
@@ -55,6 +58,7 @@ class route
 
     public function namespace( string $namespace) : route
     {
+        $this->get = true;
         $namespace = str_replace('/', '\\', $namespace);
         $s = substr($namespace, -1);
         $s != '\\' ? $namespace = $namespace . '\\' : false;
