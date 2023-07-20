@@ -38,7 +38,7 @@ class migrate
             }
         }
 
-        $allFiles = scandir(APP . '/migrations');
+        $allFiles = scandir(MIGRATIONS . '/');
 
         //Запуск миграции
         foreach ($allFiles as $i) {
@@ -51,7 +51,7 @@ class migrate
             if (empty($m)) {
 
                 try {
-                    $mSql = file_get_contents(APP . '/migrations/' . $i . '.sql');
+                    $mSql = file_get_contents(MIGRATIONS . '/' . $i . '.sql');
                     if (!empty($mSql)) {
                         $db->query('INSERT INTO migrations SET name = "' . $i . '", active = "' . date('Y-m-d H:i', time()) . '"', []);
                         $db->query($mSql, []);
@@ -72,7 +72,7 @@ class migrate
     {
         $parametr = ARGV[2];
         $s = preg_replace("/[^a-zA-Z0-9\s]/", '_', $parametr);
-        $fileName = APP . '/migrations/' . date('Y_m_d_U') . '_' . $s . '.sql';
+        $fileName = MIGRATIONS . '/' . date('Y_m_d_U') . '_' . $s . '.sql';
         file_put_contents($fileName, '');
     }
 }

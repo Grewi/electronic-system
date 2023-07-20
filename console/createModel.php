@@ -14,9 +14,11 @@ class createModel
         $parametr = ARGV[2];
         $ArrParam = explode('/', $parametr);
         $this->className = array_pop($ArrParam);
-        $this->path = APP . '/models/' . $parametr . '.php';
-        $this->pathDir = APP . '/models/' . implode('/', $ArrParam) ;
-        $ArrParam = array_merge([APP_NAME, 'models'], $ArrParam);
+        $this->path = MODELS . '/' . $parametr . '.php';
+        $this->pathDir = MODELS . '/' . implode('/', $ArrParam) ;
+        $modelPath = str_replace(ROOT . '/', '', MODELS);
+        $modelPath = str_replace('/', '\\', $modelPath);
+        $ArrParam = array_merge([$modelPath], $ArrParam);
         $this->namespace = implode('\\', $ArrParam) ;
         $this->save();
     }
@@ -40,10 +42,7 @@ use electronic\core\model\model;
 
 class " . $this->className . " extends model
 {
-    public function index()
-    {
 
-    }
 }
 ";
     }
