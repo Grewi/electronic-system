@@ -6,27 +6,27 @@ if(session_status() != PHP_SESSION_ACTIVE){
     session_start();
 }
 
-if(defined('ROOT')){
+if(!defined('ROOT')){
     define('ROOT', str_replace('\\', '/', dirname(__DIR__)));
 }
 
-if(defined('APP_NAME')){
+if(!defined('APP_NAME')){
     define('APP_NAME', 'app');
 }
 
-if(defined('APP')){
+if(!defined('APP')){
     define('APP', ROOT . '/' . APP_NAME);
 }
 
-if(defined('SYSTEM')){
+if(!defined('SYSTEM')){
     define('SYSTEM', ROOT . '/system');
 }
 
-if(defined('MIGRATIONS')){
+if(!defined('MIGRATIONS')){
     define('MIGRATIONS', APP . '/migrations');
 }
 
-if(defined('MODELS')){
+if(!defined('MODELS')){
     define('MODELS', APP . '/models');
 }
 
