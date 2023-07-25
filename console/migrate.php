@@ -38,8 +38,16 @@ class migrate
             }
         }
 
+        if(!file_exists(MIGRATIONS)){
+            createDir(MIGRATIONS . '/');
+            echo 'Создана директория миграций' . PHP_EOL;
+        }
         $allFiles = scandir(MIGRATIONS . '/');
 
+        if(!is_iterable($allFiles)){
+            echo 'Миграций нет!' . PHP_EOL;
+            return;
+        }
         //Запуск миграции
         foreach ($allFiles as $i) {
             if ($i == '.' || $i == '..') {
