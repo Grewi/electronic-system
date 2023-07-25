@@ -21,6 +21,7 @@ class auth
     private $login;
     private $email;
     private $pass;
+    private $csrf = true;
     public $error;
 
 
@@ -45,8 +46,13 @@ class auth
         $this->loginRegex = $regex;
     }
 
+    protected function setCsrf(bool $status)
+    {
+        $this->csrf = $status;
+    }
+
     /**
-     * @var  Вход пользователя по почте
+     * @var  Вход пользователя 
      * 
      */
     protected function login($function = null): void
@@ -64,8 +70,13 @@ class auth
             $where[] = '`login` = :login';
             $bild['login'] = $valid->return('login');
         }
+
         $valid->name('password', $this->pass)->empty();
-        $valid->name('csrf')->csrf('auth')->empty();   
+
+        if($this->csrf){
+            $valid->name('csrf')->csrf('auth')->empty(); 
+        }
+          
         
         $bruteforce = new bruteforce();
         $bruteforce->addTry();
