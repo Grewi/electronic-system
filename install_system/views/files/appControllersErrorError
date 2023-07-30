@@ -6,14 +6,14 @@ use electronic\core\view\view;
 
 class error extends controller
 {
-    public static function error404()
+    public function error404()
     {
         http_response_code(404);
-        $type = self::typeStr();
-        new view('error/error404', []);
+        $this->typeStr();
+        new view('error/error404', $this->data);
     }
 
-    private static function typeStr()
+    private function typeStr()
     {
         $ex = explode('/', request('global')->uri);
         $el = array_pop($ex);
