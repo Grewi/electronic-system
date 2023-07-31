@@ -5,6 +5,7 @@ use app\controllers\error\error;
 $route  = new route();
 
 $route->namespace('app/controllers/index');
-$route->get('/')->controller('indexController', 'index')->exit();
+$route->get('/')->controller('indexController', 'index');
 
-error::error404();
+$error = new error();
+$error->error404();
