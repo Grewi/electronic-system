@@ -58,7 +58,7 @@ class database
         return $sth;
     }
 
-    private function fetchAll(string $sql, array $params = null, string $className = 'stdClass')
+    private function fetchAll(string $sql, array $params = [], string $className = 'stdClass')
     {
         cacheQuery::addKey($sql, $params);
         if (!cacheQuery::control()) {
@@ -70,7 +70,7 @@ class database
         }
     }
 
-    private function fetch(string $sql, array $params = null, string $className = 'stdClass')
+    private function fetch(string $sql, array $params = [], string $className = 'stdClass')
     {
         cacheQuery::addKey($sql, $params);
         if (!cacheQuery::control()) {
