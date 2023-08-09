@@ -51,6 +51,7 @@ function copyDir($from, $to, $rewrite = true)
     }
 }
 
+deleteDir(ROOT . '/updateSystem');
 createDir(ROOT . '/updateSystem');
 
 $ch = curl_init();
@@ -74,9 +75,10 @@ $res = $zip->open(ROOT . '/updateSystem/system.zip');
 if ($res === TRUE) {
     $zip->extractTo(ROOT . '/updateSystem');
     $zip->close();
-    echo 'woot!';
 } else {
-    echo 'doh!';
+    deleteDir(ROOT . '/updateSystem');
+    echo 'Не удалось обработать данные.' . PHP_EOL;
+    exit();
 }
 
 deleteDir(ROOT . '/' . SYSTEM);
@@ -93,4 +95,5 @@ foreach ($s as $i) {
 }
 
 deleteDir(ROOT . '/updateSystem');
+
 echo 'Обновление завершено!' . PHP_EOL;
