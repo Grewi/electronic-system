@@ -71,6 +71,41 @@ if (!function_exists('createDir')) {
     }
 }
 
+if (!function_exists('deleteDir')) {
+	function deleteDir($path)
+	{
+		if (is_dir($path) === true) {
+			$files = array_diff(scandir($path), array('.', '..'));
+			foreach ($files as $file) {
+				deleteDir(realpath($path) . '/' . $file);
+			}
+			return @rmdir($path);
+		} else if (is_file($path) === true) {
+			return unlink($path);
+		}
+		return false;
+	}
+}
+
+if (!function_exists('copyDir')) {
+	function copyDir($from, $to, $rewrite = true)
+	{
+		if (is_dir($from)) {
+			@mkdir($to);
+			$d = dir($from);
+			while (false !== ($entry = $d->read())) {
+				if ($entry == "." || $entry == "..")
+					continue;
+					copyDir($from . '/' . $entry, $to . '/' . $entry, $rewrite);
+			}
+			$d->close();
+		} else {
+			if (!file_exists($to) || $rewrite)
+				copy($from, $to);
+		}
+	}
+}
+
 if (!function_exists('alert')) {
     function alert($text, $type = null)
     {
