@@ -68,6 +68,7 @@ class files
             'e' => self::view('e'),
             'index.php' => self::view('index'),
             '.htaccess' => self::view('htaccess'),
+            'update' => self::view('update'),
         ];
 
         self::structureInstall($structure, '');

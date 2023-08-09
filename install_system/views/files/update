@@ -1,0 +1,96 @@
+<?php
+//https://codeload.github.com/Grewi/electronic-system/tar.gz/refs/heads/main
+//https://codeload.github.com/Grewi/electronic-system/zip/refs/heads/main
+
+define('ROOT', str_replace('\\', '/', __DIR__));
+define('SYSTEM', 'system2');
+
+if(isset($argv[1])){
+    $v = preg_replace('/[^0-9.,]/ui', '', $argv[1]);
+    $v = str_replace(',', '.', $v);
+    $url = 'https://github.com/Grewi/electronic-system/archive/refs/tags/v'. $v . '.zip';
+}else{
+    $url = 'https://codeload.github.com/Grewi/electronic-system/zip/refs/heads/main';
+}
+
+function createDir($path)
+{
+    if (!file_exists($path)) {
+        mkdir($path, 0755, true);
+    }
+}
+
+function deleteDir($path)
+{
+    if (is_dir($path) === true) {
+        $files = array_diff(scandir($path), array('.', '..'));
+        foreach ($files as $file) {
+            deleteDir(realpath($path) . '/' . $file);
+        }
+        return rmdir($path);
+    } else if (is_file($path) === true) {
+        return unlink($path);
+    }
+    return false;
+}
+
+function copyDir($from, $to, $rewrite = true)
+{
+    if (is_dir($from)) {
+        @mkdir($to);
+        $d = dir($from);
+        while (false !== ($entry = $d->read())) {
+            if ($entry == "." || $entry == "..")
+                continue;
+                copyDir("$from/$entry", "$to/$entry", $rewrite);
+        }
+        $d->close();
+    } else {
+        if (!file_exists($to) || $rewrite)
+            copy($from, $to);
+    }
+}
+
+createDir(ROOT . '/updateSystem');
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+$fp = fopen(ROOT . '/updateSystem/system.zip', 'w');
+curl_setopt($ch, CURLOPT_FILE, $fp);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+curl_exec($ch);
+$code = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+curl_close($ch);
+fclose($fp);
+
+if($code != 200){
+    deleteDir(ROOT . '/updateSystem');
+    echo 'Не удалось получить файл' . PHP_EOL;
+    exit();
+}
+
+$zip = new ZipArchive;
+$res = $zip->open(ROOT . '/updateSystem/system.zip');
+if ($res === TRUE) {
+    $zip->extractTo(ROOT . '/updateSystem');
+    $zip->close();
+    echo 'woot!';
+} else {
+    echo 'doh!';
+}
+
+deleteDir(ROOT . '/' . SYSTEM);
+createDir(ROOT . '/' . SYSTEM);
+
+$s = scandir(ROOT . '/updateSystem');
+foreach ($s as $i) {
+    if ($i == '.' || $i == '..') {
+        continue;
+    }
+    if (is_dir(ROOT . '/updateSystem/' . $i)) {
+        copyDir(ROOT . '/updateSystem/' . $i, ROOT . '/' . SYSTEM .'/');
+    }
+}
+
+deleteDir(ROOT . '/updateSystem');
+echo 'Обновление завершено!' . PHP_EOL;
