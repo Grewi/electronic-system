@@ -32,7 +32,7 @@ trait update
             if($this->_idNumber){
                 $dbId = db()->fetch('SELECT * FROM ' . $this->_table . ' WHERE `' . $this->_id . '` = ' . $this->_idNumber . ';', []);
                 $ob = static::class;
-                $result = $ob::find($dbId->id);
+                $result = $ob::find($dbId->{$this->_id});
                 return $result ? $result : null;
             }
         }catch(\Exception $e){

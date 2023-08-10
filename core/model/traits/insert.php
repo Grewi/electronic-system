@@ -23,7 +23,7 @@ trait insert
         try{
             $dbId = db()->fetch('SELECT * FROM ' . $this->_table . ' where ' . $this->_id .' = LAST_INSERT_ID()', []);
             $ob = static::class;
-            $result = $ob::find($dbId->id);
+            $result = $ob::find($dbId->{$this->_id});
             return $result ? $result : null;
         }catch(\Exception $e){
             return null;
