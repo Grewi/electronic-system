@@ -7,10 +7,12 @@
 
     RewriteRule ^system/(.*)$ index.php [L]
     RewriteRule ^app/(.*)$ index.php [L]
-    RewriteRule ^e$ index.php [L]
+
+    RewriteRule ^(.*)$ /public/$1 [L]
+    RewriteRule ^((?!public/).*) /public/$l [L,NC]
 
     # Send Requests To Front Controller...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
+    #RewriteCond %{REQUEST_FILENAME} !-d
+    #RewriteCond %{REQUEST_FILENAME} !-f
+    #RewriteRule ^ index.php [L]
 </IfModule>
