@@ -7,6 +7,7 @@ $route = new route();
 $route->namespace('system/console');
 
 $route->console('update/system')->controller('updateSystem', 'index')->exit();
+$route->console('add/complement')->controller('addComplement', 'index');
 
 $route->console('create/controller')->controller('createController', 'index')->exit();
 $route->console('create/model')->controller('createModel', 'index')->exit();
