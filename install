@@ -2,7 +2,7 @@
 
 define('ENTRANSE', 'install');
 define('INDEX', true);
-define('ROOT', str_replace('\\', '/', dirname(__DIR__) ));
+define('ROOT', str_replace('\\', '/', dirname(__DIR__)));
 define('APP_NAME', 'app');
 define('APP', ROOT . '/' . APP_NAME);
 define('SYSTEM', ROOT . '/system');
@@ -21,94 +21,93 @@ $tableUsers = null;
 $tableMigration = null;
 $public = null;
 
-while ($startDb == null)
-{
+while ($startDb == null) {
     echo "Установить настройки базы данных? (yes/no): ";
     $startDb = trim(fgets(STDIN));
 }
 
-if($startDb != null && in_array(mb_strtolower($startDb), $ok)){
-    while ($dbType === null)
-    {
+if ($startDb != null && in_array(mb_strtolower($startDb), $ok)) {
+    while ($dbType === null) {
         echo "Тип БД (mysql, pgsql, sqlite): ";
         $dbType = trim(fgets(STDIN));
     }
 }
 
-if($dbType != null && (mb_strtolower($dbType) == 'pgsql' || mb_strtolower($dbType) == 'mysql')){
-    while ($dbName === null)
-    {
+if ($dbType != null && (mb_strtolower($dbType) == 'pgsql' || mb_strtolower($dbType) == 'mysql')) {
+    while ($dbName === null) {
         echo "Имя БД: ";
         $dbName = trim(fgets(STDIN));
     }
 
-    while ($dbUser === null)
-    {
+    while ($dbUser === null) {
         echo "Пользователь БД: ";
         $dbUser = trim(fgets(STDIN));
-    }    
+    }
 
-    while ($dbPass === null)
-    {
+    while ($dbPass === null) {
         echo "Пароль БД: ";
         $i = trim(fgets(STDIN));
         $dbPass = empty($i) ? '' : $i;
-    }  
+    }
 
-    while ($dbHost === null)
-    {
+    while ($dbHost === null) {
         echo "Хост БД (по умолчанию localhost): ";
         $i = trim(fgets(STDIN));
         $dbHost = empty($dbHost) ? 'localhost' : $i;
-    }  
+    }
 }
 
-if($dbType != null && mb_strtolower($dbType) == 'sqlite'){
-    
-    while ($dbFile === null)
-    {
+if ($dbType != null && mb_strtolower($dbType) == 'sqlite') {
+
+    while ($dbFile === null) {
         echo "Имя файла БД: ";
         $dbFile = trim(fgets(STDIN));
-    } 
+    }
 }
 
-if($dbType != null){
-    while ($TableDb === null)
-    {
+if ($dbType != null) {
+    while ($TableDb === null) {
         echo "Создать первичные таблицы в БД? (yes/no): ";
         $TableDb = trim(fgets(STDIN));
     }
-    
-    if($TableDb != null && in_array(mb_strtolower($TableDb), $ok)){
-        while ($tableSes  === null)
-        {
+
+    if ($TableDb != null && in_array(mb_strtolower($TableDb), $ok)) {
+        while ($tableSes  === null) {
             echo "Создать таблицу sessions? (yes/no): ";
             $i = trim(fgets(STDIN));
             $tableSes = in_array(mb_strtolower($i), $ok);
         }
 
-        while ($tableUsers === null)
-        {
+        while ($tableUsers === null) {
             echo "Создать таблицу users? (yes/no): ";
             $i = trim(fgets(STDIN));
             $tableUsers = in_array(mb_strtolower($i), $ok);
         }
 
-        while ($tableMigration === null)
-        {
+        while ($tableMigration === null) {
             echo "Создать таблицу migration? (yes/no): ";
             $i = trim(fgets(STDIN));
             $tableMigration = in_array(mb_strtolower($i), $ok);
-        }        
+        }
     }
 }
 
-while ($public === null)
-{
+while ($public === null) {
     echo "Публичная директория (по умолчанию public): ";
     $i = trim(fgets(STDIN));
     $public = empty($i) ? 'public' : $i;
-} 
+}
+
+if ($tableSes && $tableUsers && $tableMigration) {
+    while ($adminPanel === null) {
+        echo "Установить систему автризации и  админ-панель? (yes/no): ";
+        $i = trim(fgets(STDIN));
+        $adminPanel = in_array(mb_strtolower($i), $ok);
+    }
+}
+
 require_once SYSTEM . '/function.php';
 require_once SYSTEM . '/autoloader.php';
 require __DIR__ . '/install_system/install.php';
+
+
