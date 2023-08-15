@@ -6,6 +6,7 @@ define('ROOT', str_replace('\\', '/', dirname(__DIR__)));
 define('APP_NAME', 'app');
 define('APP', ROOT . '/' . APP_NAME);
 define('SYSTEM', ROOT . '/system');
+define('MIGRATIONS', APP . '/migrations');
 
 $ok = ['1', 'y', 'yes', 'да', 'д'];
 $startDb = null;
