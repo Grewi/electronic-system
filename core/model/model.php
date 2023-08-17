@@ -9,6 +9,7 @@ use system\core\model\traits\save;
 use system\core\model\traits\where;
 use system\core\model\traits\join;
 use system\core\model\traits\pagination;
+use system\core\model\traits\group;
 
 abstract class model
 {
@@ -19,6 +20,7 @@ abstract class model
     use where;
     use join;
     use pagination;
+    use group;
 
     protected $_table = '';
     protected $_idNumber = 0;
@@ -35,6 +37,7 @@ abstract class model
     protected $_select = '*';
     protected $_offset = '';
     protected $_leftJoin = '';
+    protected $_group = '';
 
     protected $paginationLine = [];
     protected $paginationPriv = 0;
@@ -86,7 +89,9 @@ abstract class model
         $str = 'SELECT COUNT(*) as count FROM ' .
             $this->_from . ' ' .
             $this->_leftJoin . ' ' .
-            $this->_where;
+            $this->_where . ' ' .
+            $this->_group;
+
         return db()->fetch($str, $this->_bind, get_class($this))->count;
     }
 
@@ -95,7 +100,9 @@ abstract class model
         $str = 'SELECT SUM(`' . $name . '`) as `summ` FROM ' .
             $this->_from . ' ' .
             $this->_leftJoin . ' ' .
-            $this->_where;
+            $this->_where . ' ' .
+            $this->_group;
+
         return (int)db()->fetch($str, $this->_bind, get_class($this))->summ;
     }
 
@@ -105,6 +112,7 @@ abstract class model
             $this->_from . ' ' .
             $this->_leftJoin . ' ' .
             $this->_where . ' ' .
+            $this->_group . ' ' .
             $this->_sort . ' ' .
             $this->_limit . ' ' .
             $this->_offset;
@@ -117,6 +125,7 @@ abstract class model
             $this->_from . ' ' .
             $this->_leftJoin . ' ' .
             $this->_where . ' ' .
+            $this->_group . ' ' .
             $this->_sort . ' ' .
             $this->_limit . ' ' .
             $this->_offset;
@@ -130,9 +139,12 @@ abstract class model
             $this->_from . ' ' .
             $this->_leftJoin . ' ' .
             $this->_where . ' ' .
+            $this->_group . ' ' .
             $this->_sort . ' ' .
             $this->_limit . ' ' .
             $this->_offset;
+            
+
         print_r($this->_bind);
         dd($str);
     }
