@@ -140,7 +140,9 @@ if (!function_exists('referal_url')) {
     {
         //$lavel = 0; Это текущая страница
         if (isset($_SESSION['history'][$lavel]['uri'])) {
-            return $_SESSION['history'][$lavel]['uri'];
+            $a = $_SESSION['history'][$lavel]['uri'];
+            unset($_SESSION['history'][$lavel]['uri']);
+            return $a;
         } else {
             return '/';
         }

@@ -8,6 +8,11 @@ trait update
         if(is_object($data)){
             $data = get_object_vars($data);
         }
+
+        if(isset($this->{$this->_id})){
+            $this->where($this->{$this->_id});
+        }
+
         if(isset($data[$this->_id])){
             $this->where($data[$this->_id]);
             unset($data[$this->_id]);
