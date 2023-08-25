@@ -18,6 +18,7 @@ class help
         'clean/config-----' => 'Удаление всех файлов конфигураций',
         'config-----------' => 'Обновление ini файлов конфигураций',
         'add/complement---' => 'Установка дополнений из отдельных репозиториев, параметром принимает имя репозитория',
+        'create/symlink---' => 'Создание символической ссылки "directiry/file directory/linkName"',
     ];
     public function index()
     {
