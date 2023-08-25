@@ -15,36 +15,46 @@ class migrate
             $start = $db->fetch('SELECT COUNT(*) as count FROM `migrations`', []);
         } catch (\PDOException $e) {
             if (!$start) {
-                $startSql = 'SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-                START TRANSACTION;
-                SET time_zone = "+00:00";
-                
-                CREATE TABLE `migrations` (
-                  `id` int(11) NOT NULL,
-                  `name` varchar(255) NOT NULL,
-                  `active` timestamp NULL DEFAULT NULL
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-                
-                
-                ALTER TABLE `migrations`
-                  ADD PRIMARY KEY (`id`);
-                
-                
-                ALTER TABLE `migrations`
-                  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-                COMMIT;';
+                if (config('database', 'type') == 'sqlite') {
+                    $startSql = '
+                    CREATE TABLE `migrations` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+                        `name` varchar(255) NOT NULL,
+                        `active` timestamp NULL DEFAULT NULL
+                      );
+                      ';
+                } else {
+                    $startSql = 'SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+                    START TRANSACTION;
+                    SET time_zone = "+00:00";
+                    
+                    CREATE TABLE `migrations` (
+                    `id` int(11) NOT NULL,
+                    `name` varchar(255) NOT NULL,
+                    `active` timestamp NULL DEFAULT NULL
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+                    
+                    
+                    ALTER TABLE `migrations`
+                    ADD PRIMARY KEY (`id`);
+                    
+                    
+                    ALTER TABLE `migrations`
+                    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+                    COMMIT;';
+                }
                 $db->query($startSql, []);
                 echo 'Создана стартовая таблица миграции!' . PHP_EOL;
             }
         }
 
-        if(!file_exists(MIGRATIONS)){
+        if (!file_exists(MIGRATIONS)) {
             createDir(MIGRATIONS . '/');
             echo 'Создана директория миграций' . PHP_EOL;
         }
         $allFiles = scandir(MIGRATIONS . '/');
 
-        if(!is_iterable($allFiles)){
+        if (!is_iterable($allFiles)) {
             echo 'Миграций нет!' . PHP_EOL;
             return;
         }
@@ -61,7 +71,7 @@ class migrate
                 try {
                     $mSql = file_get_contents(MIGRATIONS . '/' . $i . '.sql');
                     if (!empty($mSql)) {
-                        $db->query('INSERT INTO migrations SET name = "' . $i . '", active = "' . date('Y-m-d H:i', time()) . '"', []);
+                        $db->query('INSERT INTO migrations (`name`, `active`) VALUES ("' . $i . '", "' . date('Y-m-d H:i', time()) . '")', []);
                         $db->query($mSql, []);
                         echo 'Применён ' . $i  . PHP_EOL;
                     } else {

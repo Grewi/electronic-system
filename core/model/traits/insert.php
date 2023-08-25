@@ -6,19 +6,22 @@ trait insert
     private function insert($data )
     {
         $count = count($data);
-        $str = '';
+        $strKey = '';
+        $strData = '';
         $c = 0;
         foreach($data as $key => $i){
             $c++;
             if($c == $count){
-                $str .= ' `' . $key . '` = :' . $key . ' ';
+                $strKey .= ' `' . $key . '` ';
+                $strData .= ' :' . $key . ' ';
             }else{
-                $str .= ' `' . $key . '` = :' . $key . ', ';
+                $strKey .= ' `' . $key . '`, ';
+                $strData .= ' :' . $key . ', ';
             }
 
         }
         $data = array_merge($data,$this->_bind);
-        $sql = 'INSERT INTO ' . $this->_table . ' SET ' . $str;
+        $sql = 'INSERT INTO ' . $this->_table . ' (' . $strKey .') VALUES (' . $strData . ')';
         db()->query($sql, $data);
         try{
             $dbId = db()->fetch('SELECT * FROM ' . $this->_table . ' where ' . $this->_id .' = LAST_INSERT_ID()', []);
