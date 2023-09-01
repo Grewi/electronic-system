@@ -95,11 +95,13 @@ class auth
                 'user_agent' => request('global')->user_agent,
                 'ip' => request('global')->ip,
             ];
-            db()->query('INSERT INTO `sessions` SET `user_id` = :user_id, `session_key` = :session_key , `active_time` = :active_time, `user_agent` = :user_agent, `ip` = :ip', $param);
+            db()->query('INSERT INTO `sessions` (`user_id`, `session_key`, `active_time`, `user_agent`, `ip`) VALUES (:user_id,  :session_key, :active_time, :user_agent, :ip)', $param);
 
             setcookie('us', $passForCook, date('U') + $this->session_time(), '/');
             $_SESSION['us'] = $passForCook;
             $this->status = $user->id;
+            // var_dump($this, $user, $valid);
+            // exit();
             if ($function) {
                 $function($this, $user, $valid);
             }

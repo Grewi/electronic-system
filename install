@@ -22,27 +22,47 @@ $tableUsers = null;
 $tableMigration = null;
 $public = null;
 
-while ($startDb == null) {
+while ($startDb === null) {
     echo "Установить настройки базы данных? (yes/no): ";
-    $startDb = trim(fgets(STDIN));
+    $i = trim(fgets(STDIN));
+    if(empty($i)){
+        echo "Значение не установленно!" . PHP_EOL;
+        break;
+    }
+    $startDb = $i;
 }
 
 if ($startDb != null && in_array(mb_strtolower($startDb), $ok)) {
     while ($dbType === null) {
         echo "Тип БД (mysql, pgsql, sqlite): ";
-        $dbType = trim(fgets(STDIN));
+        $i = trim(fgets(STDIN));
+        if(empty($i)){
+            echo "Значение не установленно!" . PHP_EOL;
+            break;
+        }
+        $dbType = $i;
     }
 }
 
 if ($dbType != null && (mb_strtolower($dbType) == 'pgsql' || mb_strtolower($dbType) == 'mysql')) {
     while ($dbName === null) {
         echo "Имя БД: ";
-        $dbName = trim(fgets(STDIN));
+        $i = trim(fgets(STDIN));
+        if(empty($i)){
+            echo "Значение не установленно!" . PHP_EOL;
+            break;
+        }
+        $dbName = $i;
     }
 
     while ($dbUser === null) {
         echo "Пользователь БД: ";
-        $dbUser = trim(fgets(STDIN));
+        $i = trim(fgets(STDIN));
+        if(empty($i)){
+            echo "Значение не установленно!" . PHP_EOL;
+            break;
+        }
+        $dbUser = $i;
     }
 
     while ($dbPass === null) {
