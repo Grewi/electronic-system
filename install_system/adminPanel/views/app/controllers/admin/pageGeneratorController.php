@@ -141,8 +141,8 @@ class pageGeneratorController extends controller
     {
         $valid = new validate();
         $valid->name('csrf')->csrf('pageCreate');
-        $valid->name('url')->url();
-        $valid->name('view')->url();
+        $valid->name('url')->urn();
+        $valid->name('view')->urn();
         $valid->name('title')->text();
         $valid->name('description')->text();
         $valid->name('name')->text();
@@ -160,7 +160,7 @@ class pageGeneratorController extends controller
                 ];
                 page_generator::insert($data);
                 alert2('success', 'success');
-                redirect(referal_url(2));
+                redirect('admin/pg/');
             } catch (\Exception $e) {
                 dd($e);
                 alert2('error', 'danger');

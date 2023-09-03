@@ -215,7 +215,18 @@ trait validatedTraits
     {
         $data = $this->data[$this->currentName];
         if (!empty($data) && preg_match("/^(https?:\/\/)?([\da-z\.-]+)?\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/u", $data)) {
-            $this->error[$this->currentName][] = lang('valid', 'tel');
+            $this->error[$this->currentName][] = lang('valid', 'url');
+            $this->setControl(false);
+        }
+        $this->setReturn($data);
+        return $this;
+    }
+
+    public function urn()
+    {
+        $data = $this->data[$this->currentName];
+        if (!empty($data) && preg_match("/^[0-9а-яА-ЯёЁ\.-]+$/u", $data)) {
+            $this->error[$this->currentName][] = lang('valid', 'url');
             $this->setControl(false);
         }
         $this->setReturn($data);
