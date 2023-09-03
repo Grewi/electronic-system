@@ -156,8 +156,8 @@ class settingsController extends controller
     {
         $valid = new validate();
         $valid->name('csrf')->csrf('addSetting');
-        $valid->name('setting_category_id')->isset('settings_category');
-        $valid->name('setting_type_id')->isset('settings_type');
+        $valid->name('setting_category_id')->isset('settings_category')->empty();
+        $valid->name('setting_type_id')->isset('settings_type')->empty();
         $valid->name('name')->latRuInt()->empty();
         $valid->name('description')->text();
         $valid->name('value')->text();
