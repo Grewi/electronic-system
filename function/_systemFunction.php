@@ -7,9 +7,9 @@ use system\core\user\auth;
 use system\core\config\config;
 
 if (!function_exists('db')) {
-    function db()
+    function db($configName = null)
     {
-        return database::connect();
+        return database::connect($configName);
     }
 }
 
