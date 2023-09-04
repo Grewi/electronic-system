@@ -3,7 +3,7 @@
 //https://codeload.github.com/Grewi/electronic-system/zip/refs/heads/main
 
 define('ROOT', str_replace('\\', '/', __DIR__));
-define('SYSTEM', 'system2');
+define('SYSTEM', 'system');
 
 if(isset($argv[1])){
     $v = preg_replace('/[^0-9.,]/ui', '', $argv[1]);
@@ -22,12 +22,21 @@ function createDir($path)
 
 function deleteDir($path)
 {
+    $path = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
     if (is_dir($path) === true) {
-        $files = array_diff(scandir($path), array('.', '..'));
+        $files = scandir($path);
+
         foreach ($files as $file) {
+            if($file == '.' || $file == '..' || $file == '.git'){
+                continue;
+            }
             deleteDir(realpath($path) . '/' . $file);
         }
-        return rmdir($path);
+        if(count(scandir($path)) == 2){
+            rmdir($path);
+        }
+        return;
+        
     } else if (is_file($path) === true) {
         return unlink($path);
     }
