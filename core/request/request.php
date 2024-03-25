@@ -3,9 +3,12 @@
 namespace system\core\request;
 use system\core\collection\collection;
 
+#[\AllowDynamicProperties]
+
 class request
 {
     private static $connect = null;
+    private $name;
 
     static public function connect() : request
     {

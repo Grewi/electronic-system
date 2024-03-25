@@ -30,6 +30,9 @@ $route->console('config')->controller('config', 'actual');
 
 $route->console('create/symlink')->controller('createSymlink', 'index');
 
+$route->console('style')->controller('sass', 'compile');
+$route->console('style/info')->controller('sass', 'info');
+
 $route->console('help')->controller('help', 'index');
 
 require_once ROOT . '/app/route/console.php';

@@ -88,7 +88,7 @@ class migrate
 
     public function createMigration(): void
     {
-        $parametr = ARGV[2];
+        $parametr = isset(ARGV[2]) ? ARGV[2] : '';
         $s = preg_replace("/[^a-zA-Z0-9\s]/", '_', $parametr);
         $fileName = MIGRATIONS . '/' . date('Y_m_d_U') . '_' . $s . '.sql';
         file_put_contents($fileName, '');

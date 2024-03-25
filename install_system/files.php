@@ -1,90 +1,12 @@
 <?php
-
 namespace system\install_system;
+use system\core\app\app;
 
-use system\core\validate\validate;
-
-class files
+abstract class files
 {
-    public static function structure($type, $name, $user, $pass, $host, $file, $public)
-    {
-        $database = [
-            'type' => $type,
-            'name' => $name,
-            'user' => $user,
-            'pass' => $pass,
-            'host' => $host,
-            'file' => $file,
-        ];
-        $structure = [
-            'app' => [
-                'cache' => null,
-                'configs' => [
-                    'database.php' => self::view('appConfigDatabace', $database),
-                    'globals.php' => self::view('appConfigGlobals'),
-                    'mail.php' => self::view('appConfigMail'),
-                ],
-                'controllers' => [
-                    'index' => [
-                        'indexController.php' => self::view('appControllersIndexIndex'),
-                    ],
-                    'error' => [
-                        'error.php' => self::view('appControllersErrorError'),
-                    ],
-                    'controller.php' => self::view('appControllersController'),
-                ],
-                'lang' => [
-                    'ru' => [
-                        'global.php' => self::view('appLangRuGlobal'),
-                    ],
-                ],
-                'migrations' => null,
-                'models' => null,
-                'prefix' => null,
-                'filter' => null,
-                'route' => [
-                    'web' => null,
-                    'console.php' => self::view('appRouteConsole'),
-                    'web.php' => self::view('appRouteWeb'),
-                ],
-                'views' => [
-                    'index' => [
-                        'index.php' => self::view('appViewIndex'),
-                    ],
-                    'layout' => [
-                        'index.php' => self::view('appViewLayoutIndex'),
-                    ],
-                    'error' => [
-                        'error404.php' => self::view('appViewsErrorError404'),
-                    ],
+    protected $countFiles = 0;
 
-                ],
-            ],
-            $public => [
-                '.htaccess' => self::view('publicHtaccess'),
-                'index.php' => self::view('publicIndex'),
-            ],
-            'composer' => null,
-            'e' => self::view('e'),
-            'index.php' => self::view('index'),
-            '.htaccess' => self::view('htaccess'),
-            'update' => self::view('update'),
-        ];
-
-        self::structureInstall($structure, '');
-
-        if($file){
-            $sqlite = [
-                'sqlite' => [
-                    $file . '.db' => self::view('sqlite'),
-                ],
-            ];
-
-            self::structureInstall($sqlite, '');
-        }
-    }
-
-    private static function structureInstall($structure, $path)
+    protected function structureInstall($structure, $path = '')
     {
         foreach ($structure as $a => $i) {
             if (is_array($i)) {
@@ -100,14 +22,41 @@ class files
         }
     }
 
-    private static function view(string $file, array $data = [])
+    protected function view(string $file, array $data = [])
     {
-        $content = file_get_contents(__DIR__ . '/views/files/' . $file);
+        $app = app::app();
+        $content = file_get_contents(SYSTEM . '/install_system/' . $app->install->dirInstall . '/views/' . $file);
 
         preg_match_all('/\{\{\s*\$(.*?)\s*\}\}(else\{\{(.*?)}\})?/si', $content, $matches);
         foreach ($matches[1] as $a => $i) {
             $content = str_replace($matches[0][$a], isset($data[$i]) ? $data[$i] : '', $content);
         }
         return $content;
+    }
+
+    protected function copyDir($from, $to, $rewrite = true)
+    {
+        if (is_dir($from)) {
+            @mkdir($to);
+            $d = dir($from);
+            while (false !== ($entry = $d->read())) {
+                if ($entry == "." || $entry == ".."){
+                    continue; 
+                }    
+                $this->copyDir($from . '/' . $entry, $to . '/' . $entry, $rewrite);
+            }
+            $d->close();
+        } else {
+            if (!file_exists($to) || $rewrite) {
+                ++$this->countFiles;
+                echo " Копирование:  $this->countFiles файлов             \r";
+                copy($from, $to);
+            }
+        }
+    }
+
+    public function finish()
+    {
+        echo 'Копирование завершено                                                                                                                                           ' . PHP_EOL;
     }
 }

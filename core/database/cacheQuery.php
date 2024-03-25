@@ -2,6 +2,7 @@
 namespace system\core\database;
 use system\core\traits\singleton;
 
+#[\AllowDynamicProperties]
 class cacheQuery
 {
     use singleton;
@@ -44,6 +45,6 @@ class cacheQuery
     }
 
     private function sanitizer($str){
-        return preg_replace('/[^a-zA-Z0-9\<\>\=]/ui', '', $str);
+        return preg_replace('/[^a-zA-Z0-9\<\>\=]/ui', '', $str ?? '');
     }
 }

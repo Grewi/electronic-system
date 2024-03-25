@@ -1,11 +1,21 @@
 <?php
 //https://www.php.net/manual/ru/dateinterval.construct.php
+//https://www.php.net/manual/ru/datetime.formats.php
 namespace system\core\date;
 
 class date
 {
     private static $connect;
     private $dateTime;
+    private $dayWeek = [
+        1 => 'monday',
+        2 => 'tuesday',
+        3 => 'wednesday',
+        4 => 'thursday',
+        5 => 'friday',
+        6 => 'saturday',
+        7 => 'sunday'
+    ];
 
     private function __construct($dateTime)
     {
@@ -16,7 +26,8 @@ class date
         }
     }
 
-    private function monthLangR($month){
+    public static function monthLangR($month)
+    {
         $arr = [
             1  => 'января',
             2  => 'февраля',
@@ -33,8 +44,9 @@ class date
         ];
         return isset($arr[$month]) ? $arr[$month] : '';
     }
-    
-    private function monthLangI($month){
+
+    public static function monthLangI($month)
+    {
         $arr = [
             1  => 'январь',
             2  => 'февраль',
@@ -49,7 +61,21 @@ class date
             11 => 'ноябрь',
             12 => 'декабрь',
         ];
-        return isset($arr[(int)$month]) ? $arr[(int)$month] : '';    
+        return isset($arr[(int)$month]) ? $arr[(int)$month] : '';
+    }
+
+    public static function weekLandgI($day)
+    {
+        $arr = [
+            1 => 'Понедельник',
+            2 => 'Вторник',
+            3 => 'Среда',
+            4 => 'Четверг',
+            5 => 'Пятница',
+            6 => 'Суббота',
+            7 => 'Воскресение',
+        ];
+        return isset($arr[(int)$day]) ? $arr[(int)$day] : '';
     }
 
     public static function create($dateTime)
@@ -84,7 +110,7 @@ class date
     public function subDay($day)
     {
         $interval = new \DateInterval('P' . $day . 'D');
-        $this->dateTime->sub($interval)->format;
+        $this->dateTime->sub($interval);
         return $this;
     }
 
@@ -96,10 +122,26 @@ class date
         return $this;
     }
 
+    //Ближайший следующий день недели
+    public function dayWeekNext($day)
+    {
+        $interval = new \DateInterval($this->dayWeek[$day] . ' next week');
+        $this->dateTime->add($interval);
+        return $this;
+    }
+
+    //Ближайший предыдущий день недели
+    public function dayWeekPrev($day)
+    {
+        $interval = new \DateInterval($this->dayWeek[$day] . ' previous week');
+        $this->dateTime->add($interval);
+        return $this;
+    }
+
     public function subWeek($week)
     {
         $interval = new \DateInterval('P' . $week . 'W');
-        $this->dateTime->sub($interval)->format;
+        $this->dateTime->sub($interval);
         return $this;
     }
 
@@ -114,10 +156,10 @@ class date
     public function subMonth($month)
     {
         $interval = new \DateInterval('P' . $month . 'M');
-        $this->dateTime->sub($interval)->format;
+        $this->dateTime->sub($interval);
         return $this;
-    }  
-    
+    }
+
     //Год
     public function addYear($year)
     {
@@ -129,9 +171,9 @@ class date
     public function subYaer($year)
     {
         $interval = new \DateInterval('P' . $year . 'Y');
-        $this->dateTime->sub($interval)->format;
+        $this->dateTime->sub($interval);
         return $this;
-    }     
+    }
 
     //Формат
     public function format($format)
@@ -143,21 +185,36 @@ class date
     public function formatLang($p = 'i')
     {
         $Y = $this->dateTime->format('Y');
-        if($p == 'i'){
+        if ($p == 'i') {
             $m = $this->monthLangI((int)$this->dateTime->format('m'));
         }
-        if($p == 'r'){
+        if ($p == 'r') {
             $m = $this->monthLangR((int)$this->dateTime->format('m'));
         }
         $d = (int)$this->dateTime->format('d');
         return $this->dateTime->format($d . ' ' . $m . ' ' . $Y);
     }
-    
+
     public function intervalDay($date1, $date2)
     {
         $origin = new \DateTimeImmutable($date1);
         $target = new \DateTimeImmutable($date2);
         $interval = $target->diff($origin);
         return $interval->format('%R%a') < 0 ? 0 : $interval->format('%a');
+    }
+
+    public static function dateTimeParse($dateTime)
+    {
+        $ar = explode(' ', $dateTime);
+        $date = isset($ar[0]) ? explode('-', $ar[0]) : ['0', '0', '0'];
+        $time = isset($ar[1]) ? explode(':', $ar[1]) : ['0', '0', '0'];
+        return [
+            'day' => $date[2],
+            'month' => $date[1],
+            'year' => $date[0],
+            'hour' => $time[0],
+            'min' => $time[1],
+            'sec' => $time[2],
+        ];
     }
 }

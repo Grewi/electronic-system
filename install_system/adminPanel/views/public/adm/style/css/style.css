@@ -1,0 +1,86 @@
+@font-face {
+    font-family: "Roboto";
+    src: url("../fonts/Roboto/RobotoCondensed-Regular.ttf")
+}
+
+@font-face {
+    font-family: "Roboto-Italic";
+    src: url("../fonts/Roboto/RobotoCondensed-Italic.ttf")
+}
+
+@font-face {
+    font-family: "Roboto-Light";
+    src: url("../fonts/Roboto/RobotoCondensed-Light.ttf")
+}
+
+@font-face {
+    font-family: "Roboto-LightItalic";
+    src: url("../fonts/Roboto/RobotoCondensed-LightItalic.ttf")
+}
+
+@font-face {
+    font-family: "Roboto-bold";
+    src: url("../fonts/Roboto/RobotoCondensed-Bold.ttf")
+}
+
+@font-face {
+    font-family: "PT_Sans";
+    src: url("../fonts/PT_Sans/PT_Sans-Narrow-Web-Regular.ttf")
+}
+
+@font-face {
+    font-family: "PT_Sans-Bold";
+    src: url("../fonts/PT_Sans/PT_Sans-Narrow-Web-Bold.ttf")
+}
+
+body {
+    font-family:"Roboto";
+    background-color: #ccc;
+}
+
+a {
+    text-decoration: none;
+}
+
+.adm-left-menu {
+    width: 200px;
+    min-height: 100vh;
+    background-color: #444;
+}
+
+.adm-left-menu .siteName {
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+}
+
+.adm-menu-list {
+    padding: 0;
+    list-style-type: none;
+}
+
+.adm-menu-list li {
+    border: 1px solid #525252;
+    margin-bottom: 3px;
+    transition: 0.5s;
+}
+
+.adm-menu-list li:hover {
+    background-color: #616161;
+}
+
+.adm-menu-list a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 5px;
+}
+
+.adm-main {
+    background-color: #fff;
+}

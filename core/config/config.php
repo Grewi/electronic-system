@@ -30,6 +30,23 @@ class config
         return self::connect()->m($this->element, [$parameters]);
     }
 
+    public function all()
+    {
+        $ini = $this->path . '.' . $this->element . '.ini';
+        $php = $this->path . $this->element . '.php';
+
+        if (!file_exists($ini) && file_exists($php)) {
+            $this->createConfigFile($this->element);
+        }        
+
+        //Парсим ini файл
+        if (file_exists($ini)) {
+            return parse_ini_file($ini);
+        }
+
+        return null;
+    }
+
     private function m(string $element, array $param = null){
         $this->iniArr = [];
         $this->element = $element;

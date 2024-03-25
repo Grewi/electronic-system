@@ -10,7 +10,11 @@ if (!function_exists('eGetReplace')) {
             $a = parse_url($_SERVER['REQUEST_URI']);
         }
 
-        parse_str($a['query'], $get);
+        $query = $a['query'] ?? '';
+        $fragment = $a['fragment'] ?? false;
+        $path = $a['path'] ?? '';
+
+        parse_str($query, $get);
 
         if ($value) {
             $get[$name] = $value;
@@ -18,9 +22,8 @@ if (!function_exists('eGetReplace')) {
             unset($get[$name]);
         }
 
-
         $get = $get ? '?' . http_build_query($get, '', '&') : '';
-        $fragment = $a['fragment'] ? '#' . $a['fragment'] : '';
-        return $a['path'] . $get  . $fragment;
+        $f = $fragment ? '#' . $fragment : '';
+        return $path . $get  . $f;
     }
 }

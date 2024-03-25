@@ -1,43 +1,44 @@
 <?php
+use system\core\text\sanitizer;
 
 if (!function_exists('eSanitizerLatInt')) {
     function eSanitizerLatInt($str)
     {
-        return preg_replace('/[^a-zA-Z0-9]/ui', '', $str);
+        return sanitizer::latInt($str);
     }
 }
 
 if (!function_exists('eSanitizerLatRuInt')) {
     function eSanitizerLatRuInt($str)
     {
-        return preg_replace('/[^a-zA-Zа-яА-Я0-9]/ui', '', $str);
+        return sanitizer::latRuInt($str);
     }
 }
 
 if (!function_exists('eSanitizerFloat')) {
     function eSanitizerFloat($str)
     {
-        return preg_replace('/[^0-9.,]/ui', '', $str);
+        return sanitizer::float($str);
     }
 }
 
 if (!function_exists('eSanitizerInt')) {
     function eSanitizerInt($str)
     {
-        return preg_replace('/[^0-9]/ui', '', $str);
+        return sanitizer::int($str);
     }
 }
 
 if (!function_exists('eSanitizerDate')) {
     function eSanitizerDate($str)
     {
-        return preg_replace('/[^0-9-]/ui', '', $str);
+        return sanitizer::date($str);
     }
 }
 
 if (!function_exists('eSanitizerDate')) {
     function eSanitizerDEmail($str)
     {
-        return preg_replace('/[^@.a-zA-Zа-яА-Я0-9-_]/ui', '', $str);
+        return sanitizer::email($str);
     }
 }

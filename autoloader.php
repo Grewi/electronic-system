@@ -22,7 +22,7 @@ class autoloader
         if($this->classArray[0] == 'electronic'){
             $this->system();
         }else{
-            includeFile(ROOT . '/' . $this->namespace . '.php');
+            $this->includeFile(ROOT . '/' . $this->namespace . '.php');
         }
     }
 
@@ -37,11 +37,11 @@ class autoloader
             if(!file_exists(ROOT . $this->pathApp . '.php')){
                 $this->createFile(ROOT . $this->pathApp);
             }
-            includeFile(ROOT . $this->pathApp . '.php');
+            $this->includeFile(ROOT . $this->pathApp . '.php');
         }
 
         if(!file_exists(ROOT . $this->pathSystem . '.php') && file_exists(ROOT . $this->pathApp . '.php')){
-            includeFile(ROOT . $this->pathApp . '.php');
+            $this->includeFile(ROOT . $this->pathApp . '.php');
         }
     }
 
@@ -67,5 +67,19 @@ class ' . $className .' extends ' . str_replace('/', '\\', $this->pathSystem) . 
 }
 ';
         file_put_contents(ROOT . $this->pathApp . '.php', $class);
+    }
+
+    private function includeFile($path)
+    {
+        try {
+            if (file_exists($path)) {
+                require $path;
+            } else {
+                throw new \FileException('Файл ' . $path . ' не найден!');
+            }
+        } catch (\FileException $e) {
+            var_dump($e);
+            exit($e->message);
+        }
     }
 }

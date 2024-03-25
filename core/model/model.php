@@ -10,7 +10,9 @@ use system\core\model\traits\where;
 use system\core\model\traits\join;
 use system\core\model\traits\pagination;
 use system\core\model\traits\group;
+use system\core\model\traits\sort;
 
+#[\AllowDynamicProperties]
 abstract class model
 {
     use insert;
@@ -21,7 +23,9 @@ abstract class model
     use join;
     use pagination;
     use group;
+    use sort;
 
+    protected $_databaseName = 'database';
     protected $_table = '';
     protected $_idNumber = 0;
     protected $_id = 'id';
@@ -76,10 +80,15 @@ abstract class model
     private function sort(string $type, string $name = null)
     {
         $name = $name ? $name : $this->_id;
+        if(empty($this->_sort)){
+            $this->_sort = ' ORDER BY ';
+        }else{
+            $this->_sort = $this->_sort . ', ';
+        }
         if ($type == 'asc') {
-            $this->_sort = ' ORDER BY ' . $name . ' ASC';
+            $this->_sort = $this->_sort . $name . ' ASC';
         } elseif ($type == 'desc') {
-            $this->_sort = ' ORDER BY ' . $name . ' DESC';
+            $this->_sort = $this->_sort . $name . ' DESC';
         }
         return $this;
     }
@@ -92,7 +101,7 @@ abstract class model
             $this->_where . ' ' .
             $this->_group;
 
-        return db()->fetch($str, $this->_bind, get_class($this))->count;
+        return db($this->_databaseName)->fetch($str, $this->_bind, get_class($this))->count;
     }
 
     private function summ($name): float
@@ -103,7 +112,7 @@ abstract class model
             $this->_where . ' ' .
             $this->_group;
 
-        return (int)db()->fetch($str, $this->_bind, get_class($this))->summ;
+        return (int)db($this->_databaseName)->fetch($str, $this->_bind, get_class($this))->summ;
     }
 
     private function all(): array
@@ -116,7 +125,7 @@ abstract class model
             $this->_sort . ' ' .
             $this->_limit . ' ' .
             $this->_offset;
-        return db()->fetchAll($str, $this->_bind, get_class($this));
+        return db($this->_databaseName)->fetchAll($str, $this->_bind, get_class($this));
     }
 
     private function get()
@@ -130,7 +139,7 @@ abstract class model
             $this->_limit . ' ' .
             $this->_offset;
 
-        return db()->fetch($str, $this->_bind, get_class($this));
+        return db($this->_databaseName)->fetch($str, $this->_bind, get_class($this));
     }
 
     private function sql(): void
@@ -149,9 +158,12 @@ abstract class model
         dd($str);
     }
 
-    private function find($id)
+    private function find($id = null)
     {
-        $result = db()->fetch('SELECT * FROM ' . $this->_table . ' WHERE `' . $this->_id . '` = :' . $this->_id . ' ', [$this->_id => $id], get_class($this));
+        if(!$id){
+            return null;
+        }
+        $result = db($this->_databaseName)->fetch('SELECT * FROM ' . $this->_table . ' WHERE `' . $this->_id . '` = :' . $this->_id . ' ', [$this->_id => $id], get_class($this));
         return $result ? $result : null;
     }
 
@@ -167,5 +179,10 @@ abstract class model
         if(method_exists($this, $method)){
             return $this->$method(...$param);
         }
+    }
+
+    public function __get($property)
+    {
+        return null;
     }
 }

@@ -54,7 +54,7 @@ trait validatedTraits
     public function int()
     {
         $data = $this->data[$this->currentName];
-        if (!empty($data) && !preg_match("/^[0-9]+$/u", (string)$data)) {
+        if (!empty($data) && !preg_match("/^[0-9-]+$/u", (string)$data)) {
             $this->error[$this->currentName][] = lang('valid', 'noInt');
             $this->setControl(false);
         }
@@ -101,7 +101,7 @@ trait validatedTraits
     public function float()
     {
         $data = $this->data[$this->currentName];
-        if (!empty($data) && !preg_match("/^[0-9\.\,]+$/u", (string)$data)) {
+        if (!empty($data) && !preg_match("/^[0-9\.\,-]+$/u", (string)$data)) {
             $this->error[$this->currentName][] = lang('valid', 'noInt');;
             $this->setControl(false);
         }
@@ -215,7 +215,18 @@ trait validatedTraits
     {
         $data = $this->data[$this->currentName];
         if (!empty($data) && preg_match("/^(https?:\/\/)?([\da-z\.-]+)?\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/u", $data)) {
-            $this->error[$this->currentName][] = lang('valid', 'tel');
+            $this->error[$this->currentName][] = lang('valid', 'url');
+            $this->setControl(false);
+        }
+        $this->setReturn($data);
+        return $this;
+    }
+
+    public function urn()
+    {
+        $data = $this->data[$this->currentName];
+        if (!empty($data) && preg_match("/^[0-9а-яА-ЯёЁ\.-]+$/u", $data)) {
+            $this->error[$this->currentName][] = lang('valid', 'url');
             $this->setControl(false);
         }
         $this->setReturn($data);
@@ -246,6 +257,31 @@ trait validatedTraits
         $this->setReturn($data);
         return $this;
     }
+
+    public function time()
+    {
+        $this->data[$this->currentName] = !empty($this->data[$this->currentName]) ? $this->data[$this->currentName] : null;
+        $data = $this->data[$this->currentName];
+        if (!empty($data)) {
+            $test = explode(':', $data);
+            $check = false;
+            $H = (int)$test[0];
+            $i = (int)$test[1];
+            $s = (int)$test[2];
+            if ($H >= 0 && $H <= 24 && $i >= 0 && $i <= 59 && $s >= 0 && $i <= 59) {
+                $check = true;
+            }
+
+            if (!preg_match("/^[0-9\:]+$/u", $data) && !$check) {
+                $this->error[$this->currentName][] = lang('valid', 'date');
+                $this->setControl(false);
+            }
+        }
+
+        $this->setReturn($data);
+        return $this;
+    }    
+
 
     /**
      * Значение преобразует символы в html сущности функцией htmlspecialchars

@@ -42,10 +42,14 @@ try{
         require_once $composer;
     }
 
+    require_once SYSTEM . '/errors.php';
+
     if(ENTRANSE == 'web'){
         require_once APP . '/route/web.php';
     }elseif(ENTRANSE == 'console'){
         require_once SYSTEM . '/console/console.php';
+    }elseif(ENTRANSE == 'cron'){
+        require_once APP . '/route/cron.php';
     }
 }catch(GlobalException $e){
     exit($e);

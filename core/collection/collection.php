@@ -2,8 +2,10 @@
 
 namespace system\core\collection;
 
+#[\AllowDynamicProperties]
 class collection 
 {
+
     public function set( array $param)
     {
         foreach($param as $a => $i){

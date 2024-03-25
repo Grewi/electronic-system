@@ -6,34 +6,53 @@ use system\core\config\config;
 use system\core\database\cacheQuery;
 use system\core\traits\singleton;
 
+#[\AllowDynamicProperties]
 class database
 {
 
     /** @var \PDO */
     private $pdo;
     private static $db;
+    private static $connect = [];
 
-    use singleton;
+    private $type = '';
+    private $file_name = '';
+    private $host = '';
+    private $name = '';
+    private $user = '';
+    private $pass = '';
+
+    static public function connect($configName = null)
+    {
+        if(!$configName){
+            $configName = 'database';
+        }
+		if(!isset(self::$connect[$configName]) || self::$connect[$configName] === null){ 
+			self::$connect[$configName] = new self($configName);
+		}
+		return self::$connect[$configName];
+	}
 
     /** @var Подключение к базе */
-    private function __construct()
+    private function __construct($configName)
     {
+        $this->config($configName);
         try {
-            if (config::database()->type == 'sqlite') {
+            if ($this->type == 'sqlite') {
                 $options = [
                     \PDO::ATTR_EMULATE_PREPARES => false,
                     \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
                 ];
-                if (file_exists(ROOT . '/sqlite/' . config::database('file_name') . '.db')) {
-                    $this->pdo = new \PDO('sqlite:' . ROOT . '/sqlite/' . config::database('file_name') . '.db', '', '', $options);
+                if (file_exists(ROOT . '/sqlite/' . $this->file_name . '.db')) {
+                    $this->pdo = new \PDO('sqlite:' . ROOT . '/sqlite/' . $this->file_name . '.db', '', '', $options);
                 } else {
                     exit('Ошибка подключения к БД');
                 }
-            } else if (in_array(config::database()->type, ['mysql', 'pgsql'])) {
+            } else if (in_array($this->type, ['mysql', 'pgsql'])) {
                 $this->pdo = new \PDO(
-                    config::database()->type . ':host=' . config::database('host') . ';dbname=' . config::database('name'),
-                    config::database('user'),
-                    config::database('pass')
+                    $this->type . ':host=' . $this->host . ';dbname=' . $this->name  . '; charset=utf8mb4',
+                    $this->user,
+                    $this->pass
                 );
                 //$this->pdo->exec('SET NAMES UTF8');
                 if (config::globals('dev')) {
@@ -45,6 +64,20 @@ class database
         } catch (\PDOException $e) {
             dd('Ошибка подключения к БД: ' . $e->getMessage());
         }
+    }
+
+    private function config($name)
+    {
+        $config = config::$name();
+        if(!$config){
+            exit('Не установленны настройки для подключения к базе данных');
+        }
+        $this->file_name = $config->file_name;
+        $this->type = $config->type;
+        $this->name = $config->name;
+        $this->host = $config->host;
+        $this->user = $config->user;
+        $this->pass = $config->pass;
     }
 
     private function query(string $sql, array $params = [], string $className = 'stdClass')
@@ -105,5 +138,25 @@ class database
     private function errorInfo()
     {
         return $this->pdo->errorInfo();
+    }
+
+    public static function __callStatic($method, $parameters)
+    {
+        $m = '_' . $method;
+        if(method_exists(self::connect(), $method)){
+            return self::connect()->$method(...$parameters);
+        }elseif(method_exists(self::connect(), $m)){
+            return self::connect()->$m(...$parameters);
+        }
+    }
+
+    public function __call($method, $param)
+    {
+        $m = '_' . $method;
+        if(method_exists($this, $method)){
+            return $this->$method(...$param);
+        }elseif(method_exists($this, $m)){
+            return $this->$m(...$param);
+        }
     }
 }

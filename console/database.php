@@ -20,7 +20,8 @@ class database
         $fileName = date('Y-m-d__U', time());
         createDir($dumpSql);
         $fileSql = $dumpSql . '/' . $fileName . '.sql';
-        exec('mysqldump --user=' . $dbUser . ' --password=' . $dbPass . ' --host=' . $dbHost . ' ' . $dbName . ' > ' . $fileSql, $output, $status);
+        // exec('mysqldump --user=' . $dbUser . ' --password=' . $dbPass . ' --host=' . $dbHost . ' ' . $dbName . ' --set-charset=utf8mb4 > ' . $fileSql, $output, $status);
+        exec('mysqldump --user=' . $dbUser . ' --password=' . $dbPass . ' --host=' . $dbHost . ' ' . $dbName . ' --set-charset=utf8mb4 --result-file=' . $fileSql, $output, $status);
         zip::zip($dumpSql, $dumpPath . '/' . $fileName . '.zip');
         $files = scandir($dumpSql);
         if(is_iterable($files)){
@@ -49,10 +50,13 @@ class database
     public function dropTables()
     {
         $db = db::connect();
+        $db->query('SET FOREIGN_KEY_CHECKS = 0;');
         $tables = $db->fetchAll('SELECT TABLE_NAME FROM `INFORMATION_SCHEMA`.`TABLES` WHERE TABLE_SCHEMA = "' . config::database('name') . '"', []);
         foreach ($tables as $t) {
-            $db->query("DROP TABLE " . $t['TABLE_NAME'], []);
+            $db->query("DROP TABLE " . $t->TABLE_NAME, []);
         }
+        $db->query('SET FOREIGN_KEY_CHECKS = 1;');
+        echo "Процессс завершён \n";
     }
 
     private function zip($folder, $zipFile)

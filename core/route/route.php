@@ -2,6 +2,8 @@
 
 namespace system\core\route;
 
+use system\core\app\app;
+
 class route
 {
     protected $namespace = '';
@@ -14,21 +16,28 @@ class route
 
     public function __construct()
     {
+        $app = app::app();
         if (ENTRANSE == 'web') {
             //Парсинг URL
-            $urls = explode('?', request('global')->uri);
+            $urls = explode('?', $app->bootstrap->uri);
             $url = explode('/', $urls[0]);
             unset($url[0]);
             $this->url = $url;
+            $app->request->set(['type' => 'web']);
+            $app->request->set(['params' => $url]);
+            request('global')->set(['url' => implode('/', $url)]);
         } elseif (ENTRANSE == 'console') {
             $argv = ARGV;
             unset($argv[0]);
             $this->url = $argv;
+            $app->request->set(['type' => 'console']);
+            $app->request->set(['params' => $argv]);
         }
     }
 
     public function group(string $name, callable $function): route
     {
+        $name = $this->slash($name);
         if (is_null($this->get)) {
             $this->get = true;
         }
@@ -39,12 +48,13 @@ class route
 
         $this->groupName = $name;
         $status = true;
-        foreach (explode('/', $name) as $a => $i) {
-            if ($this->url[$a + 1] != $i) {
+        $nameArr = explode('/', $name);
+
+        foreach ($nameArr as $a => $i) {
+            if (@$this->url[$a + 1] != $i) {
                 $status = false;
             }
         }
-        $offset = stripos(implode('/', $this->url), $this->groupName);
 
         if ($status && $this->get) {
             $function($this);
@@ -70,7 +80,8 @@ class route
 
     public function get(string $get = null): route
     {
-        if(is_null($get)){
+        $get = $this->slash($get);
+        if (is_null($get)) {
             return $this;
         }
         $this->parseUrl($get);
@@ -82,6 +93,7 @@ class route
 
     public function post(string $get): route
     {
+        $get = $this->slash($get);
         $this->parseUrl($get);
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->get = false;
@@ -91,6 +103,7 @@ class route
 
     public function put(string $get): route
     {
+        $get = $this->slash($get);
         $this->parseUrl($get);
         if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
             $this->get = false;
@@ -100,6 +113,7 @@ class route
 
     public function delete(string $get): route
     {
+        $get = $this->slash($get);
         $this->parseUrl($get);
         if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
             $this->get = false;
@@ -109,6 +123,7 @@ class route
 
     public function all(string $get): route
     {
+        $get = $this->slash($get);
         $this->parseUrl($get);
         return $this;
     }
@@ -169,6 +184,7 @@ class route
 
     private function parseUrl(string $get): void
     {
+        $app = app::app();
         if ($this->groupName) {
             if ($get == '/') {
                 $get = substr($get, 1);
@@ -183,8 +199,6 @@ class route
         $url = (array) $this->url;
         $check = true;
 
-
-
         //Если длина url меньше роута без необязательных параметров
         $gg = $this->delParametr($g);
         if (count($url) < count($gg)) {
@@ -195,6 +209,9 @@ class route
 
             //Если на последней итерации пусто. пропускаем
             if (empty($i) && count($url) == $a) {
+                if ($i != @$g[$a]) {
+                    $check = false;
+                }
                 continue;
             }
 
@@ -203,13 +220,15 @@ class route
                 preg_match('/\{(.*?)\?\}/si', $g[$a], $freeParam);
 
                 //Если сработал необязательный параметр, удаляем обязательный
-                if ($freeParam[1]) {
+                if (isset($freeParam[1])) {
                     unset($param);
                 }
 
                 //Проверка не обязательного параметра
                 if (isset($freeParam[1])) {
-                    request('get')->set([$freeParam[1] => preg_replace($this->param_regex, '', urldecode($url[$a]))]);
+                    $getReturn = preg_replace($this->param_regex, '', urldecode($url[$a]));
+                    $app->getparams->set([$freeParam[1] => $getReturn]);
+                    request('get')->set([$freeParam[1] => $getReturn]);
                     continue;
                 }
 
@@ -218,7 +237,9 @@ class route
                     $check = false;
                     break;
                 } elseif ((isset($param[1]) && !empty($url[$a])) && $check) {
-                    request('get')->set([$param[1] => preg_replace($this->param_regex, '', urldecode($url[$a]))]);
+                    $getReturn = preg_replace($this->param_regex, '', urldecode($url[$a]));
+                    $app->getparams->set([$param[1] => $getReturn]);
+                    request('get')->set([$param[1] => $getReturn]);
                 }
 
                 //Проверка элемента url
@@ -259,5 +280,45 @@ class route
     public function autoExitController($status)
     {
         $this->autoExitController = $status;
+    }
+
+    public function autoloadWeb()
+    {
+        $existInclude = get_included_files();
+        $appFunctionDir = APP . '/route/web';
+        $generatorPage = null;
+        $route = $this;
+        if (file_exists($appFunctionDir)) {
+            $systemFnctionFiles = scandir($appFunctionDir);
+            asort($systemFnctionFiles);
+            if (is_iterable($systemFnctionFiles)) {
+                foreach ($systemFnctionFiles as $file) {
+                    if (!file_exists($appFunctionDir . '/' . $file)) {
+                        continue;
+                    }
+                    if (in_array($appFunctionDir . '/' . $file, $existInclude)) {
+                        continue;
+                    }
+                    if ($file == 'generatorPage.php') {
+                        $generatorPage = $appFunctionDir . '/' . $file;
+                        continue;
+                    }
+
+                    $f = pathinfo($file);
+                    if ($f['extension'] == 'php') {
+                        require $appFunctionDir . '/' . $file;
+                    }
+                }
+            }
+            if ($generatorPage) {
+                require $generatorPage;
+            }
+        }
+    }
+
+    private function slash($str)
+    {
+        $str = str_replace('\\', '/', $str);
+        return '/' . trim($str, '/');
     }
 }

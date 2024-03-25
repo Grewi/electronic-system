@@ -1,78 +1,31 @@
 <?php
+use system\core\date\date;
 
 if (!function_exists('dateTimeParse')) {
     function dateTimeParse($dateTime)
     {
-        $ar = explode(' ', $dateTime);
-        $date = isset($ar[0]) ? explode('-', $ar[0]) : ['0', '0', '0'];
-        $time = isset($ar[1]) ? explode(':', $ar[1]) : ['0', '0', '0'];
-        return [
-            'day' => $date[2],
-            'month' => $date[1],
-            'year' => $date[0],
-            'hour' => $time[0],
-            'min' => $time[1],
-            'sec' => $time[2],
-        ];
+        return date::dateTimeParse($dateTime);
     }
 }
 
 if (!function_exists('monthLangR')) {
     function monthLangR($month)
     {
-        $month = (int)$month;
-        $arr = [
-            1 => 'января',
-            2 => 'февраля',
-            3 => 'марта',
-            4 => 'апреля',
-            5 => 'мая',
-            6 => 'июня',
-            7 => 'июля',
-            8 => 'августа',
-            9 => 'сентября',
-            10 => 'октября',
-            11 => 'ноября',
-            12 => 'декабря',
-        ];
-        return isset($arr[$month]) ? $arr[$month] : '';
+        return date::monthLangR($month);
     }
 }
 
 if (!function_exists('monthLangI')) {
     function monthLangI($month)
     {
-        $arr = [
-            1 => 'январь',
-            2 => 'февраль',
-            3 => 'март',
-            4 => 'апрель',
-            5 => 'май',
-            6 => 'июнь',
-            7 => 'июль',
-            8 => 'август',
-            9 => 'сентябрь',
-            10 => 'октябрь',
-            11 => 'ноябрь',
-            12 => 'декабрь',
-        ];
-        return isset($arr[(int)$month]) ? $arr[(int)$month] : '';
+        return date::monthLangI($month);
     }
 }
 
 if (!function_exists('weekLandgI')) {
     function weekLandgI($day)
     {
-        $arr = [
-            1 => 'Понедельник',
-            2 => 'Вторник',
-            3 => 'Среда',
-            4 => 'Четверг',
-            5 => 'Пятница',
-            6 => 'Суббота',
-            7 => 'Воскресение',
-        ];
-        return isset($arr[(int)$day]) ? $arr[(int)$day] : '';
+        return date::weekLandgI($day);
     }
 }
 

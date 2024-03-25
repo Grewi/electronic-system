@@ -7,6 +7,8 @@ use system\core\user\bruteforce;
 use system\core\request\request;
 use system\core\traits\singleton;
 use system\core\config\config;
+use system\core\system\header;
+use system\core\app\app;
 
 class auth
 {
@@ -58,14 +60,14 @@ class auth
     protected function login($function = null): void
     {
         $valid = new validate();
-        $where = [];  
+        $where = [];
         $bild = [];
         if ($this->email) {
             $valid->name('email', $this->email)->mail()->empty();
             $where[] = '`email` = :email';
             $bild['email'] = $valid->return('email');
-        } 
-        if($this->login){
+        }
+        if ($this->login) {
             $valid->name('login', $this->login)->free($this->loginRegex)->empty();
             $where[] = '`login` = :login';
             $bild['login'] = $valid->return('login');
@@ -73,11 +75,11 @@ class auth
 
         $valid->name('password', $this->pass)->empty();
 
-        if($this->csrf){
-            $valid->name('csrf')->csrf('auth')->empty(); 
+        if ($this->csrf) {
+            $valid->name('csrf')->csrf('auth')->empty();
         }
-          
-        
+
+
         $bruteforce = new bruteforce();
         $bruteforce->addTry();
 
@@ -95,26 +97,27 @@ class auth
                 'user_agent' => request('global')->user_agent,
                 'ip' => request('global')->ip,
             ];
-            db()->query('INSERT INTO `sessions` SET `user_id` = :user_id, `session_key` = :session_key , `active_time` = :active_time, `user_agent` = :user_agent, `ip` = :ip', $param);
+            db()->query('INSERT INTO `sessions` (`user_id`, `session_key`, `active_time`, `user_agent`, `ip`) VALUES (:user_id,  :session_key, :active_time, :user_agent, :ip)', $param);
 
             setcookie('us', $passForCook, date('U') + $this->session_time(), '/');
             $_SESSION['us'] = $passForCook;
             $this->status = $user->id;
+            // var_dump($this, $user, $valid);
+            // exit();
             if ($function) {
                 $function($this, $user, $valid);
             }
-            if($this->urlSuccess){
-                redirect($this->urlSuccess);
+            if ($this->urlSuccess) {
+                (new header())->location($this->urlSuccess);
             }
-
-        }else{
+        } else {
             $this->status = 0;
             if ($function) {
                 $function($this, $user, $valid);
             }
-            if($this->urlFailed){
-                redirect($this->urlFailed);
-            }         
+            if ($this->urlFailed) {
+                (new header())->location($this->urlFailed);
+            }
         }
     }
 
@@ -131,12 +134,12 @@ class auth
         if ($function) {
             $function();
         }
-        if($this->urlFailed){
-            redirect($this->urlFailed);
-        }elseif($this->urlSuccess){
-            redirect($this->urlSuccess);
-        }else{
-            redirect('/');
+        if ($this->urlFailed) {
+            (new header())->location($this->urlFailed);
+        } elseif ($this->urlSuccess) {
+            (new header())->location($this->urlSuccess);
+        } else {
+            (new header())->location('/');
         }
     }
 
@@ -153,7 +156,9 @@ class auth
             if (isset($ses->user_id) && $this->sanitary($ses)) {
                 //При активности пользователя, продлеваем сессию
                 db()->query('UPDATE `sessions` SET `active_time` = :active_time WHERE `id` = ' . $ses->id, ['active_time' => time()]);
+                @setcookie('us', $ses->session_key, date('U') + $this->session_time(), '/');
                 $result = $ses->user_id; // Актуальная сессия
+
                 $this->delOldSes($ses->user_id);
             } else {
                 $this->error = 'Сессия завершенна';
@@ -179,7 +184,16 @@ class auth
             $result = '0'; // Требуется авторизация
         }
         $this->status = $result;
-        // dd($this->error, $result);
+
+        $app = app::app();
+        $user = db()->fetch('SELECT * FROM `users` WHERE id = ' . $result);
+        if ($result > 0 && $user) {
+            foreach ($user as $a => $i) {
+                $app->user->set([$a => $i]);
+            }
+        } else {
+            $app->user->set(['id' => 0]);
+        }
         return $result;
     }
 

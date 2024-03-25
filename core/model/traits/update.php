@@ -32,10 +32,10 @@ trait update
         
         $data = array_merge($data, $this->_bind);
         $sql = 'UPDATE ' . $this->_table . ' SET ' . $str . $this->_where;
-        db()->query($sql, $data);
+        db($this->_databaseName)->query($sql, $data);
         try{
             if($this->_idNumber){
-                $dbId = db()->fetch('SELECT * FROM ' . $this->_table . ' WHERE `' . $this->_id . '` = ' . $this->_idNumber . ';', []);
+                $dbId = db($this->_databaseName)->fetch('SELECT * FROM ' . $this->_table . ' WHERE `' . $this->_id . '` = ' . $this->_idNumber . ';', []);
                 $ob = static::class;
                 $result = $ob::find($dbId->{$this->_id});
                 return $result ? $result : null;

@@ -19,6 +19,8 @@ class help
         'config-----------' => 'Обновление ini файлов конфигураций',
         'add/complement---' => 'Установка дополнений из отдельных репозиториев, параметром принимает имя репозитория',
         'create/symlink---' => 'Создание символической ссылки "directiry/file directory/linkName"',
+        'style------------' => 'Компилирование css файлов по значениям из app/system/sass/sass.php',
+        'style/info-------' => 'Список возможных значений для конфигурации sass',
     ];
     public function index()
     {

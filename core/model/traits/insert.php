@@ -22,9 +22,15 @@ trait insert
         }
         $data = array_merge($data,$this->_bind);
         $sql = 'INSERT INTO ' . $this->_table . ' (' . $strKey .') VALUES (' . $strData . ')';
-        db()->query($sql, $data);
+        db($this->_databaseName)->query($sql, $data);
         try{
-            $dbId = db()->fetch('SELECT * FROM ' . $this->_table . ' where ' . $this->_id .' = LAST_INSERT_ID()', []);
+
+            if (config('database', 'type') == 'sqlite') {
+                $dbId = db($this->_databaseName)->fetch('SELECT Last_insert_rowid() as ' . $this->_id, []);
+            }else{
+                $dbId = db($this->_databaseName)->fetch('SELECT * FROM ' . $this->_table . ' where ' . $this->_id .' = LAST_INSERT_ID()', []);
+            }
+
             $ob = static::class;
             $result = $ob::find($dbId->{$this->_id});
             return $result ? $result : null;
