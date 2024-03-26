@@ -24,4 +24,5 @@ if ($adminPanel) {
         \system\install_system\adminPanel\database::mysql();
     }
     $filesAdmin->finish();
+    echo 'Для некоторых установленных функций потребуется запустить composer install' . PHP_EOL;
 }
