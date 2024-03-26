@@ -318,7 +318,9 @@ class route
 
     private function slash($str)
     {
-        $str = str_replace('\\', '/', $str);
-        return '/' . trim($str, '/');
+        if($str){
+            $str = str_replace('\\', '/', $str);
+            return '/' . trim($str, '/');            
+        }
     }
 }
