@@ -11,7 +11,7 @@
                     <form action="" method="post">
                         <csrf type="input" name="userCreate" />
                         <div class="mb-3">
-                            <input type="email" class="form-control <?= $class_email ?>" name="email" placeholder="email" value="<?= $return->data->email ?>">
+                            <input type="email" class="form-control <?= $return->class->email ?>" name="email" placeholder="email" value="<?= $return->data->email ?>">
                             <div class="invalid-feedback"><?= $error_email ?></div>
                         </div>
                         <div class="mb-3">
