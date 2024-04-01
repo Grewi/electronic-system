@@ -105,7 +105,9 @@ trait validatedTraits
             $this->error[$this->currentName][] = lang('valid', 'noInt');;
             $this->setControl(false);
         }
-        $data = str_replace(',', '.', $data);
+        if($data){
+            $data = str_replace(',', '.', $data);
+        }
         $this->setReturn($data);
         return $this;
     }
