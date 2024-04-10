@@ -98,6 +98,14 @@ class view
                 $this->render($i);
             }
         }
+
+        preg_match_all('/\<include \s*class\s*=\s*"(.*?)"\s* \s*method\s*=\s*"(.*?)" \/*\>/si', $content, $matches);
+        if ($matches && count($matches[1]) > 0) {
+            foreach ($matches[1] as $key => $i) {
+                $inc = '<?php (new ' . $i . '())->' . $matches[2][$key] . '() ?>';
+                $content = str_replace($matches[0][$key], $inc, $content);
+            }
+        }
         return $content;
     }
 
