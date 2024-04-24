@@ -33,7 +33,7 @@ class createController
         $this->route   = APP . '/route/web/00_' . str_replace('/', '_', $parametr) . '.php';
         $_ArrParam     = array_merge([APP_NAME, 'controllers'], $ArrParam);
         $this->namespace = implode('\\', $_ArrParam);
-
+        $v = null;
         if (!isset(ARGV[3])) {
             $this->saveController();
         }else{
