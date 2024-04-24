@@ -6,6 +6,10 @@ use system\core\app\app;
 $app = app::app();
 $app->install->set(['dirInstall' => 'system']);
 
+$tableSes = null;
+$tableUsers = null;
+$tableMigration = null;
+
 while ($app->install->startDb === null) {
     echo "Установить настройки базы данных? (yes/no): ";
     $i = trim(fgets(STDIN));

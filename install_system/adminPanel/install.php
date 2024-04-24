@@ -7,13 +7,13 @@ $app->install->set(['dirInstall' => 'adminPanel']);
 
 $adminPanel = null;
 
-// if ($app->install->tableSes && $app->install->tableUsers && $app->install->tableMigration) {
+if (!empty(config('database', 'type'))) {
     while ($adminPanel === null) {
         echo "Установить систему авторизации и  админ-панель? (yes/no): ";
         $i = trim(fgets(STDIN));
         $adminPanel = in_array(mb_strtolower($i), $ok);
     }
-// }
+}
 
 if ($adminPanel) {
     $filesAdmin = new files();

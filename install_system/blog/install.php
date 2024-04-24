@@ -1,4 +1,5 @@
 <?php
+
 use system\install_system\blog\files;
 use system\install_system\blog\sql\mysql;
 use system\install_system\blog\sql\sqlite;
@@ -9,10 +10,12 @@ $app->install->set(['dirInstall' => 'blog']);
 $blog = null;
 $slug = null;
 
-while ($blog === null) {
-    echo "Установить блоги? (yes/no): ";
-    $i = trim(fgets(STDIN));
-    $blog = in_array(mb_strtolower($i), $ok);
+if (!empty(config('database', 'type'))) {
+    while ($blog === null) {
+        echo "Установить блоги? (yes/no): ";
+        $i = trim(fgets(STDIN));
+        $blog = in_array(mb_strtolower($i), $ok);
+    }
 }
 
 if ($blog) {
@@ -22,9 +25,9 @@ if ($blog) {
         echo '"blogs, blog": ';
         $i = trim(fgets(STDIN));
         $arr = explode(',', $i);
-        if(is_array($arr)){
-            foreach($arr as &$el){
-                $el = mb_strtolower(trim($el)); 
+        if (is_array($arr)) {
+            foreach ($arr as &$el) {
+                $el = mb_strtolower(trim($el));
             }
             $app->install->set(['blogs'   => $arr[0]]);
             $app->install->set(['blog'    => $arr[1]]);
@@ -40,9 +43,8 @@ if ($blog) {
     if ($app->install->dbType == 'sqlite') {
         // $sqlite = new sqlite();
         // $sqlite->install();
-    }else{
+    } else {
         $mysql = new mysql();
         $mysql->mysql();
     }
 }
-

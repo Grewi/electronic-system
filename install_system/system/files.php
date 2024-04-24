@@ -53,6 +53,7 @@ class files extends \system\install_system\files
                     ],
                     'console.php' => $this->view('app/route/console.php'),
                     'web.php' => $this->view('app/route/web.php'),
+                    'cron.php' => $this->view('app/route/cron.php'),
                 ],
                 'views' => [
                     'index' => [
@@ -73,6 +74,7 @@ class files extends \system\install_system\files
             ],
             'composer' => null,
             'e' => $this->view('e'),
+            'cron' => $this->view('cron'),
             'index.php' => $this->view('index.php'),
             '.htaccess' => $this->view('.htaccess'),
             '.gitignore' => $this->view('.gitignore'),
