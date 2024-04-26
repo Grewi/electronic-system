@@ -17,6 +17,7 @@ class createConfigIni
                     continue;
                 }
                 $filename = $info['filename'];
+                // var_dump($filename);
                 \system\core\config\config::createConfig($filename);
             }
             echo 'Процесс завершён.' . PHP_EOL;

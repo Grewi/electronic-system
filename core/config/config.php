@@ -100,6 +100,7 @@ class config
         $class = '\\' . APP_NAME . '\\configs\\' . $className;
         $a = new $class;
         $config = $a->set();
+        $this->iniArr = [];
 
         $i = $this->path . '.' . $className . '.ini';
         if (file_exists($i)) {
