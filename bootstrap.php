@@ -1,6 +1,7 @@
 <?php
 
 use system\core\app\app;
+use system\core\history\history;
 
 !INDEX ? exit('exit') : true;
 if (ENTRANSE == 'web') {
@@ -40,26 +41,7 @@ if (ENTRANSE == 'web') {
         $app->bootstrap->set(['ajax' => false]);
     }
 
-
-
-    if (!request('global')->ajax && isset($_SERVER['REQUEST_URI'])) {
-
-        if (empty($_SESSION['history'])) {
-            $_SESSION['history'][] = [
-                'uri'    => $_SERVER['REQUEST_URI'],
-                'method' => $_SERVER['REQUEST_METHOD']
-            ];
-        }
-
-        $oldUri    = isset($_SESSION['history'][0]['uri'])    ? $_SESSION['history'][0]['uri']    : null;
-        $oldMethod = isset($_SESSION['history'][0]['method']) ? $_SESSION['history'][0]['method'] : null;
-
-        if (($oldUri && $oldUri != $_SERVER['REQUEST_URI']) || ($oldMethod && $oldMethod != $_SERVER['REQUEST_METHOD'])) {
-            array_unshift($_SESSION['history'], [
-                'uri'    => $_SERVER['REQUEST_URI'],
-                'method' => $_SERVER['REQUEST_METHOD']
-            ]);
-        }
-    }
     unset($ip, $uri, $url, $host, $user_agent, $method);
+
+    history::unshift();
 }

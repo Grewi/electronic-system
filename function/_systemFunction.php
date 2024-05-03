@@ -7,6 +7,7 @@ use system\core\user\auth;
 use system\core\config\config;
 use system\core\files\files;
 use system\core\system\header;
+use system\core\history\history;
 
 if (!function_exists('db')) {
     function db($configName = null)
@@ -112,14 +113,7 @@ if (!function_exists('alert2')) {
 if (!function_exists('referal_url')) {
     function referal_url($lavel = 1)
     {
-        //$lavel = 0; Это текущая страница
-        if (isset($_SESSION['history'][$lavel]['uri'])) {
-            $a = $_SESSION['history'][$lavel]['uri'];
-            unset($_SESSION['history'][$lavel]);
-            return $a;
-        } else {
-            return '/';
-        }
+        return history::referal();
     }
 }
 
@@ -140,6 +134,12 @@ if (!function_exists('csrf')) {
         } else {
             return $_SESSION['csrf'][$name];
         }
+    }
+}
+
+if (!function_exists('historyid')) {
+    function historyid(){
+        return history::currentId();
     }
 }
 

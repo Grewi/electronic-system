@@ -4,12 +4,13 @@ namespace system\core\view;
 
 class view
 {
-    private $file;
-    private $forseCompile = false;
-    private $cacheDir;
-    private $viewsDir;
-    private $validElement;
-    private $countInclude;
+    protected $file;
+    protected $forseCompile = false;
+    protected $cacheDir;
+    protected $viewsDir;
+    protected $validElement;
+    protected $countInclude;
+    protected $historyid = true;
 
     public function __construct(string $file = null, $data = [])
     {
@@ -81,6 +82,7 @@ class view
             $content = $this->variable($content);
             $content = $this->include($content);   // Подключение файлов
             $content = $this->csrf($content);      // Токен csrf
+            $content = $this->historyid($content); // 
             $content = $this->clearing($content);  // Очистка
             $this->save($file, $content);          // Сохранение файла в кеш
         }
@@ -187,6 +189,25 @@ class view
         return $content;
     }
 
+    //
+    private function historyid($content): string
+    {
+        preg_match_all('/\<history\s*(.*?)\s*\\/*>/si', $content, $matches);
+        foreach ($matches[0] as $key => $i) {
+            $content = str_replace($matches[0][$key], '<input value="<?= historyid() ?>" name="historyid" hidden >', $content);
+        }
+        if(count($matches[0]) < 1 && $this->historyid){
+            preg_match_all('/\<form\s*(.*?)\s*>(.*?)<\/form\s*>/si', $content, $matches);
+            foreach ($matches[0] as $key => $i) {
+                $content = str_replace($matches[0][$key], '<form ' . $matches[1][$key] .'> 
+                <input value="<?= historyid() ?>" name="historyid" hidden >
+                ' . $matches[2][$key] .' 
+                </form>', $content);
+            }
+        }
+        return $content;
+    }
+
     //Последнее изменение в директории
     private function foldermtime(string $dir)
     {
@@ -215,4 +236,6 @@ class view
         }
         return $result;
     }
+
+
 }
