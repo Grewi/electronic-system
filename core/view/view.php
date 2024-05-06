@@ -197,11 +197,10 @@ class view
             $content = str_replace($matches[0][$key], '<input value="<?= historyid() ?>" name="historyid" hidden >', $content);
         }
         if(count($matches[0]) < 1 && $this->historyid){
-            preg_match_all('/\<form\s*(.*?)\s*>(.*?)<\/form\s*>/si', $content, $matches);
+            preg_match_all('/<form(.*?)<\/form\s*>/si', $content, $matches);
             foreach ($matches[0] as $key => $i) {
-                $content = str_replace($matches[0][$key], '<form ' . $matches[1][$key] .'> 
+                $content = str_replace($matches[0][$key], '<form ' . $matches[1][$key] .' 
                 <input value="<?= historyid() ?>" name="historyid" hidden >
-                ' . $matches[2][$key] .' 
                 </form>', $content);
             }
         }
