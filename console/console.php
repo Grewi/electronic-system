@@ -34,8 +34,3 @@ $route->console('style')->controller('sass', 'compile');
 $route->console('style/info')->controller('sass', 'info');
 
 $route->console('help')->controller('help', 'index');
-
-require_once ROOT . '/app/route/console.php';
-
-
-exit('no controller ');

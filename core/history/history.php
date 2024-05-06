@@ -12,7 +12,7 @@ class history
     public static function unshift()
     {
         $app = app::app();
-        if (!request('global')->ajax && isset($_SERVER['REQUEST_URI'])) {
+        if (!$app->bootstrap->ajax && isset($_SERVER['REQUEST_URI'])) {
             
             if (empty($_SESSION['history'])) {
                 $_SESSION['history'][] = [
