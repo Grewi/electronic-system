@@ -36,8 +36,6 @@ require_once SYSTEM . '/exception.php';
 try{
     require_once SYSTEM . '/function.php';
     require_once SYSTEM . '/autoloader.php';
-    bootstrap::load();
-    history::unshift();
     errorPhp::config();
 
     $composer = ROOT . '/composer/vendor/autoload.php';
@@ -46,6 +44,8 @@ try{
     }
 
     if(ENTRANSE == 'web'){
+        bootstrap::load();
+        history::unshift();
         require_once APP . '/route/web.php';
     }elseif(ENTRANSE == 'console'){
         require_once SYSTEM . '/console/console.php';
