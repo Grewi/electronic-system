@@ -5,6 +5,8 @@ use system\core\app\app;
 
 trait error404 
 {
+    protected $ErrorTextResponse = "Page not found";
+
     protected function errorResponse()
     {
         $app = app::app();
@@ -12,7 +14,7 @@ trait error404
         history::shift();
         $this->errorTypeStr();
         if($app->bootstrap->ajax){
-            exit("123");
+            exit($this->ErrorTextResponse);
         }
     }
 
