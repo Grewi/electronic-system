@@ -31,7 +31,7 @@ if(!defined('MODELS')){
     define('MODELS', APP . '/models');
 }
 
-require_once SYSTEM . '/exception.php';
+require_once SYSTEM . '/exception/exception.php';
 
 try{
     require_once SYSTEM . '/function.php';
@@ -54,6 +54,7 @@ try{
     }elseif(ENTRANSE == 'cron'){
         require_once APP . '/route/cron.php';
     }
-}catch(GlobalException $e){
-    exit($e);
+}catch(Throwable $e){
+    exeptionVar::dump($e, $e->getMessage(), 0);
+    exit();
 }
