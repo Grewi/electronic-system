@@ -13,7 +13,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="alert alert-danger mt-3" role="alert">
-                    <?= $message ?>
+                    <div><?= $message ?></div>
+                    <div>
+                        <?= $exeption->getFile() ?>
+                        <strong><?= $exeption->getLine() ?></strong>
+                    </div>
                 </div>
             </div>
             <div class="col-12">

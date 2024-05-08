@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="alert alert-dark mt-3" role="alert">
-                    503 Service Unavailable <br>
+                    <div><strong>503 Service Unavailable</strong></div>
                     Произошла непредвиденная ошибка в работе сайта.
                 </div>
             </div>

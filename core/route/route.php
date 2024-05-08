@@ -130,7 +130,8 @@ class route
 
     public function console(string $get): route
     {
-        if ($get == $this->url[1]) {
+
+        if (isset($this->url[1]) && $get == $this->url[1]) {
             $this->get = true;
         } else {
             $this->get = false;

@@ -41,11 +41,16 @@ class exeptionVar
 {
     public static function dump($exeption, $message, $code)
     {
-        http_response_code(503);
-        if(\system\core\config\config::globals('dev')){
-            require SYSTEM . '/exception/tempDew.php';
-        }else{
-            require SYSTEM . '/exception/tempProd.php';
+
+        if (ENTRANSE == 'web') {
+            http_response_code(503);
+            if (\system\core\config\config::globals('dev')) {
+                require SYSTEM . '/exception/tempDew.php';
+            } else {
+                require SYSTEM . '/exception/tempProd.php';
+            }
+        } else {
+            require SYSTEM . '/exception/tempConsole.php';
         }
         exit();
     }
