@@ -24,14 +24,14 @@ class database
 
     static public function connect($configName = null)
     {
-        if(!$configName){
+        if (!$configName) {
             $configName = 'database';
         }
-		if(!isset(self::$connect[$configName]) || self::$connect[$configName] === null){ 
-			self::$connect[$configName] = new self($configName);
-		}
-		return self::$connect[$configName];
-	}
+        if (!isset(self::$connect[$configName]) || self::$connect[$configName] === null) {
+            self::$connect[$configName] = new self($configName);
+        }
+        return self::$connect[$configName];
+    }
 
     /** @var Подключение к базе */
     private function __construct($configName)
@@ -46,7 +46,7 @@ class database
                 if (file_exists(ROOT . '/sqlite/' . $this->file_name . '.db')) {
                     $this->pdo = new \PDO('sqlite:' . ROOT . '/sqlite/' . $this->file_name . '.db', '', '', $options);
                 } else {
-                    exit('Ошибка подключения к БД');
+                    throw new \PDOException('Ошибка подключения к БД');
                 }
             } else if (in_array($this->type, ['mysql', 'pgsql'])) {
                 $this->pdo = new \PDO(
@@ -59,17 +59,18 @@ class database
                     $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
                 }
             } else {
-		throw new \PDOException('Неизвестный тип БД');
+                throw new \PDOException('Неизвестный тип БД');
             }
         } catch (\PDOException $e) {
-            dd('Ошибка подключения к БД: ' . $e->getMessage());
+            throw new \PDOException($e->getMessage());
+            // dd('Ошибка подключения к БД: ' . $e->getMessage());
         }
     }
 
     private function config($name)
     {
         $config = config::$name();
-        if(!$config){
+        if (!$config) {
             exit('Не установленны настройки для подключения к базе данных');
         }
         $this->file_name = $config->file_name;
@@ -110,7 +111,7 @@ class database
             $r = $this->query($sql, $params, $className)->fetch();
             cacheQuery::addQuery($r);
             return $r;
-        }else{
+        } else {
             return cacheQuery::returnQuery();
         }
     }
@@ -143,9 +144,9 @@ class database
     public static function __callStatic($method, $parameters)
     {
         $m = '_' . $method;
-        if(method_exists(self::connect(), $method)){
+        if (method_exists(self::connect(), $method)) {
             return self::connect()->$method(...$parameters);
-        }elseif(method_exists(self::connect(), $m)){
+        } elseif (method_exists(self::connect(), $m)) {
             return self::connect()->$m(...$parameters);
         }
     }
@@ -153,9 +154,9 @@ class database
     public function __call($method, $param)
     {
         $m = '_' . $method;
-        if(method_exists($this, $method)){
+        if (method_exists($this, $method)) {
             return $this->$method(...$param);
-        }elseif(method_exists($this, $m)){
+        } elseif (method_exists($this, $m)) {
             return $this->$m(...$param);
         }
     }

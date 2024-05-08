@@ -138,7 +138,8 @@ if (!function_exists('csrf')) {
 }
 
 if (!function_exists('historyid')) {
-    function historyid(){
+    function historyid()
+    {
         return history::currentId();
     }
 }
@@ -174,10 +175,15 @@ if (!function_exists('dd')) {
         if (config::globals('dev')) {
             if (\system\core\config\config::globals('dumpline')) {
                 $backtrace = debug_backtrace();
-                echo '<div style="font-size: 12px; padding:3px; background: #fff; font-family: monospace; white-space:nowrap;">
-                <span style="color:#900;">' . $backtrace[0]['file'] . '</span>
+                if (ENTRANSE == 'web') {
+                    echo '<div style="font-size: 12px; padding:3px; background: #fff; font-family: monospace; white-space:nowrap;">
+                    Вызов в: 
+                <span style="color:#900;">' . localPathFile($backtrace[0]['file']) . '</span>
                 <span style="color:#090;">' . $backtrace[0]['line'] . '</span>
                 </div>';
+                } else {
+                    echo 'Вызов в: ' . localPathFile($backtrace[0]['file']) . ' (' . $backtrace[0]['line'] . ')' . PHP_EOL;
+                }
             }
             foreach ($a as $b) {
                 var_dump($b);
@@ -187,12 +193,12 @@ if (!function_exists('dd')) {
     }
 }
 
-// if (!function_exists('url')) {
-//     function url()
-//     {
-//         return $_SERVER['REQUEST_URI'];
-//     }
-// }
+if (!function_exists('localPathFile')) {
+    function localPathFile($path)
+    {
+        return str_replace(ROOT, '', str_replace('\\', '/', $path));
+    }
+}
 
 // if (!function_exists('count_form')) {
 //     function count_form($name, $inc = false)

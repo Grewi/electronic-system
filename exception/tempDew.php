@@ -13,9 +13,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="alert alert-danger mt-3" role="alert">
-                    <div><?= $message ?></div>
+                    <div><?= localPathFile($message) ?></div>
                     <div>
-                        <?= $exeption->getFile() ?>
+                        <?= localPathFile($exeption->getFile()) ?>
                         <strong><?= $exeption->getLine() ?></strong>
                     </div>
                 </div>
@@ -23,25 +23,26 @@
             <div class="col-12">
                 <table class="table table-striped mt-3">
                     <thead>
-                        <tr class="table-primary">
-                            <th scope="col" width="50%">file</th>
-                            <th scope="col">line</th>
+                        <tr class="table-secondary">
+                            <th>№</th>
+                            <th scope="col">file</th>
                             <th scope="col">class</th>
+                            <th scope="col">type</th>
                             <th scope="col">function</th>
-                            <!-- <th scope="col">type</th> -->
+                            <th scope="col">line</th>
                             <th scope="col">arg</th>
                         </tr>
                     </thead>
                     <tbody>
 
-                        <?php foreach ($exeption->getTrace() as $e) : ?>
+                        <?php foreach ($exeption->getTrace() as $a => $e) : ?>
                             <tr>
-
-                                <td class="text-primary-emphasis"><?= $e['file'] ?></td>
+                                <td class="text-muted"><?=$a + 1?></td>
+                                <td class="text-primary-emphasis"><?= localPathFile($e['file']) ?></td>
+                                <td class="fst-italic text-success"><?= isset($e['class']) ? $e['class'] : '' ?></td>
+                                <td><?= isset($e['type']) ? $e['type'] : '' ?></td>
+                                <td class="fst-italic text-danger"><?= isset($e['function']) ? $e['function'] : '' ?></td>
                                 <td class="fw-bold"><?= isset($e['line']) ? $e['line'] : '' ?></td>
-                                <td class="fst-italic text-secondary"><?= isset($e['class']) ? $e['class'] : '' ?></td>
-                                <td class="fst-italic text-secondary"><?= isset($e['function']) ? $e['function'] : '' ?></td>
-                                <!-- <td><?= $e['type'] ?></td> -->
                                 <td>
                                     <?php if(isset($e['args'])):?>
                                         <?php foreach($e['args'] as $i) : ?>
