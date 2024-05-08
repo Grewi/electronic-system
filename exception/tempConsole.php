@@ -5,6 +5,10 @@ $lineLen = strlen('Line');
 $clssLen = strlen('Class');
 $funcLen = strlen('Function');
 
+// $a1 = shell_exec('mode con'); //for windows
+// $col = exec('tput cols'); //
+// dd($a1);
+
 foreach ($exeption->getTrace() as $e) {
     $fileLen = strlen(localPathFile($e['file'])) > $fileLen ? strlen(localPathFile($e['file'])) : $fileLen;
     $lineLen = isset($e['line']) && strlen($e['line']) > $lineLen ? strlen($e['line']) : $lineLen;
