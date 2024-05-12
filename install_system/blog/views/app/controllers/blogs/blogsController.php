@@ -12,7 +12,7 @@ class blogsController extends controller
 {
     public function index()
     {
-        $blog = blogs::where('url', request('get', 'url'))->fullGet();
+        $blog = (new blogs)->where('url', request('get', 'url'))->fullGet();
 
         if(!$blog){
             (new error())->error404();
@@ -21,7 +21,7 @@ class blogsController extends controller
 
         $this->bc(lang('blogs', 'blogs'), '/blogs');
 
-        $bcp = blogs_categories::bc($blog->category_id, true);
+        $bcp = (new blogs_categories)->bc($blog->category_id, true);
         
         foreach($bcp as $i){
             $this->bc($i->name, '/blogs/category/' . $i->url);
@@ -36,13 +36,13 @@ class blogsController extends controller
             $this->data['meta_description'] = $blog->description;
         }
 
-        $postsCategory = blogs::whereIn('category_id', blogs_categories::treeArray($blog->category_id))
+        $postsCategory = (new blogs)->whereIn('category_id', (new blogs_categories)->treeArray($blog->category_id))
             ->where('active', 1)
             ->sort('asc', 'sort')
             ->all();
         $this->data['blog'] = $blog;
         $this->data['postsCategory'] = $postsCategory;
-        $this->data['rootCategory'] = blogs_categories::tree($bcp ? $bcp[0]->id : null);
+        $this->data['rootCategory'] = (new blogs_categories)->tree($bcp ? $bcp[0]->id : null);
         new view('blogs/blogs/index', $this->data);
     }
 }

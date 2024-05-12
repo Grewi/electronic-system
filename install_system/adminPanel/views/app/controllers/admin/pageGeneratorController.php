@@ -18,7 +18,7 @@ class pageGeneratorController extends controller
 
     public function index()
     {
-        $pages = page_generator::pagin();
+        $pages = (new page_generator)->pagin();
         $this->title(lang('admin', 'pageGenerator'));
         $this->bc(lang('admin', 'pageGenerator'), '');
         $this->data['PGSubMenu'] = true;
@@ -29,8 +29,8 @@ class pageGeneratorController extends controller
 
     public function pgList()
     {
-        $page = page_generator::find(request('get', 'pg_id'));
-        $datas = data_page_generator::where('page_id', $page->id)->all();
+        $page = (new page_generator)->find(request('get', 'pg_id'));
+        $datas = (new data_page_generator)->where('page_id', $page->id)->all();
         $this->bc(lang('admin', 'pageGenerator'), '/' . ADMIN . '/pg/');
         $this->bc($page->name, '/' . ADMIN . '/pg/data/' . $page->id);
         $this->bc(lang('admin', 'data'));
@@ -41,7 +41,7 @@ class pageGeneratorController extends controller
 
     public function pgAddData()
     {
-        $page = page_generator::find(request('get', 'pg_id'));
+        $page = (new page_generator)->find(request('get', 'pg_id'));
         $this->return($page);
         $this->bc(lang('admin', 'pageGenerator'), '/admin/pg/');
         $this->bc($page->name, '/' . ADMIN . '/pg/data/' . $page->id);
@@ -53,7 +53,7 @@ class pageGeneratorController extends controller
 
     public function pgListSave()
     {
-        $page = page_generator::find(request('get', 'pg_id'));
+        $page = (new page_generator)->find(request('get', 'pg_id'));
         $valid = new validate();
         $valid->name('csrf')->csrf('pgData');
         $valid->name('name')->text();
@@ -66,7 +66,7 @@ class pageGeneratorController extends controller
                 'type' => $valid->return('type'),
                 'data' => $valid->return('type') != 3 ? json_encode($valid->return('value')) : $valid->return('value'),
             ];
-            data_page_generator::insert($data);
+            (new data_page_generator)->insert($data);
             redirect(referal_url(2));
         }else{
             dd($valid);
@@ -76,8 +76,8 @@ class pageGeneratorController extends controller
 
     public function pgDataEdit()
     {
-        $dataPg = data_page_generator::find(request('get', 'data_id'));
-        $page = page_generator::find($dataPg->id);
+        $dataPg = (new data_page_generator)->find(request('get', 'data_id'));
+        $page = (new page_generator)->find($dataPg->id);
         $this->return($page);
         $this->bc(lang('admin', 'pageGenerator'), '/admin/pg/');
         $this->bc($page->name, '/' . ADMIN . '/pg/data/' . $page->id);
@@ -90,8 +90,8 @@ class pageGeneratorController extends controller
 
     public function pgDataEditSave()
     {
-        $dataPg = data_page_generator::find(request('get', 'data_id'));
-        $page = page_generator::find($dataPg->id);
+        $dataPg = (new data_page_generator)->find(request('get', 'data_id'));
+        $page = (new page_generator)->find($dataPg->id);
 
         $valid = new validate();
         $valid->name('csrf')->csrf('pgData');
@@ -112,8 +112,8 @@ class pageGeneratorController extends controller
 
     public function pgDataDelete()
     {
-        $dataPg = data_page_generator::find(request('get', 'data_id'));
-        $page = page_generator::find($dataPg->id);
+        $dataPg = (new data_page_generator)->find(request('get', 'data_id'));
+        $page = (new page_generator)->find($dataPg->id);
         $this->bc(lang('admin', 'pageGenerator'), '/admin/pg/');
         $this->bc($page->name, '/' . ADMIN . '/pg/data/' . $page->id);
         $this->bc(lang('admin', 'addData'));
@@ -125,8 +125,8 @@ class pageGeneratorController extends controller
 
     public function pgDataDeleteAction()
     {
-        $dataPg = data_page_generator::find(request('get', 'data_id'));
-        $page = page_generator::find($dataPg->id);
+        $dataPg = (new data_page_generator)->find(request('get', 'data_id'));
+        $page = (new page_generator)->find($dataPg->id);
         $dataPg->delete();
         redirect(referal_url(2));
     }
@@ -160,7 +160,7 @@ class pageGeneratorController extends controller
                     'name' => $valid->return('name'),
                     'active' => $valid->return('active'),
                 ];
-                page_generator::insert($data);
+                (new page_generator)->insert($data);
                 alert2('success', 'success');
                 redirect('admin/pg/');
             } catch (\Exception $e) {
@@ -175,7 +175,7 @@ class pageGeneratorController extends controller
 
     public function update()
     {
-        $page = page_generator::find(request('get', 'page_id'));
+        $page = (new page_generator)->find(request('get', 'page_id'));
         $this->return($page);
         $this->title(lang('admin', 'editPage'));
         $this->bc(lang('admin', 'pageGenerator'), '/' . ADMIN .'/pg/');
@@ -186,7 +186,7 @@ class pageGeneratorController extends controller
 
     public function updateAction()
     {
-        $page = page_generator::find(request('get', 'page_id'));
+        $page = (new page_generator)->find(request('get', 'page_id'));
         $valid = new validate();
         $valid->name('csrf')->csrf('pageUpdate');
         $valid->name('url')->url();
@@ -221,7 +221,7 @@ class pageGeneratorController extends controller
 
     public function delete()
     {
-        $page = page_generator::find(request('get', 'page_id'));
+        $page = (new page_generator)->find(request('get', 'page_id'));
         $this->title(lang('admin', 'deletePage'));
         $this->bc(lang('admin', 'pageGenerator'), '/' . ADMIN .'/pg/');
         $this->bc(lang('admin', 'deletePage'));   
@@ -231,8 +231,8 @@ class pageGeneratorController extends controller
 
     public function deleteAction()
     {
-        $page = page_generator::find(request('get', 'page_id'));
-        data_page_generator::where('page_id', $page->id)->delete();
+        $page = (new page_generator)->find(request('get', 'page_id'));
+        (new data_page_generator)->where('page_id', $page->id)->delete();
         $page->delete();
         alert2('success', 'success');
         redirect(referal_url(2));

@@ -51,7 +51,7 @@ class images extends model
 
     protected function deleteFiles()
     {
-        $sizes = image_size::all();
+        $sizes = (new image_size)->all();
         $name = $this->id;
         foreach($sizes as $size){
             $path = ROOT . '/public/images/thumbnail/' . $size->slug . '/' . $name . '.png';

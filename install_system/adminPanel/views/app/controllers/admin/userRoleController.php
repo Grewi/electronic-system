@@ -8,7 +8,7 @@ class userRoleController extends controller
 {
     public function index()
     {
-        $roles = user_role::all();
+        $roles = (new user_role)->all();
         $this->title(lang('admin', 'userRoles'));
         $this->bc(lang('admin', 'userRoles'));
         $this->data['roles'] = $roles;

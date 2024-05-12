@@ -31,7 +31,7 @@
                             <tbody>
                                 <?php foreach ($settings as $a => $setting) : ?>
                                     <?php
-                                    $type = \app\models\settings_type::find($setting->setting_type_id);
+                                    $type = (new \app\models\settings_type)->find($setting->setting_type_id);
                                     ?>
                                     <tr>
                                         <td><?= $setting->id ?></td>

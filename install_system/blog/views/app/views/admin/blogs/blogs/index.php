@@ -41,8 +41,8 @@
                                                 <?php
                                                 $bcp = [];
                                                 if ($blog->category_id) {
-                                                    $bc = \app\models\blogs_categories::find($blog->category_id);
-                                                    $bcp = \app\models\blogs_categories::bc($bc->id, true);
+                                                    $bc = (new \app\models\blogs_categories)->find($blog->category_id);
+                                                    $bcp = (new \app\models\blogs_categories)->bc($bc->id, true);
                                                 }
                                                 ?>
                                                 <nav aria-label="breadcrumb">

@@ -1,10 +1,15 @@
 <?php
-
+/**
+ * Electronic v3.0
+ * https://github.com/Grewi/electronic-system
+ * grewi@ya.ru
+ */
 namespace system\core\database;
 
 use system\core\config\config;
 use system\core\database\cacheQuery;
-use system\core\traits\singleton;
+
+!INDEX ? exit() : true;
 
 #[\AllowDynamicProperties]
 class database

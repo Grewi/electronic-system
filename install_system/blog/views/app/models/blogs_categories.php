@@ -11,7 +11,7 @@ class blogs_categories extends model
 
     protected function bc($parent_id = null, $revers = false)
     {
-        $el = blogs_categories::find($parent_id ?? 0);
+        $el = (new blogs_categories)->find($parent_id ?? 0);
         if ($el) {
             $this->bcArray[] = $el;
         }

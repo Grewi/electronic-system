@@ -15,8 +15,8 @@ class registerController extends controller
         $this->title(lang::register('title'));
         $userRole = null;
         if(user_id() > 0){
-            $user = users::find(user_id());
-            $userRole = user_role::find($user->user_role_id);
+            $user = (new users)->find(user_id());
+            $userRole = (new user_role)->find($user->user_role_id);
         }
         $this->data['userRole'] = $userRole;
         new view('users/register/register', $this->data);
@@ -32,7 +32,7 @@ class registerController extends controller
         $valid->name('confirm')->confirmPass();
 
         if($valid->control()){
-            $userRole = user_role::where('slug', 'user')->get();
+            $userRole = (new user_role)->where('slug', 'user')->get();
             $data = [
                 'email' => $valid->return('emailUser'),
                 'email_code' => rand(1000, 9999),
@@ -42,7 +42,7 @@ class registerController extends controller
                 'active' => 1,
                 'user_role_id' => $userRole->id,
             ];
-            $user = users::insert($data);
+            $user = (new users)->insert($data);
             alert2('Спасибо за регистрацию!', 'primary');
             $login = new \system\core\user\auth();
             $login->setCsrf(false);

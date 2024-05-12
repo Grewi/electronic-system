@@ -45,7 +45,7 @@
                         <div class="mb-3">
                             <?php foreach ($blogTags as $tag) : ?>
                                 <label class="btn btn-sm btn-light" for="tag<?= $tag->id ?>">
-                                    <?php $checked = \app\models\blog_tag::where('blog_id', $return->data->id)->where('tag_id', $tag->id)->get() ? 'checked' : '' ?>
+                                    <?php $checked = (new \app\models\blog_tag)->where('blog_id', $return->data->id)->where('tag_id', $tag->id)->get() ? 'checked' : '' ?>
                                     <input id="tag<?= $tag->id ?>" type="checkbox" name="tag[<?= $tag->id ?>]" value="<?= $tag->id ?>" <?= $checked ?>>
                                     <?= $tag->name ?></label>
                             <?php endforeach; ?>

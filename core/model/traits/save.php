@@ -3,7 +3,7 @@ namespace system\core\model\traits;
 
 trait save
 {
-    protected function save(array $data = [])
+    public function save(array $data = [])
     {
         $arr = [];
         foreach($this as $a => $i){

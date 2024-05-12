@@ -3,7 +3,7 @@ namespace system\core\model\traits;
 
 trait delete
 {
-    private function delete($id = null): void
+    public function delete($id = null): void
     {
         if(!empty($id) && !empty($this->{$this->_id})){
             $sql = 'DELETE FROM ' . $this->_table . ' ' . $this->_where;

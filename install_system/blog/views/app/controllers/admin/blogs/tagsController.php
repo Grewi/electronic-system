@@ -9,7 +9,7 @@ class tagsController extends controller
 {
     public function index()
     {
-        $tags = blogs_tags::where('active', 1)->pagin();
+        $tags = (new blogs_tags)->where('active', 1)->pagin();
         $this->title('Теги');
         $this->data['tags'] = $tags->all();
         $this->data['pagin'] = $tags->pagination();
@@ -46,10 +46,10 @@ class tagsController extends controller
             'active' => $valid->return('active'),
         ];
 
-        $c = blogs_tags::insert($data);
+        $c = (new blogs_tags)->insert($data);
         if(empty($c->url)){
             $u = translit_slug($c->name);
-            $c->url = blogs_tags::where('url', $u)->get() ? $c->id . '-' . $u : $u;
+            $c->url = (new blogs_tags)->where('url', $u)->get() ? $c->id . '-' . $u : $u;
             $c->save();
         }
 
@@ -60,14 +60,14 @@ class tagsController extends controller
     public function update()
     {
         $this->title('Редактирование тега');
-        $tag = blogs_tags::find(request('get', 'tag_id'));
+        $tag = (new blogs_tags)->find(request('get', 'tag_id'));
         $this->return($tag);
         new view('admin/blogs/tags/update', $this->data);
     }
 
     public function updateAction()
     {
-        $tag = blogs_tags::find(request('get', 'tag_id'));
+        $tag = (new blogs_tags)->find(request('get', 'tag_id'));
         $valid = new validate();
         $valid->name('csrf')->csrf('tagUpdate');
         $valid->name('title')->text();
@@ -96,16 +96,16 @@ class tagsController extends controller
     public function delete()
     {
         $this->title('Удалить тег');
-        $tag = blogs_tags::find(request('get', 'tag_id'));
+        $tag = (new blogs_tags)->find(request('get', 'tag_id'));
         $this->return($tag);
         new view('admin/blogs/tags/delete', $this->data);
     }
 
     public function deleteAction()
     {
-        $tag = blogs_tags::find(request('get', 'tag_id'));
+        $tag = (new blogs_tags)->find(request('get', 'tag_id'));
         try{
-            blogs_tags::where($tag->id)->delete();
+            (new blogs_tags)->where($tag->id)->delete();
             redirect('/admin/blogs/tags');
         }catch(\Exception $e){
             redirect(referal_url());
@@ -119,7 +119,7 @@ class tagsController extends controller
             $error = false;
             foreach($_POST['sort'] as $a => $i){
                 if(is_numeric($i)){
-                    $b = blogs_tags::where('id', $a)->update(['sort' => (int)$i]);
+                    $b = (new blogs_tags)->where('id', $a)->update(['sort' => (int)$i]);
                     if(!$b){
                         $error = true;
                     }

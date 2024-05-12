@@ -20,26 +20,26 @@ class blogsController extends controller
     {
         $app = app::app();
 
-        $blogs = blogs::select('*');
+        $blogs = (new blogs)->select('*');
 
         if($app->getparams->category_id){
-            $categories = blogs_categories::treeArray($app->getparams->category_id);
+            $categories = (new blogs_categories)->treeArray($app->getparams->category_id);
             $blogs->whereIn('category_id', $categories);
         }
 
         $this->bc(lang('blogs', 'blogs'), '/admin/blogs');
-        $category = blogs_categories::find($app->getparams->category_id);
+        $category = (new blogs_categories)->find($app->getparams->category_id);
         if ($category) {
             if ($category->parent_id) {
-                $bcp = blogs_categories::bc($category->parent_id, true);
+                $bcp = (new blogs_categories)->bc($category->parent_id, true);
                 foreach ($bcp as $i) {
                     $this->bc($i->name, '/admin/blogs/' . $i->id);
                 }
             }
             $this->bc($category->name, '/admin/blogs/' . $category->id);
-            $parents = blogs_categories::where('parent_id', $category->id)->sort('asc', 'sort')->all();
+            $parents = (new blogs_categories)->where('parent_id', $category->id)->sort('asc', 'sort')->all();
         }else{
-            $parents = blogs_categories::whereNull('parent_id')->sort('asc', 'sort')->all();
+            $parents = (new blogs_categories)->whereNull('parent_id')->sort('asc', 'sort')->all();
         }
 
         if($category && $category->sort_post){
@@ -72,7 +72,7 @@ class blogsController extends controller
         $valid->name('description')->text();
 
         $url = empty($valid->return('url')) ? translit_slug($valid->return('name')) : $valid->return('url');
-        $issetUrl = blogs::where('url', $url)->all();
+        $issetUrl = (new blogs)->where('url', $url)->all();
         if(count($issetUrl) > 0){
             $url = $url . '-' . time();
         }
@@ -91,19 +91,19 @@ class blogsController extends controller
             'content' => '',
             'sort' => 0,
         ];
-        $blog = blogs::insert($data);
+        $blog = (new blogs)->insert($data);
         redirect('/admin/blogs/edit/' . $blog->id . '?referal=' . referal_url());
     }
 
 
     public function update()
     {
-        $blog = blogs::find(request('get', 'blog_id'));
-        $images = images::selectRelation('blog', $blog->id)->all();
+        $blog = (new blogs)->find(request('get', 'blog_id'));
+        $images = (new images)->selectRelation('blog', $blog->id)->all();
 
         //Временно!
         if(!$blog->category_id){
-            $blog_category = blog_category::where('blog_id', $blog->id)->get();
+            $blog_category = (new blog_category)->where('blog_id', $blog->id)->get();
             if($blog_category){
                 $blog->category_id = $blog_category->category_id;
                 $blog->save();
@@ -113,16 +113,16 @@ class blogsController extends controller
         $this->return($blog);
         $this->title('Редактирование записи');
         $this->data['images'] = $images;
-        $this->data['blogCategories'] = blogs_categories::all();
-        $this->data['imagesSizes'] = image_size::all();
-        $this->data['blogTags'] = blogs_tags::all();
-        $this->data['categoriesTree'] = blogs_categories::tree();
+        $this->data['blogCategories'] = (new blogs_categories)->all();
+        $this->data['imagesSizes'] = (new image_size)->all();
+        $this->data['blogTags'] = (new blogs_tags)->all();
+        $this->data['categoriesTree'] = (new blogs_categories)->tree();
         new view('admin/blogs/blogs/update', $this->data);
     }
 
     public function updateAction()
     {
-        $blog = blogs::find(request('get', 'blog_id'));
+        $blog = (new blogs)->find(request('get', 'blog_id'));
         $valid = new validate();
         $valid->name('csrf')->csrf('blogCreate');
         $valid->name('referal')->url();
@@ -153,7 +153,7 @@ class blogsController extends controller
                 $data = [
                     'blog_id' => $blog->id,
                 ];
-                images::upload($data, $_FILES['image']);
+                (new images)->upload($data, $_FILES['image']);
             }
 
             if (empty($valid->return('url')) || is_numeric($valid->return('url'))) {
@@ -176,12 +176,12 @@ class blogsController extends controller
                 'active' => $valid->return('active'),
                 'content' => $valid->return('content'),
             ];
-            blogs::update($data);
+            (new blogs)->update($data);
 
-            blog_tag::where('blog_id', $blog->id)->delete();
+            (new blog_tag)->where('blog_id', $blog->id)->delete();
             if (isset($_POST['tag']) && is_array($_POST['tag'])) {
                 foreach ($_POST['tag'] as $tag) {
-                    blog_tag::insert([
+                    (new blog_tag)->insert([
                         'blog_id' => $blog->id,
                         'tag_id' => $tag,
                     ]);
@@ -213,7 +213,7 @@ class blogsController extends controller
 
     public function delete()
     {
-        $blog = blogs::find(request('get', 'blog_id'));
+        $blog = (new blogs)->find(request('get', 'blog_id'));
         $this->return($blog);
         $this->title('Удалить запись');
         new view('admin/blogs/blogs/delete', $this->data);
@@ -221,7 +221,7 @@ class blogsController extends controller
 
     public function deleteAction()
     {
-        $blog = blogs::find(request('get', 'blog_id'));
+        $blog = (new blogs)->find(request('get', 'blog_id'));
         $blog->delete();
         alert('Запись удалена', 'success');
         redirect('/admin/blogs');
@@ -229,9 +229,8 @@ class blogsController extends controller
 
     private function telegram($title, $content, $image, $url, $description)
     {
-        // $chat_id   = '-963309107';
-        $chat_id   = '-1001998153358';
-        $token     = '1272029330:AAEv12evuTTB6noF9Y3Lt7y7IZoK7Cyzax8';
+        $chat_id   = '-10000000000';
+        $token     = '1272029330:--------';
         $whiteList = '<b><a><i><em><strong><code><pre>';
         $content = htmlspecialchars_decode($title . $content);
         $content = str_replace('&nbsp;', ' ', $content);
@@ -295,7 +294,7 @@ class blogsController extends controller
             $error = false;
             foreach ($_POST['sort'] as $a => $i) {
                 if (is_numeric($i)) {
-                    $b = blogs::where('id', $a)->update(['sort' => (int)$i]);
+                    $b = (new blogs)->where('id', $a)->update(['sort' => (int)$i]);
                     if (!$b) {
                         $error = true;
                     }

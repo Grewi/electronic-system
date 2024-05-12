@@ -8,9 +8,9 @@ class admin
 {
     public function index()
     {
-        $adminRole = user_role::where('slug', 'admin')->get();
+        $adminRole = (new user_role)->where('slug', 'admin')->get();
         if(user_id()){
-            $user = users::find(user_id());
+            $user = (new users)->find(user_id());
             if($user->user_role_id != $adminRole->id){
                 return false;
             }

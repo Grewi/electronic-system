@@ -12,4 +12,4 @@ $route->filter('bruteforce');
 
 $route->autoloadWeb();
 
-$error = (new error())->error404();
+$error = (new error)->error404();

@@ -11,7 +11,7 @@ class imagesController extends controller
 {
     public function index()
     {
-        $images = images::pagin();
+        $images = (new images)->pagin();
         $this->title('');
         $this->data['images'] = $images->all();
         $this->data['pagin']  = $images->pagination();
@@ -39,7 +39,7 @@ class imagesController extends controller
             'name' => $valid->return('name'),
             'description' => $valid->return('description'),
         ];
-        if($r = images::upload($data, $_FILES['image'])){
+        if($r = (new images)->upload($data, $_FILES['image'])){
             alert($r, 'danger');
             redirect(referal_url());
         }
@@ -51,7 +51,7 @@ class imagesController extends controller
     public function update()
     {
         $app = app::app();
-        $image = images::find($app->getparams->param_id);
+        $image = (new images)->find($app->getparams->param_id);
         $this->return($image);
         $this->title('');
         new view('admin/images/images/update', $this->data);
@@ -60,7 +60,7 @@ class imagesController extends controller
     public function updateAction()
     {
         $app = app::app();
-        $image = images::find($app->getparams->param_id);
+        $image = (new images)->find($app->getparams->param_id);
         $valid = new validate();
         $valid->name('csrf')->csrf('imageEdit');
         $valid->name('name')->text();
@@ -81,7 +81,7 @@ class imagesController extends controller
 
     public function delete()
     {
-        $image = images::find(request('get', 'param_id'));
+        $image = (new images)->find(request('get', 'param_id'));
         $valid = new validate();
         $valid->name('referal')->url();
         $this->title('Удалить изображение');
@@ -93,7 +93,7 @@ class imagesController extends controller
     public function deleteAction()
     {
         $app = app::app();
-        $image = images::find($app->getparams->param_id);
+        $image = (new images)->find($app->getparams->param_id);
         $valid = new validate();
         $valid->name('csrf')->csrf('imageDel');
         $valid->name('referal')->url();

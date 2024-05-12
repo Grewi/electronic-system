@@ -32,14 +32,14 @@ class blogs extends model
     {
         $i->categories = [];
         $i->tags = [];
-        $im = images::where('blog_id', $i->id)->all(); 
+        $im = (new images)->where('blog_id', $i->id)->all(); 
         if($im){
             $i->images = $im;
         }
 
-        $tag = blog_tag::where('blog_id', $i->id)->all();
+        $tag = (new blog_tag)->where('blog_id', $i->id)->all();
         foreach($tag as $ii){
-            $b = blogs_tags::find($ii->tag_id);
+            $b = (new blogs_tags)->find($ii->tag_id);
             if($b){
                 $i->tags[] = $b;
             }

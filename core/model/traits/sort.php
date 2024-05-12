@@ -18,7 +18,7 @@ trait sort
         return $this;
     }
 
-    protected function sortLink($name, $lang)
+    public function sortLink($name, $lang)
     {
         $href = eGetReplace('sort', $name);
         if($_GET['sort'] == $name){

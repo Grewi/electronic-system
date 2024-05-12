@@ -8,7 +8,7 @@ class authController extends controller
 {
     public function indexUser()
     {
-        $user = users::find(user_id());
+        $user = (new users)->find(user_id());
         $this->title('');
         $this->data['user'] = $user;
         new view('users/auth/indexUser', $this->data);

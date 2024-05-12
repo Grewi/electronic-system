@@ -3,9 +3,9 @@ namespace system\core\model\traits;
 
 trait where
 {
-    private $whereSeparator;
+    protected $whereSeparator;
 
-    private function _separatorWhere()
+    public function _separatorWhere()
     {
         if($this->whereSeparator){
             $wsep = $this->whereSeparator;
@@ -17,7 +17,7 @@ trait where
         return empty($this->_where) ? ' WHERE' : $wsep;
     }
 
-    private function _wrapperWhere($p1)
+    public function _wrapperWhere($p1)
     {
         $a = explode('.', $p1);
         foreach($a as &$i){
@@ -26,13 +26,13 @@ trait where
         return implode('.', $a);
     }
 
-    private function or()
+    public function or()
     {
         $this->whereSeparator = ' OR';
         return $this;
     }
 
-    private function where($p1, $p2 = null, $p3 = null)
+    public function where($p1, $p2 = null, $p3 = null)
     {
 
         $count = $this->_this_where_count++;
@@ -63,21 +63,21 @@ trait where
 
 
 
-    private function whereNull($p1)
+    public function whereNull($p1)
     {
         $sep = $this->_separatorWhere();
         $this->_where .= $sep . ' ' . $this->_wrapperWhere($p1) . ' IS NULL ';
         return $this;
     }
 
-    private function whereNotNull(string $p1)
+    public function whereNotNull(string $p1)
     {
         $sep = $this->_separatorWhere();
         $this->_where .= $sep . ' ' . $this->_wrapperWhere($p1) . ' IS NOT NULL ';
         return $this;
     }
 
-    private function whereIn($p1, $arg)
+    public function whereIn($p1, $arg)
     {
         $sep = $this->_separatorWhere();
         $arr = [];
@@ -92,7 +92,7 @@ trait where
         return $this;
     }
 
-    private function whereStr($str, $bind = [])
+    public function whereStr($str, $bind = [])
     {
         $this->_where .= $str;
         foreach ($bind as $key => $i) {
@@ -101,7 +101,7 @@ trait where
         return $this;
     }
 
-    private function whereAnd(callable $a)
+    public function whereAnd(callable $a)
     {
         $new = new \system\core\model\model();
         return $this;

@@ -15,17 +15,17 @@ class settingsController extends controller
     {
         $this->bc(lang('admin', 'settings'));
         $this->title(lang('admin', 'settings'));
-        $this->data['categories'] = settings_category::sort('asc', 'name')->all();
+        $this->data['categories'] = (new settings_category)->sort('asc', 'name')->all();
         new view('admin/settings/settings/index', $this->data);
     }
 
     public function settings()
     {
-        $category = settings_category::find(request('get', 'caegory_id'));
+        $category = (new settings_category)->find(request('get', 'caegory_id'));
         if(!$category){
             redirect(referal_url());
         }
-        $settings = settings::where('setting_category_id', $category->id)->pagin();
+        $settings = (new settings)->where('setting_category_id', $category->id)->pagin();
         $this->title('');
         $this->bc(lang('admin', 'settings'), '/' . ADMIN . '/settings');
         $this->bc($category->name);
@@ -41,7 +41,7 @@ class settingsController extends controller
             redirect(referal_url());
         }
         foreach ($_POST['setting'] as $a => $value) {
-            $s = settings::find($a);
+            $s = (new settings)->find($a);
             if ($s) {
                 $s->value = $value;
                 $s->save();
@@ -67,7 +67,7 @@ class settingsController extends controller
         $valid->name('name')->latRuInt()->empty();
 
         if($valid->control()){
-            settings_category::insert($valid->return());
+            (new settings_category)->insert($valid->return());
             redirect('/' . ADMIN . '/settings');
         }else{
             dd($valid);
@@ -77,7 +77,7 @@ class settingsController extends controller
 
     public function updateCategory()
     {
-        $category = settings_category::find(request('get', 'setting_id'));
+        $category = (new settings_category)->find(request('get', 'setting_id'));
         if(!$category){
             redirect(referal_url());
         }
@@ -91,7 +91,7 @@ class settingsController extends controller
 
     public function updateCategoryAction()
     {
-        $category = settings_category::find(request('get', 'setting_id'));
+        $category = (new settings_category)->find(request('get', 'setting_id'));
         $valid = new validate();
         $valid->name('csrf')->csrf('editCategory');
         $valid->name('name')->latRuInt()->empty();
@@ -107,7 +107,7 @@ class settingsController extends controller
 
     public function deleteCategory()
     {
-        $category = settings_category::find(request('get', 'setting_id'));
+        $category = (new settings_category)->find(request('get', 'setting_id'));
         if(!$category){
             redirect(referal_url());
         }
@@ -120,12 +120,12 @@ class settingsController extends controller
 
     public function deleteCategoryAction()
     {
-        $category = settings_category::find(request('get')->setting_id);
+        $category = (new settings_category)->find(request('get')->setting_id);
         $valid = new validate();
         $valid->name('csrf')->csrf('categoryDelete');
 
         if($valid->control() && $category){
-            settings::where('setting_category_id', $category->id)->delete();
+            (new settings)->where('setting_category_id', $category->id)->delete();
             $category->delete();
             redirect('/' . ADMIN . '/settings');
         }else{
@@ -139,7 +139,7 @@ class settingsController extends controller
     public function create()
     {
         if(request('get')->category_id){
-            $category = settings_category::find(request('get', 'category_id'));
+            $category = (new settings_category)->find(request('get', 'category_id'));
         }
         $this->title(lang('admin', 'addSetting'));
         $this->bc(lang('admin', 'settings'), '/' . ADMIN . '/settings');
@@ -147,8 +147,8 @@ class settingsController extends controller
             $this->bc($category->name, '/' . ADMIN . '/settings/' . $category->id);
         }
         $this->bc(lang('admin', 'addSetting'));
-        $this->data['settingCategory'] = settings_category::all();
-        $this->data['settingsType'] = settings_type::all();
+        $this->data['settingCategory'] = (new settings_category)->all();
+        $this->data['settingsType'] = (new settings_type)->all();
         $this->data['categoryParent'] = $category;
         new view('admin/settings/managerSettings/create', $this->data);
     }
@@ -164,7 +164,7 @@ class settingsController extends controller
         $valid->name('value')->text();
 
         if($valid->control()){
-            settings::insert($valid->return());
+            (new settings)->insert($valid->return());
             redirect('/' . ADMIN . '/settings/' . $valid->return('setting_category_id'));
         }else{
             redirect(referal_url(), $valid->data(), $valid->error());
@@ -173,18 +173,18 @@ class settingsController extends controller
 
     public function update()
     {
-        $setting = settings::find(request('get')->setting_id);
+        $setting = (new settings)->find(request('get')->setting_id);
         if(!$setting){
             redirect(referal_url());
         }
-        $category = settings_category::find($setting->setting_category_id);
+        $category = (new settings_category)->find($setting->setting_category_id);
         $this->title(lang('admin', 'editSetting'));
         $this->bc(lang('admin', 'settings'), '/' . ADMIN . '/settings');
         $this->bc($category->name, '/' . ADMIN . '/settings/' . $category->id);
         $this->bc(lang('admin', 'editSetting'));
         $this->data['setting'] = $setting;
-        $this->data['settingCategory'] = settings_category::all();
-        $this->data['settingsType'] = settings_type::all();
+        $this->data['settingCategory'] = (new settings_category)->all();
+        $this->data['settingsType'] = (new settings_type)->all();
         new view('admin/settings/managerSettings/update', $this->data);
     }
 
@@ -197,7 +197,7 @@ class settingsController extends controller
         $valid->name('name')->latRuInt()->empty();
         $valid->name('description')->text();
         $valid->name('value')->text()->empty();
-        $setting = settings::find(request('get', 'setting_id'));
+        $setting = (new settings)->find(request('get', 'setting_id'));
         if(!$setting){
             redirect(referal_url());
         }
@@ -211,11 +211,11 @@ class settingsController extends controller
 
     public function delete()
     {
-        $setting = settings::find(request('get', 'setting_id'));
+        $setting = (new settings)->find(request('get', 'setting_id'));
         if(!$setting){
             redirect(referal_url());
         }
-        $category = settings_category::find($setting->setting_category_id);
+        $category = (new settings_category)->find($setting->setting_category_id);
         $this->title(lang('admin', 'deleteSetting'));
         $this->bc(lang('admin', 'settings'), '/' . ADMIN . '/settings');
         $this->bc($category->name, '/' . ADMIN . '/settings/' . $category->id);
@@ -229,7 +229,7 @@ class settingsController extends controller
         $valid = new validate();
         $valid->name('csrf')->csrf('settingDelete');
         if($valid->control()){
-            $setting = settings::find(request('get', 'setting_id'));
+            $setting = (new settings)->find(request('get', 'setting_id'));
             if(!$setting){
                 redirect(referal_url());
             }

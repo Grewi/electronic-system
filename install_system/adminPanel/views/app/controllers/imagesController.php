@@ -46,8 +46,8 @@ class imagesController extends controller
             exit();
         }   
 
-        $image = images::find($id);
-        $s = image_size::where('slug', $size)->get();
+        $image = (new images)->find($id);
+        $s = (new image_size)->where('slug', $size)->get();
 
         if(!$s){
             http_response_code(404);

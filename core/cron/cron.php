@@ -1,18 +1,25 @@
 <?php
+/**
+ * Electronic v3.0
+ * https://github.com/Grewi/electronic-system
+ * grewi@ya.ru
+ */
 
 namespace system\core\cron;
 use system\core\files\files;
 use system\core\date\date;
 
+!INDEX ? exit() : true;
+
 class cron
 {
 
-    private $name;
-    private $status = true;
-    private $first = false;
-    private $namespace;
-    private $log;
-    private $logFile = APP . '/cache/cron.json';
+    protected $name;
+    protected $status = true;
+    protected $first = false;
+    protected $namespace;
+    protected $log;
+    protected $logFile = APP . '/cache/cron.json';
 
     public function namespace(string $name)
     {
@@ -40,7 +47,7 @@ class cron
         }
     }
 
-    private function logFile()
+    protected function logFile()
     {
         if (!file_exists($this->logFile)) {
             file_put_contents($this->logFile, '{}');
@@ -48,7 +55,7 @@ class cron
         $this->log = json_decode(file_get_contents($this->logFile));
     }
 
-    private function controlTime()
+    protected function controlTime()
     {
         if (!isset($this->log->{$this->name})) {
             $this->first = true;
@@ -61,7 +68,7 @@ class cron
         }
     }
 
-    private function logSave()
+    protected function logSave()
     {
         file_put_contents($this->logFile, json_encode($this->log));
     }
@@ -69,7 +76,7 @@ class cron
     /**
      * Считает время следующего испоолнения
      */
-    private function trueTime(int $i) : int
+    protected function trueTime(int $i) : int
     {
         return empty($this->log->{$this->name}) || ($this->log->{$this->name} + $i) - time() <= 0
         ? time() + $i 

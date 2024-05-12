@@ -13,12 +13,12 @@ class pageController extends controller
     public function index()
     {
         $url = implode('/', (new route())->getUrl());
-        $page = page_generator::where('url', $url)->get();
+        $page = (new page_generator)->where('url', $url)->get();
         if(!$page){
             (new error())->error404();
             exit();
         }
-        $data = data_page_generator::where('page_id', $page->id)->all();
+        $data = (new data_page_generator)->where('page_id', $page->id)->all();
         if(is_iterable($data)){
             foreach($data as $d){
                 if($d->type == 2 ||$d->type == 1){

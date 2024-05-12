@@ -11,7 +11,7 @@ class usersController extends controller
 {
     public function index()
     {
-        $users = users::pagin();
+        $users = (new users)->pagin();
         $this->title(lang('admin', 'users'));
         
         $this->bc(lang('admin', 'users'));
@@ -23,7 +23,7 @@ class usersController extends controller
 
     public function create()
     {
-        $userRoles = user_role::all();
+        $userRoles = (new user_role)->all();
         $this->title(lang('admin', 'createUser'));
         $this->bc(lang('admin', 'users'), '/' . ADMIN . '/users');
         $this->bc(lang('admin', 'createUser'));
@@ -53,7 +53,7 @@ class usersController extends controller
                 'user_role_id' => $valid->return('user_role_id'),
             ];
 
-            users::insert($data);
+            (new users)->insert($data);
             alert2(lang('admin', 'successSave'), 'success');
             redirect(referal_url());
         }else{
@@ -64,8 +64,8 @@ class usersController extends controller
 
     public function update()
     {
-        $user = users::find(request('get', 'user_id'));
-        $userRoles = user_role::all();
+        $user = (new users)->find(request('get', 'user_id'));
+        $userRoles = (new user_role)->all();
         $this->return($user);
         $this->title(lang('admin', 'editUser'));
         $this->bc(lang('admin', 'users'), '/' . ADMIN . '/users');
@@ -78,7 +78,7 @@ class usersController extends controller
 
     public function updateAction()
     {
-        $user = users::find(request('get', 'user_id'));
+        $user = (new users)->find(request('get', 'user_id'));
         $valid = new validate();
         $valid->name('csrf')->csrf('userUpdate');
         $valid->name('email')->mail()->unique('users', 'email', $user->id)->empty();
@@ -113,7 +113,7 @@ class usersController extends controller
 
     public function delete()
     {
-        $user = users::find(request('get', 'user_id'));
+        $user = (new users)->find(request('get', 'user_id'));
         $this->title(lang('admin', 'deleteUser'));
         $this->bc(lang('admin', 'users'), '/' . ADMIN . '/users');
         $this->bc(lang('admin', 'deleteUser'));
@@ -124,9 +124,9 @@ class usersController extends controller
 
     public function deleteAction()
     {
-        $user = users::find(request('get', 'user_id'));
+        $user = (new users)->find(request('get', 'user_id'));
         try{
-            users::where($user->id)->delete();
+            (new users)->where($user->id)->delete();
             redirect('/admin/users');
         }catch(\Exception $e){
             redirect(referal_url());

@@ -2,6 +2,7 @@
 
 namespace system\core\model;
 
+use system\core\database\database;
 use system\core\model\traits\insert;
 use system\core\model\traits\update;
 use system\core\model\traits\delete;
@@ -59,25 +60,25 @@ abstract class model
         $this->_from = $this->_table;
     }
 
-    private function from(string $from)
+    public function from(string $from)
     {
         $this->_from = $from;
         return $this;
     }
 
-    private function select(string $select)
+    public function select(string $select)
     {
         $this->_select = $select;
         return $this;
     }
 
-    private function limit($limit)
+    public function limit($limit)
     {
         $this->_limit = ' LIMIT ' . $limit . ' ';
         return $this;
     }
 
-    private function sort(string $type, string $name = null)
+    public function sort(string $type, string $name = null)
     {
         $name = $name ? $name : $this->_id;
         if(empty($this->_sort)){
@@ -93,7 +94,7 @@ abstract class model
         return $this;
     }
 
-    private function count(): string
+    public function count(): string
     {
         $str = 'SELECT COUNT(*) as count FROM ' .
             $this->_from . ' ' .
@@ -104,7 +105,7 @@ abstract class model
         return db($this->_databaseName)->fetch($str, $this->_bind, get_class($this))->count;
     }
 
-    private function summ($name): float
+    public function summ($name): float
     {
         $str = 'SELECT SUM(`' . $name . '`) as `summ` FROM ' .
             $this->_from . ' ' .
@@ -115,7 +116,7 @@ abstract class model
         return (int)db($this->_databaseName)->fetch($str, $this->_bind, get_class($this))->summ;
     }
 
-    private function all(): array
+    public function all(): array
     {
         $str = 'SELECT ' . $this->_select . ' ' . ' FROM ' .
             $this->_from . ' ' .
@@ -128,7 +129,7 @@ abstract class model
         return db($this->_databaseName)->fetchAll($str, $this->_bind, get_class($this));
     }
 
-    private function get()
+    public function get()
     {
         $str = 'SELECT ' . $this->_select . ' ' . ' FROM ' .
             $this->_from . ' ' .
@@ -138,11 +139,11 @@ abstract class model
             $this->_sort . ' ' .
             $this->_limit . ' ' .
             $this->_offset;
-
-        return db($this->_databaseName)->fetch($str, $this->_bind, get_class($this));
+// dd($str, $this->_bind, get_class($this));
+        return database::connect($this->_databaseName)->fetch($str, $this->_bind, get_class($this));
     }
 
-    private function sql(): void
+    public function sql(): void
     {
         $str = 'SELECT ' . $this->_select . ' ' . ' FROM ' .
             $this->_from . ' ' .
@@ -158,7 +159,7 @@ abstract class model
         dd($str);
     }
 
-    private function find($id = null)
+    public function find($id = null)
     {
         if(!$id){
             return null;
@@ -167,19 +168,19 @@ abstract class model
         return $result ? $result : null;
     }
 
-    public static function __callStatic(string $method, array $parameters)
-    {
-        if(method_exists((new static), $method)){
-            return (new static)->$method(...$parameters);
-        }  
-    }
+    // public static function __callStatic(string $method, array $parameters)
+    // {
+    //     if(method_exists((new static), $method)){
+    //         return (new static)->$method(...$parameters);
+    //     }  
+    // }
 
-    public function __call(string $method, array $param)
-    {
-        if(method_exists($this, $method)){
-            return $this->$method(...$param);
-        }
-    }
+    // public function __call(string $method, array $param)
+    // {
+    //     if(method_exists($this, $method)){
+    //         return $this->$method(...$param);
+    //     }
+    // }
 
     public function __get($property)
     {

@@ -29,7 +29,7 @@
                         <tbody>
                             <?php foreach ($users as $a => $user) : ?>
                                 <?php
-                                $role = \app\models\user_role::find($user->user_role_id);
+                                $role = (new \app\models\user_role)->find($user->user_role_id);
                                 ?>
                                 <tr>
                                     <td><?= $user->id ?></td>

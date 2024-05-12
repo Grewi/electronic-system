@@ -13,7 +13,7 @@ class categoriesController extends controller
     public function index()
     {
 
-        $bc = blogs_categories::find(request('get', 'parent_id') ?? 0);
+        $bc = (new blogs_categories)->find(request('get', 'parent_id') ?? 0);
 
         if(request('get', 'parent_id') && !$bc){
             (new error())->error404();
@@ -22,17 +22,17 @@ class categoriesController extends controller
         $parent = null;
         $this->bc('Категории', '/admin/blogs/categories/');
         if($bc){
-            $categories = blogs_categories::where('parent_id', $bc->id)->pagin();
+            $categories = (new blogs_categories)->where('parent_id', $bc->id)->pagin();
             $parent = $bc->id;
 
-            $bcp = blogs_categories::bc($parent, true);
+            $bcp = (new blogs_categories)->bc($parent, true);
             
             foreach($bcp as $i){
                 $this->bc($i->name, '/admin/blogs/categories/' . $i->id);
             }
 
         }else{
-            $categories = blogs_categories::whereNull('parent_id')->pagin();
+            $categories = (new blogs_categories)->whereNull('parent_id')->pagin();
         }
 
         $categories->sort('asc', 'sort');
@@ -46,7 +46,7 @@ class categoriesController extends controller
 
     public function create()
     {
-        $bc = blogs_categories::find(request('get', 'parent_id') ?? 0);
+        $bc = (new blogs_categories)->find(request('get', 'parent_id') ?? 0);
         if(request('get', 'parent_id') && !$bc){
             (new error())->error404();
             exit();
@@ -57,7 +57,7 @@ class categoriesController extends controller
 
     public function createAction()
     {
-        $bc = blogs_categories::find(request('get', 'parent_id') ?? 0);
+        $bc = (new blogs_categories)->find(request('get', 'parent_id') ?? 0);
         if(request('get', 'parent_id') && !$bc){
             (new error())->error404();
             exit();
@@ -92,10 +92,10 @@ class categoriesController extends controller
             'sort_post' => in_array($valid->return('sort_post'), $sortPostArray) ? $valid->return('sort_post') : null,
         ];
 
-        $c = blogs_categories::insert($data);
+        $c = (new blogs_categories)->insert($data);
         if(empty($c->url)){
             $u = translit_slug($c->name);
-            $c->url = blogs_categories::where('url', $u)->get() ? $c->id . '-' . $u : $u;
+            $c->url = (new blogs_categories)->where('url', $u)->get() ? $c->id . '-' . $u : $u;
             $c->save();
         }
         alert('Категория создана', 'success');
@@ -104,7 +104,7 @@ class categoriesController extends controller
 
     public function update()
     {
-        $category = blogs_categories::find(request('get', 'category_id'));
+        $category = (new blogs_categories)->find(request('get', 'category_id'));
         $this->title('Редактировать категорию');
         $this->return($category);
         $this->data['category'] = $category;
@@ -113,7 +113,7 @@ class categoriesController extends controller
 
     public function updateAction()
     {
-        $category = blogs_categories::find(request('get', 'category_id'));
+        $category = (new blogs_categories)->find(request('get', 'category_id'));
         $valid = new validate();
         $valid->name('csrf')->csrf('categoryCreate');
         $valid->name('title')->text();
@@ -146,16 +146,16 @@ class categoriesController extends controller
     public function delete()
     {
         $this->title('Удалить тег');
-        $category = blogs_categories::find(request('get', 'tag_id'));
+        $category = (new blogs_categories)->find(request('get', 'tag_id'));
         $this->return($category);
         new view('admin/blogs/categories/delete', $this->data);
     }
 
     public function deleteAction()
     {
-        $category = blogs_categories::find(request('get', 'category_id'));
+        $category = (new blogs_categories)->find(request('get', 'category_id'));
         try{
-            blogs_categories::where($category->id)->delete();
+            (new blogs_categories)->where($category->id)->delete();
             redirect('/admin/blogs/tags');
         }catch(\Exception $e){
             redirect(referal_url());
@@ -169,7 +169,7 @@ class categoriesController extends controller
             $error = false;
             foreach($_POST['sort'] as $a => $i){
                 if(is_numeric($i)){
-                    $b = blogs_categories::where('id', $a)->update(['sort' => (int)$i]);
+                    $b = (new blogs_categories)->where('id', $a)->update(['sort' => (int)$i]);
                     if(!$b){
                         $error = true;
                     }

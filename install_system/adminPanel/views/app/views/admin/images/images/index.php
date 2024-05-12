@@ -35,7 +35,7 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <?php $imageSize = \app\models\image_size::all(); ?>
+                                        <?php $imageSize = (new \app\models\image_size)->all(); ?>
                                         <ul class="nav nav-tabs" role="tablist">
                                             <li class="nav-item" role="presentation">
                                                 <button class="nav-link active" id="img_tab<?= $image->id ?>" data-bs-toggle="tab" data-bs-target="#img_tab_pane<?= $image->id ?>" type="button" role="tab" aria-controls="img_tab_pane" aria-selected="true">Оригинал</button>
