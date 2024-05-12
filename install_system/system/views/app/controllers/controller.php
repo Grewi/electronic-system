@@ -14,7 +14,7 @@ abstract class controller extends \electronic\core\controller\controller
 
     public function __construct()
     {
-        $user = users::find(user_id());
+        $user = (new users)->find(user_id());
         $this->return = new collection();
         $this->return->set([
             'error' => new collection(),

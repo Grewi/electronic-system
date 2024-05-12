@@ -10,6 +10,7 @@ class database
         $sqlUsers = str_replace('{login}', $adminLogin, $sqlUsers);
         $sqlUsers = str_replace('{email}', $adminEmail, $sqlUsers);
         $sqlUsers = str_replace('{pass}', password_hash($adminPass, PASSWORD_DEFAULT), $sqlUsers);
+        dd($sqlUsers);
         db()->query($sqlUsers);
     }
 

@@ -14,8 +14,8 @@ class indexController extends controller
     {
         $userRole = null;
         if(user_id() > 0){
-            $user = users::find(user_id());
-            $userRole = user_role::find($user->user_role_id);
+            $user = (new users)->find(user_id());
+            $userRole = (new user_role)->find($user->user_role_id);
         }
         $this->data['userRole'] = $userRole;
         $this->title('Главная страница');
