@@ -77,7 +77,7 @@ class history
         $s = $s ? $s : 0;
         if(isset($_SESSION['history'])){
             foreach($_SESSION['history'] as $a => $i){
-                if($a < $s || $i['method'] != 'GET'){
+                if($a <= $s || $i['method'] != 'GET'){
                     continue;
                 }
                 return $i['uri'];

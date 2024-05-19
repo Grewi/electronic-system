@@ -250,7 +250,7 @@ trait validatedTraits
                 $check = true;
             }
 
-            if (!preg_match("/^[0-9\-]+$/u", $data) && !$check) {
+            if (!preg_match("/^[0-9\-]+$/u", $data) || !$check) {
                 $this->error[$this->currentName][] = lang('valid', 'date');
                 $this->setControl(false);
             }
@@ -267,16 +267,18 @@ trait validatedTraits
         if (!empty($data)) {
             $test = explode(':', $data);
             $check = false;
-            $H = (int)$test[0];
-            $i = (int)$test[1];
-            $s = (int)$test[2];
+            $H = isset($test[0]) ? (int)$test[0] : 0;
+            $i = isset($test[1]) ? (int)$test[1] : 0;
+            $s = isset($test[2]) ? (int)$test[2] : 0;
+
             if ($H >= 0 && $H <= 24 && $i >= 0 && $i <= 59 && $s >= 0 && $i <= 59) {
                 $check = true;
             }
 
-            if (!preg_match("/^[0-9\:]+$/u", $data) && !$check) {
+            if (!preg_match("/^[0-9\:]+$/u", $data) || !$check) {
                 $this->error[$this->currentName][] = lang('valid', 'date');
                 $this->setControl(false);
+                dump(0123);
             }
         }
 
