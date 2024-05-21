@@ -286,6 +286,20 @@ trait validatedTraits
         return $this;
     }    
 
+    public function datetime($format = 'Y-m-d\TH:i')
+    {
+        $this->data[$this->currentName] = !empty($this->data[$this->currentName]) ? $this->data[$this->currentName] : null;
+        $data = $this->data[$this->currentName];
+        if (!empty($data)) {
+            if(!(\DateTime::createFromFormat($format, $data) !== false)){
+                $this->error[$this->currentName][] = lang('valid', 'date');
+                $this->setControl(false);
+            }
+        }
+
+        $this->setReturn($data);
+        return $this;
+    }  
 
     /**
      * Значение преобразует символы в html сущности функцией htmlspecialchars
