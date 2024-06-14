@@ -4,6 +4,8 @@ use system\core\user\register;
 
 trait validetePassTrait
 {
+    protected $pass = null;
+    
     public function pass()
     {
         $this->pass = $this->data[$this->currentName];
