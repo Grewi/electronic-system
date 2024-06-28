@@ -12,6 +12,6 @@ class error extends controller
     public function error404()
     {
         $this->errorResponse();
-        new view('error/error404');
+        new view('error/error404', $this->data);
     }
 }
