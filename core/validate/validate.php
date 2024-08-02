@@ -40,6 +40,7 @@ class validate
 
     protected function setReturn($data) : void
     {
+        $data = $data === '' ? null : $data;
         $this->return[$this->currentName] = $data;
     }
 

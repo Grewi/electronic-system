@@ -167,7 +167,15 @@ class route
         if ($this->get) {
             $controller = $this->namespace . $class;
             $_SERVER['routeController'] = $controller;
-            (new $controller)->$method();
+
+            // $reflection = new \ReflectionClass($controller);
+            // $params = $reflection->getConstructor()->getParameters();
+            // foreach ($params AS $param) {
+            //     echo $param->getType()->getName() . '<br>';
+            // }
+            // dd($params);
+
+            (new $controller())->$method(app::app());
             if ($this->autoExitController) {
                 exit();
             }
@@ -319,9 +327,9 @@ class route
 
     private function slash($str)
     {
-        if($str){
+        if ($str) {
             $str = str_replace('\\', '/', $str);
-            return '/' . trim($str, '/');            
+            return '/' . trim($str, '/');
         }
     }
 }

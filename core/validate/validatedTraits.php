@@ -58,7 +58,7 @@ trait validatedTraits
             $this->error[$this->currentName][] = lang('valid', 'noInt');
             $this->setControl(false);
         }
-        $this->setReturn($data);
+        $this->setReturn($data === '' ? null : (int) $data);
         return $this;
     }
 
@@ -108,7 +108,7 @@ trait validatedTraits
         if($data){
             $data = str_replace(',', '.', $data);
         }
-        $this->setReturn($data);
+        $this->setReturn($data === '' ? null : (float) $data);
         return $this;
     }
 
