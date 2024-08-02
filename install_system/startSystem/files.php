@@ -1,5 +1,5 @@
 <?php
-namespace system\install_system\system;
+namespace system\install_system\startSystem;
 use system\core\app\app;
 
 
@@ -42,14 +42,8 @@ class files extends \system\install_system\files
                     ],
                 ],
                 'migrations' => null,
-                'models' => [
-                    'user_role.php' => $this->view('app/models/user_role.php'),
-                    'users.php' => $this->view('app/models/users.php'),
-                ],
+                'models' => null,
                 'prefix' => null,
-                'filter' => [
-                    'bruteforce.php' => $this->view('app/filter/bruteforce.php'),
-                ],
                 'route' => [
                     'web' => [
                         '02_index.php' => $this->view('app/route/web/02_index.php'),
@@ -85,17 +79,5 @@ class files extends \system\install_system\files
         ];
 
         $this->structureInstall($structure, '');
-
-        if($app->install->dbFile){
-            $sqlite = [
-                'sqlite' => [
-                    $app->install->dbFile . '.db' => $this->view('sqlite/sqlite'),
-                    'adminer.php' => $this->view('sqlite/adminer.php'),
-                    'index.php' => $this->view('sqlite/index.php'),
-                ],
-            ];
-
-            $this->structureInstall($sqlite);
-        }
     }
 }

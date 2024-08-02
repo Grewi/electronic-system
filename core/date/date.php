@@ -99,6 +99,37 @@ class date
         return $this;
     }
 
+    //Минуты
+    public function addMin($time)
+    {
+        $interval = new \DateInterval('PT' . $time . 'M');
+        $this->dateTime->add($interval);
+        return $this;
+    }
+
+    public function subMin($time)
+    {
+        $interval = new \DateInterval('PT' . $time . 'M');
+        $this->dateTime->sub($interval);
+        return $this;
+    }
+
+    //Часы
+    public function addHorse($time)
+    {
+        $interval = new \DateInterval('PT' . $time . 'H');
+        $this->dateTime->add($interval);
+        return $this;
+    }
+
+    public function subHorse($time)
+    {
+        $interval = new \DateInterval('PT' . $time . 'H');
+        $this->dateTime->sub($interval);
+        return $this;
+    }
+
+
     //Дни
     public function addDay($day)
     {

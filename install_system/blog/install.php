@@ -10,7 +10,7 @@ $app->install->set(['dirInstall' => 'blog']);
 $blog = null;
 $slug = null;
 
-if (!empty(config('database', 'type'))) {
+if (!empty(config('database', 'type')) && $adminPanel) {
     while ($blog === null) {
         echo "Установить блоги? (yes/no): ";
         $i = trim(fgets(STDIN));

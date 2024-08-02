@@ -1,0 +1,6 @@
+*.log
+/app/configs/*.ini
+/app/cache/
+/system/
+/public/upload/
+/public/images/

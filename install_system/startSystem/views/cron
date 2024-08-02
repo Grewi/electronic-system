@@ -1,0 +1,11 @@
+<?php
+date_default_timezone_set('Europe/Saratov');
+define('INDEX', true);
+define('ROOT', str_replace('\\', '/', __DIR__));
+define('ENTRANSE', 'cron');
+define('ARGV', $argv);
+define('APP_NAME', 'app');
+define('APP', ROOT . '/' . APP_NAME);
+define('SYSTEM', ROOT . '/system');
+
+require_once ROOT . '/system/system.php';

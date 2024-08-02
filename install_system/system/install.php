@@ -1,4 +1,5 @@
 <?php
+
 use system\install_system\system\files;
 use system\install_system\system\database;
 use system\core\app\app;
@@ -101,19 +102,15 @@ if ($app->install->dbType != null) {
             echo "Укажите электропочту администратора (По умолчанию admin@admin.ru): ";
             $i = trim(fgets(STDIN));
             $app->install->set(['adminEmail' => empty($i) ? 'admin@admin.ru' : $i]);
-        }        
+        }
     }
 }
 
-while ($app->install->public === null) {
-    echo "Публичная директория (по умолчанию public): ";
-    $i = trim(fgets(STDIN));
-    $app->install->set(['public' => empty($i) ? 'public' : $i]);
+if ($tableUsers) {
+    $files = new files();
+    $files->structure();
+    $files->finish();
 }
-
-$files = new files();
-$files->structure();
-$files->finish();
 
 if ($tableSes) {
     if ($app->install->dbType == 'sqlite') {

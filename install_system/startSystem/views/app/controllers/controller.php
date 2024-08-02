@@ -14,7 +14,6 @@ abstract class controller extends \electronic\core\controller\controller
 
     public function __construct()
     {
-        $user = users::find(user_id());
         $this->return = new collection();
         $this->return->set([
             'error' => new collection(),
@@ -24,11 +23,8 @@ abstract class controller extends \electronic\core\controller\controller
         ]);
         $this->title(config::globals('title'));
         $this->alert();
-        $this->data();
-        $this->error();
         $this->data['lang'] = config::globals('lang');
         $this->data['title'] = lang('global', 'title');       
-        $this->data['user'] = $user;
         $this->data['return'] = $this->return;
     }
 
@@ -47,27 +43,6 @@ abstract class controller extends \electronic\core\controller\controller
             unset($_SESSION['alert']);
         } else {
             $this->data['alert'] = [];
-        }
-    }
-
-    protected function data()
-    {
-        if(isset($_SESSION['data'])){
-            foreach($_SESSION['data'] as $k => $i){
-                $this->return->data->set([$k => $i]);
-            }
-            unset($_SESSION['data']);
-        }
-    }
-
-    protected function error()
-    {
-        if (isset($_SESSION['error'])) {
-            foreach ($_SESSION['error'] as $k => $i) {
-                $this->return->error->set([$k => $i]);
-                $this->return->class->set([$k => 'is-invalid']);
-            }
-            unset($_SESSION['error']);
         }
     }
 
