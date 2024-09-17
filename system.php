@@ -15,6 +15,10 @@ if(!defined('APP_NAME')){
     define('APP_NAME', 'app');
 }
 
+if(!defined('APP_NAMESPACE')){
+    define('APP_NAMESPACE', str_replace('/', '\\', APP_NAME));
+}
+
 if(!defined('APP')){
     define('APP', ROOT . '/' . APP_NAME);
 }

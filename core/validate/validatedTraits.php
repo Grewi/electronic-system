@@ -438,4 +438,26 @@ trait validatedTraits
         $this->setReturn($data);
         return $this;
     }
+
+    public function in_array($array)
+    {
+        $data = $this->data[$this->currentName];
+        if (!empty($data) && !in_array((string)$data, $array)) {
+            $this->error[$this->currentName][] = lang('valid', 'in_array');
+            $this->setControl(false);
+        }
+        $this->setReturn($data);
+        return $this;
+    }
+
+    public function array_key_exists($array)
+    {
+        $data = $this->data[$this->currentName];
+        if (!empty($data) && !array_key_exists((string)$data, $array)) {
+            $this->error[$this->currentName][] = lang('valid', 'array_key_exists');
+            $this->setControl(false);
+        }
+        $this->setReturn($data);
+        return $this;
+    }    
 }

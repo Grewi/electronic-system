@@ -15,7 +15,7 @@ class database
         $dbHost = config::database('host');
         $dbPass = config::database('pass');
         $dbUser = config::database('user');
-        $dumpPath = ROOT . '/app/cache/dump';
+        $dumpPath = APP . '/cache/dump';
         $dumpSql = $dumpPath . '/' . date('Y-m-d', time());
         $fileName = date('Y-m-d__U', time());
         createDir($dumpSql);

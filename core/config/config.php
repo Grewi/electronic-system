@@ -82,7 +82,7 @@ class config
 
     private function createConfigFile(string $className): void
     {
-        $class = '\\' . APP_NAME . '\\configs\\' . $className;
+        $class = '\\' . APP_NAMESPACE . '\\configs\\' . $className;
         $a = new $class;
         $config = $a->set();
         $config = array_merge($config, $this->iniArr);
@@ -97,7 +97,7 @@ class config
     //Метод для обновления ini файлов
     private function createConfig(string $className): void
     {
-        $class = '\\' . APP_NAME . '\\configs\\' . $className;
+        $class = '\\' . APP_NAMESPACE . '\\configs\\' . $className;
         $a = new $class;
         $config = $a->set();
         $this->iniArr = [];
