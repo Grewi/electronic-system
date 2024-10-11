@@ -80,6 +80,9 @@ class history
                 if($a < $s || $i['method'] != 'GET'){
                     continue;
                 }
+                if($_SERVER['REQUEST_URI'] == $i['uri']){
+                    continue;
+                }
                 return $i['uri'];
             }
         }

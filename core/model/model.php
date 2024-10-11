@@ -11,6 +11,7 @@ use system\core\model\traits\join;
 use system\core\model\traits\pagination;
 use system\core\model\traits\group;
 use system\core\model\traits\sort;
+use system\core\model\traits\filter;
 
 #[\AllowDynamicProperties]
 abstract class model
@@ -24,6 +25,7 @@ abstract class model
     use pagination;
     use group;
     use sort;
+    use filter;
 
     protected $_databaseName = 'database';
     protected $_table = '';
@@ -142,7 +144,7 @@ abstract class model
         return db($this->_databaseName)->fetch($str, $this->_bind, get_class($this));
     }
 
-    private function sql(): void
+    private function sql($type = true): void
     {
         $str = 'SELECT ' . $this->_select . ' ' . ' FROM ' .
             $this->_from . ' ' .
@@ -153,9 +155,16 @@ abstract class model
             $this->_limit . ' ' .
             $this->_offset;
             
+        if($type){
+            dump($this->_bind);
+            dump($str);            
+        }else{
+            print_r($this->_bind);
+            print_r($str);
+        }
 
-        print_r($this->_bind);
-        dd($str);
+
+        exit();
     }
 
     private function find($id = null)

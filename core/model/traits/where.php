@@ -92,18 +92,36 @@ trait where
         return $this;
     }
 
+    /**
+     * Summary of whereLike
+     * @param string $col - colomn 
+     * @param string $value search value
+     * @param array $type - all, l(left) or r(right)
+     */
+    private function whereLike(string $col, string $value, string $type = 'all')
+    {
+        $sep = $this->_separatorWhere();
+        $count = $this->_this_where_count++;
+        $pp1 = str_replace('.', '_', $col) . '_' . $count;
+        if($type == 'all'){
+            $this->_where .= $sep . ' ' . $this->_wrapperWhere($col) . ' LIKE CONCAT("%", :' . $pp1 . ',"%") ';
+        }elseif($type == 'l'){
+            $this->_where .= $sep . ' ' . $this->_wrapperWhere($col) . ' LIKE CONCAT(:' . $pp1 . ',"%") ';
+        }elseif($type == 'r'){
+            $this->_where .= $sep . ' ' . $this->_wrapperWhere($col) . ' LIKE CONCAT("%", :' . $pp1 . ') ';
+        }else{
+            $this->_where .= $sep . ' ' . $this->_wrapperWhere($col) . ' LIKE :' . $pp1 . ' ';
+        }
+        $this->_bind[$pp1] = $value;
+        return $this;
+    }
+
     private function whereStr($str, $bind = [])
     {
         $this->_where .= $str;
         foreach ($bind as $key => $i) {
             $this->_bind[$key] = $i;
         }
-        return $this;
-    }
-
-    private function whereAnd(callable $a)
-    {
-        $new = new \system\core\model\model();
         return $this;
     }
 }
