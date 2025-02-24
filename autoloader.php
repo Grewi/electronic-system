@@ -75,7 +75,7 @@ class ' . $className .' extends ' . str_replace('/', '\\', $this->pathSystem) . 
             if (file_exists($path)) {
                 require $path;
             } else {
-                throw new \FileException('Файл ' . $path . ' не найден!');
+                // throw new \FileException('Файл ' . $path . ' не найден!');
             }
         } catch (\FileException $e) {
             var_dump($e);
