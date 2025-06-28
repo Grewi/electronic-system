@@ -44,6 +44,11 @@ trait pagination
         return $this;
     }
 
+    /**
+     * Метод вывода пагинации. Устарел.
+     * @param string $url
+     * @return array
+     */
     private function pagination(string $url = null): array
     {
         return [
@@ -53,5 +58,77 @@ trait pagination
             'url'  => $url,
             'actual' => $this->paginationActive,
         ];
+    }
+
+    protected function paginList()
+    {
+        $r = [];
+        if (count($this->paginationLine) > 0) {
+            //Если текущая страница рядом с концом или началом увеличиваем край
+            $countLi = count($this->paginationLine);
+            $min = $this->paginationActive > 2 ? 2 : 6;
+            $max = $this->paginationActive < $countLi - 2 ? $countLi - 2 : $countLi - 6;
+            if ($this->paginationPriv  > 0){
+                $r[] = [
+                    'type' => 'priv',
+                    'url' =>  eGetReplace('str', $this->paginationPriv),
+                    'text' => null,
+                    'active' => true,
+                ];
+            }else{
+                $r[] = [
+                    'type' => 'priv',
+                    'url' =>  null,
+                    'text' => null,
+                    'active' => false,
+                ]; 
+            }
+            foreach ($this->paginationLine as $key => $i){
+                // Первые, последние и рядом с актуальной страницей
+                if ($key <= $min || ($key >= $this->paginationActive - 3 && $key <= $this->paginationActive + 3) || $key > $max){
+                    if ($i == 'active'){
+                        $r[] = [
+                            'type' => 'el',
+                            'url' =>  eGetReplace('str', $key),
+                            'text' => $key,
+                            'active' => true,
+                        ];
+                    }else{
+                        $r[] = [
+                            'type' => 'el',
+                            'url' =>  eGetReplace('str', $key),
+                            'text' => $key,
+                            'active' => false,
+                        ];
+                    }
+                }else{
+                    //Многоточие
+                    if($key == $min+1 || $key == $this->paginationActive + 4){
+                        $r[] = [
+                            'type' => 'ellipsis',
+                            'url' =>  '',
+                            'text' => null,
+                            'active' => false,
+                        ];
+                    }
+                }
+            }
+            if ($this->paginationNext  > 0){
+                $r[] = [
+                    'type' => 'next',
+                    'url' =>  eGetReplace('str', $this->paginationNext),
+                    'text' => null,
+                    'active' => true,
+                ];
+            }else{
+                $r[] = [
+                    'type' => 'next',
+                    'url' =>  null,
+                    'text' => null,
+                    'active' => false,
+                ];
+            }
+        }
+        return $r;
     }
 }

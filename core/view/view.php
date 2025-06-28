@@ -1,6 +1,7 @@
 <?php
 
 namespace system\core\view;
+use system\core\app\app;
 
 class view
 {
@@ -38,7 +39,11 @@ class view
 
     public function out(string $file, $data = null) : void
     {
+        $app = app::app();
         $this->render($file);
+        if($app->views){
+            extract((array)$app->views);
+        }
         extract($data);
         $file = $this->countInclude[0];
         if(file_exists($this->cacheDir . '/' . $file . '.php')){
@@ -50,7 +55,11 @@ class view
 
     public function return(string $file, $data = null) : string
     {
+        $app = app::app();
         $this->render($file);
+        if($app->views){
+            extract((array)$app->views);
+        }
         extract($data);
         $file = $this->countInclude[0];
         if(file_exists($this->cacheDir . '/' . $file . '.php')){

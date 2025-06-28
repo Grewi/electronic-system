@@ -64,7 +64,7 @@ if ($app->install->dbType != null && (mb_strtolower($app->install->dbType) == 'p
     while ($app->install->dbHost === null) {
         echo "Хост БД (по умолчанию localhost): ";
         $i = trim(fgets(STDIN));
-        $app->install->set(['dbHost' => empty($dbHost) ? 'localhost' : $i]);
+        $app->install->set(['dbHost' => empty($i) ? 'localhost' : $i]);
     }
 }
 

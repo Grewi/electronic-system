@@ -72,7 +72,7 @@ class maskRule
         $this->rules[$c] = array_search($mask, $this->mask);
     }
 
-    private function numberInMask($b)
+    private function numberInMask(int $b): int
     {
         return match($b){
             1 => 0,

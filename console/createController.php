@@ -70,8 +70,8 @@ class createController
                 mkdir($this->pathDir, 0755, true);
             }
             $layout = "<?php 
-namespace " . $this->namespace . ";
-use " . APP_NAME . "\controllers\controller;
+namespace " . $this->slRev($this->namespace) . ";
+use " . $this->slRev(APP_NAMESPACE) . "\controllers\controller;
 use electronic\core\\view\\view;
 
 class " . $this->className . " extends controller
@@ -120,8 +120,8 @@ class " . $this->className . " extends controller
                 mkdir($this->pathDir, 0755, true);
             }
             $layout = "<?php 
-namespace " . $this->namespace . ";
-use " . APP_NAME . "\controllers\controller;
+namespace " . $this->slRev($this->namespace) . ";
+use " . $this->slRev(APP_NAMESPACE) . "\controllers\controller;
 use electronic\core\\view\\view;
 
 class " . $this->className . " extends controller
@@ -181,8 +181,8 @@ class " . $this->className . " extends controller
                         mkdir($this->pathDir, 0755, true);
                     }
                     $layout = "<?php 
-namespace " . $this->namespace . ";
-use " . APP_NAME . "\controllers\controller;
+namespace " . $this->slRev($this->namespace) . ";
+use " . $this->slRev(APP_NAMESPACE) . "\controllers\controller;
 use electronic\core\\view\\view;
 use electronic\core\\validate\\validate;
 
@@ -271,7 +271,7 @@ class " . $this->className . " extends controller
                     $r = count($arrParam) > 0 ?  '/' . implode('/', $arrParam) : '';
                 //Создаём роут
                 $layout = "<?php 
-                \$route->namespace('" . $this->namespace . "')->group('/" . $chiftEl . "', function(\$route){
+                \$route->namespace('" . $this->sl($this->namespace) . "')->group('/" . $chiftEl . "', function(\$route){
                     \$route->get('" . $r . "/')->controller('" . $lastEl . "Controller', 'index');
                     \$route->get('" . $r . "/create')->controller('" . $lastEl . "Controller', 'create');
                     \$route->post('" . $r . "/create')->controller('" . $lastEl . "Controller', 'createAction');
@@ -285,5 +285,15 @@ class " . $this->className . " extends controller
 
             }
         }
+    }
+
+    private function slRev(string $a) : string
+    {
+        return str_replace('/', '\\', $a);
+    }
+
+    private function sl(string $a) : string
+    {
+        return str_replace('\\', '/', $a);
     }
 }

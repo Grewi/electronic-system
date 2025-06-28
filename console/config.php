@@ -4,7 +4,7 @@ namespace system\console;
 class config
 {
     private $dir = [];
-    private $path = ROOT . '/app/configs/';
+    private $path = APP . '/configs/';
 
     public function actual() : void
     {
@@ -32,22 +32,23 @@ class config
 
     private function comparison() : void
     {
+        
         foreach($this->dir as $i){
+            $ini = [];
             if(file_exists($this->path . '.' . $i . '.ini')){
                 $ini = parse_ini_file($this->path . '.' . $i . '.ini');
             }else{
-                continue;
+                $class = '\\' . APP_NAMESPACE . '\\configs\\' . $i;
+                $configs = new $class();
+                $php = $configs->set();
+                $result = array_merge($php, $ini);
+                $ini = '';
+                foreach ($result as $key => $ii) {
+                    
+                    $ini .= $key . ' = ' . $ii . PHP_EOL;
+                }
             }
 
-            $class = '\\app\\configs\\' . $i;
-            $configs = new $class();
-            $php = $configs->set();
-            $result = array_merge($php, $ini);
-            $ini = '';
-            foreach ($result as $key => $ii) {
-                
-                $ini .= $key . ' = ' . $ii . PHP_EOL;
-            }
             file_put_contents($this->path . '.' . $i . '.ini', $ini);
         }
     }
