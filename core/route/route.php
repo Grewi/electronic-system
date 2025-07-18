@@ -64,6 +64,7 @@ class route
         } else {
             $this->get = false;
         }
+        $this->groupName = null;
         return $this;
     }
 
