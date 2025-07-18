@@ -67,6 +67,15 @@ class route
         return $this;
     }
 
+    public function blockGroup(string $name, callable $function):route
+    {
+        $this->get = true;
+        $this->namespace = '';
+        $this->groupName = null;
+        $this->group($name, $function);
+        return $this;
+    }
+
     public function namespace(string $namespace): route
     {
         $this->get = true;
@@ -78,7 +87,7 @@ class route
         return $this;
     }
 
-    public function get(string $get = null): route
+    public function get(string|null $get = null): route
     {
         $get = $this->slash($get);
         if (is_null($get)) {
