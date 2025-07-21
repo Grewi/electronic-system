@@ -59,6 +59,14 @@ class where{
         $this->data[] = $d;
     }
 
+    public function whereL($p1, $p2, $p3)
+    {
+        $d['start'] = '&&';
+        $d['simple'] = [$p1, $p2, $p3];
+        $this->data[] = $d;
+        dd($this->data);
+    }
+
     public function group($start, $func)
     {
         $a = (new static);

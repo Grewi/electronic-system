@@ -61,7 +61,20 @@ trait where
         return $this;
     }
 
+    private function whereL($p1, $p2, $p3)
+    {
 
+        $count = $this->_this_where_count++;
+        $sep = $this->_separatorWhere();
+        $pp1 = str_replace('.', '_', $p1) . '_' . $count;
+        $this->_where .= $sep . ' ' . $this->_wrapperWhere($p1) . ' ' . $p2 . ' :' . $pp1 . ' ';
+        $this->_bind[$pp1] = $p3;
+        $this->_data = array_merge([$p1 => $p3]);
+        if ($p1 == $this->_id) {
+            $this->_idNumber = $p3;
+        }
+        return $this;
+    }
 
     private function whereNull($p1)
     {
