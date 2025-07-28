@@ -212,7 +212,7 @@ class date
         return $this->dateTime->format($format);
     }
 
-    //Месяц прописью в именительном и родительном падежах
+    //Дата прописью в именительном и родительном падежах
     public function formatLang($p = 'i')
     {
         $Y = $this->dateTime->format('Y');
@@ -224,6 +224,17 @@ class date
         }
         $d = (int)$this->dateTime->format('d');
         return $this->dateTime->format($d . ' ' . $m . ' ' . $Y);
+    }
+
+    //Месяц прописью в именительном и родительном падежах
+    public function monthFormatLang($p = 'i')
+    {
+        if ($p == 'i') {
+            return $this->monthLangI((int)$this->dateTime->format('m'));
+        }
+        if ($p == 'r') {
+            return $this->monthLangR((int)$this->dateTime->format('m'));
+        }
     }
 
     public function intervalDay($date1, $date2)
