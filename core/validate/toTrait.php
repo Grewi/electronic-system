@@ -5,19 +5,19 @@ trait toTrait{
     public function toInt() : void
     {
         $data = $this->data[$this->currentName];
-        $this->setReturn((int)$data);
+        $this->return[$this->currentName] = (int)$data;
     }
 
     public function toFloat() : void
     {
         $data = $this->data[$this->currentName];
-        $this->setReturn((float)$data);
+        $this->return[$this->currentName] = (float)$data;
     }
 
     public function toString() : void
     {
         $data = $this->data[$this->currentName];
-        $this->setReturn((string)$data);
+        $this->return[$this->currentName] = (string)$data;
     }
 	
 	public function toNull() : void
