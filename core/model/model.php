@@ -114,7 +114,7 @@ abstract class model
             $this->_where . ' ' .
             $this->_group;
 
-        return (int)db($this->_databaseName)->fetch($str, $this->_bind, get_class($this))->summ;
+        return (float)db($this->_databaseName)->fetch($str, $this->_bind, get_class($this))->summ;
     }
 
     private function all(): array
