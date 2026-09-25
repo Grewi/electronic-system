@@ -3,6 +3,6 @@
 if (!function_exists('eMony')) {
     function eMony($data, $kop = 2)
     {
-        return number_format($data, $kop, ',', ' ') . ' ₽';
+        return number_format((float)$data, $kop, ',', ' ') . ' ₽';
     }
 }

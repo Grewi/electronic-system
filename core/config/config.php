@@ -12,21 +12,22 @@ class config
 
     static public function connect()
     {
-		if(self::$connect === null){ 
-			self::$connect = new self();
-		}
-		return self::$connect;
-	}
+        if (self::$connect === null) {
+            self::$connect = new self();
+        }
+        return self::$connect;
+    }
 
     public static function __callStatic($element, $parameters)
     {
-        if($element == 'createConfig'){
+        if ($element == 'createConfig') {
             self::connect()->createConfig($parameters[0]);
         }
         return self::connect()->m($element, $parameters);
     }
 
-    public function __get($parameters){
+    public function __get($parameters)
+    {
         return self::connect()->m($this->element, [$parameters]);
     }
 
@@ -37,7 +38,7 @@ class config
 
         if (!file_exists($ini) && file_exists($php)) {
             $this->createConfigFile($this->element);
-        }        
+        }
 
         //Парсим ini файл
         if (file_exists($ini)) {
@@ -47,7 +48,8 @@ class config
         return null;
     }
 
-    private function m(string $element, array $param = null){
+    private function m(string $element, array $param = null)
+    {
         $this->iniArr = [];
         $this->element = $element;
         $ini = $this->path . '.' . $element . '.ini';
@@ -70,10 +72,10 @@ class config
             //Если есть значение в ini возвращаем его
             if ($param && isset($this->iniArr[$param[0]])) {
                 return $this->iniArr[$param[0]];
-            }else{
+            } else {
                 return null;
             }
-        }elseif($param){
+        } elseif ($param) {
             return null;
         }
 
